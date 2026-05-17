@@ -19,7 +19,6 @@ dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3001;
 
 // ── Supabase ──────────────────────────────────────────────────────
@@ -387,10 +386,21 @@ app.post('/api/orders/create', async (req, res) => {
     
     // Initialiser paiement PayTech
     let paymentUrl = null;
+    let paytechError = null;
     try {
       paymentUrl = await initiatePayTech(order);
+      console.log('✅ PayTech URL générée:', paymentUrl);
     } catch (pe) {
-      console.error('PayTech init error:', pe.message);
+      paytechError = pe.message;
+      console.error('❌ PayTech erreur:', pe.message);
+    }
+    
+    if (!paymentUrl) {
+      return res.status(500).json({ 
+        success: false, 
+        error: 'Paiement indisponible: ' + (paytechError || 'Erreur PayTech'),
+        data: order 
+      });
     }
     
     res.json({ success: true, data: order, paymentUrl });
@@ -758,10 +768,3 @@ app.listen(PORT, () => {
     console.log(tok ? '✅ CJ Dropshipping connecté' : '❌ CJ Dropshipping: échec connexion');
   });
 });
-
-
-
-
-
-
-
