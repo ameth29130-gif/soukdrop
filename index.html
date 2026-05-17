@@ -1,0 +1,1116 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>SoukDrop — Plateforme Dropshipping Senegal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Satoshi:wght@400;500;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<style>
+:root{--bg:#09090E;--bg2:#111117;--surf:#15151D;--pan:#1C1C27;--b:rgba(255,255,255,.07);--bm:rgba(255,255,255,.13);--lime:#C8F04D;--ld:rgba(200,240,77,.14);--amb:#F5A623;--ad:rgba(245,166,35,.13);--vio:#8B5CF6;--vd:rgba(139,92,246,.13);--t1:#fff;--t2:rgba(255,255,255,.65);--t3:rgba(255,255,255,.35);--t4:rgba(255,255,255,.16);--ok:#22C55E;--err:#EF4444;--warn:#EAB308;--fd:'Cabinet Grotesk',sans-serif;--fb:'Satoshi',sans-serif;--r8:8px;--r12:12px;--r16:16px;--r20:20px;--r24:24px;--rf:9999px;--sh:0 4px 20px rgba(0,0,0,.45);--shl:0 16px 48px rgba(0,0,0,.6);--tr:.18s ease;--mw:1280px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;line-height:1.65;overflow-x:hidden}
+h1,h2,h3,h4{font-family:var(--fd);line-height:1.1;letter-spacing:-.02em}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}button{cursor:pointer;border:none;background:none;font-family:inherit}input,select,textarea{font-family:inherit;font-size:inherit}
+::selection{background:var(--lime);color:var(--bg)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--bm);border-radius:2px}
+.w{max-width:var(--mw);margin:0 auto;padding:0 28px}
+@media(max-width:640px){.w{padding:0 14px}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;border-radius:var(--r12);font-family:var(--fd);font-weight:700;font-size:14px;letter-spacing:-.01em;transition:all var(--tr);white-space:nowrap;cursor:pointer;border:1.5px solid transparent;position:relative}
+.btn:disabled{opacity:.44;cursor:not-allowed;pointer-events:none}
+.bl{background:var(--lime);color:var(--bg);border-color:var(--lime)}.bl:hover{background:#d2f55a;transform:translateY(-1px);box-shadow:0 8px 24px rgba(200,240,77,.28)}
+.bo{background:transparent;color:var(--t1);border-color:var(--bm)}.bo:hover{border-color:var(--lime);color:var(--lime);background:var(--ld)}
+.bg_{background:var(--surf);color:var(--t2);border-color:var(--b)}.bg_:hover{border-color:var(--bm);color:var(--t1)}
+.bd{background:rgba(239,68,68,.12);color:var(--err);border-color:rgba(239,68,68,.2)}.bd:hover{background:rgba(239,68,68,.22)}
+.bsm{padding:7px 13px;font-size:12px;border-radius:var(--r8)}.blg{padding:14px 28px;font-size:16px}.bxl{padding:16px 34px;font-size:17px}.bfw{width:100%}
+.card{background:var(--surf);border:1px solid var(--b);border-radius:var(--r20);overflow:hidden;transition:border-color var(--tr),transform var(--tr),box-shadow var(--tr)}
+.pan{background:var(--pan);border:1px solid var(--b);border-radius:var(--r20)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:var(--rf);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.bgl{background:var(--ld);color:var(--lime)}.bga{background:var(--ad);color:var(--amb)}.bgv{background:var(--vd);color:var(--vio)}.bgg{background:rgba(34,197,94,.12);color:var(--ok)}.bgr{background:rgba(239,68,68,.12);color:var(--err)}.bgy{background:rgba(234,179,8,.12);color:var(--warn)}.bgn{background:var(--surf);color:var(--t3);border:1px solid var(--b)}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:13px}
+.lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em}
+.inp{width:100%;padding:11px 15px;background:var(--bg2);border:1.5px solid var(--b);border-radius:var(--r12);font-size:14px;color:var(--t1);transition:border-color var(--tr),box-shadow var(--tr);outline:none}
+.inp:focus{border-color:var(--lime);box-shadow:0 0 0 3px var(--ld)}.inp::placeholder{color:var(--t4)}
+#nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(9,9,14,.88);backdrop-filter:blur(20px) saturate(1.5);border-bottom:1px solid var(--b)}
+.sb{width:216px;background:var(--bg2);border-right:1px solid var(--b);padding:18px 10px;position:sticky;top:60px;height:calc(100vh - 60px);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sbtn{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:var(--r8);border:none;cursor:pointer;background:transparent;color:var(--t2);font-family:var(--fb);font-weight:400;font-size:13px;text-align:left;transition:all var(--tr);width:100%}
+.sbtn:hover{background:var(--surf);color:var(--t1)}.sbtn.on{background:var(--ld);color:var(--lime);font-weight:600}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.4}}
+.fu{animation:fadeUp .38s ease both}.fi{animation:fadeIn .28s ease both}
+.skel{background:linear-gradient(90deg,var(--surf) 25%,var(--pan) 50%,var(--surf) 75%);background-size:200% 100%;animation:shimmer 1.8s infinite;border-radius:var(--r8)}
+.spin_{width:32px;height:32px;border:2.5px solid var(--b);border-top-color:var(--lime);border-radius:50%;animation:spin .7s linear infinite;margin:40px auto}
+#toasts{position:fixed;bottom:22px;right:22px;display:flex;flex-direction:column-reverse;gap:9px;z-index:9999;pointer-events:none}
+.toast{display:flex;align-items:center;gap:9px;padding:11px 16px;border-radius:var(--r12);font-size:13px;font-weight:500;max-width:300px;animation:fadeUp .28s ease;pointer-events:all;box-shadow:var(--shl);border:1px solid}
+.tok{background:var(--surf);border-color:rgba(34,197,94,.3);color:var(--ok)}.terr{background:var(--surf);border-color:rgba(239,68,68,.3);color:var(--err)}.tinf{background:var(--surf);border-color:var(--bm);color:var(--t1)}
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px);animation:fadeIn .2s ease}
+.modal{background:var(--bg2);border:1px solid var(--bm);border-radius:var(--r24);max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shl);animation:fadeUp .28s ease}
+.tabs{display:flex;gap:2px;background:var(--bg2);padding:4px;border-radius:var(--r12)}
+.tab{padding:8px 13px;font-family:var(--fd);font-weight:700;font-size:12px;border-radius:var(--r8);border:none;cursor:pointer;transition:all var(--tr);color:var(--t3);background:transparent;text-align:center;white-space:nowrap}
+.tab.on{background:var(--surf);color:var(--t1);box-shadow:var(--sh)}
+.tbl{overflow-x:auto;border-radius:var(--r16);border:1px solid var(--b)}
+table{width:100%;border-collapse:collapse}thead tr{background:var(--bg2)}
+th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);white-space:nowrap}
+td{padding:12px 14px;font-size:13px;color:var(--t2);border-top:1px solid var(--b)}
+tbody tr:hover td{background:rgba(255,255,255,.018)}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:900px){.g3{grid-template-columns:repeat(2,1fr)}.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:13px}
+@media(max-width:600px){.pgrid{grid-template-columns:repeat(2,1fr);gap:9px}}
+.sc{background:var(--surf);border:1px solid var(--b);border-radius:var(--r16);padding:18px 20px}
+.pill{display:inline-block;padding:4px 12px;border-radius:var(--rf);font-size:12px;font-weight:600;background:var(--surf);border:1px solid var(--b);color:var(--t2);cursor:pointer;transition:all var(--tr)}
+.pill:hover,.pill.on{background:var(--ld);border-color:rgba(200,240,77,.28);color:var(--lime)}
+.upz{border:2px dashed var(--b);border-radius:var(--r16);padding:24px;text-align:center;cursor:pointer;transition:all var(--tr)}
+.upz:hover{border-color:var(--lime);background:var(--ld)}
+.div_{height:1px;background:var(--b);margin:16px 0}
+.gt{background:linear-gradient(135deg,var(--lime) 0%,#A8E6FF 50%,var(--amb) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hbg{background:radial-gradient(ellipse 60% 50% at 70% 0%,rgba(200,240,77,.07),transparent 60%),radial-gradient(ellipse 40% 60% at 0% 80%,rgba(139,92,246,.05),transparent 50%),var(--bg)}
+.gp{background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:58px 58px}
+.ellipsis{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.c2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--ok);animation:pulseDot 2s infinite;display:inline-block}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="toasts"></div>
+<script type="text/babel">
+const {useState,useEffect,useCallback,useRef,useMemo,createContext,useContext}=React;
+
+const CFG={
+  API: window.location.origin,
+  ADMIN_EMAIL:'ameth29.130@gmail.com',
+  ADMIN_PASS:'Ameth123',
+  USD_FCFA:615,MARGIN:1.50,SHIP:8,
+  COMM:{starter:.05,pro:.02,business:0},
+};
+
+const SUPPLIERS=[
+  {id:'cj',name:'CJ Dropshipping',flag:'🇨🇳',delay:'7-15j',color:'var(--lime)',api:true,desc:'Millions de produits depuis la Chine. Commande auto apres paiement.',shippers:[{id:'cj_std',name:'CJ Packet Standard',delay:'7-15j',price:4920,type:'eco'},{id:'cj_exp',name:'CJ Express',delay:'5-9j',price:9225,type:'express'}]},
+  {id:'dakar',name:'Fournisseur Dakar',flag:'🇸🇳',delay:'1-3j',color:'var(--ok)',api:false,desc:'Produits locaux. Livraison express a Dakar.',shippers:[{id:'dk_moto',name:'Livraison moto',delay:'Meme jour',price:2500,type:'express'},{id:'dk_std',name:'Standard Dakar',delay:'1-2j',price:1500,type:'eco'}]},
+  {id:'aliexpress',name:'Aliexpress DSers',flag:'🇨🇳',delay:'10-25j',color:'var(--amb)',api:false,desc:'Large catalogue, prix competitifs.',shippers:[{id:'ali_std',name:'AliExpress Standard',delay:'10-25j',price:3075,type:'eco'},{id:'ali_exp',name:'AliExpress Premium',delay:'8-15j',price:6150,type:'express'}]},
+  {id:'printful',name:'Printful',flag:'🌍',delay:'15-30j',color:'var(--vio)',api:false,desc:'T-shirts, mugs personnalises. Zero stock.',shippers:[{id:'pf_std',name:'Standard',delay:'15-30j',price:7380,type:'eco'}]},
+  {id:'own',name:'Mes propres produits',flag:'📦',delay:'Votre choix',color:'#60A5FA',api:false,desc:'Vendez vos articles personnels.',shippers:[{id:'own_you',name:'Vous expediez',delay:'Votre choix',price:0,type:'eco'}]},
+];
+
+const fcfa=n=>new Intl.NumberFormat('fr-SN',{style:'currency',currency:'XOF',maximumFractionDigits:0}).format(n||0);
+const calcP=(usd,m=CFG.MARGIN)=>Math.ceil((parseFloat(usd||0)+CFG.SHIP)*m*CFG.USD_FCFA);
+const slug_=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+const uid=()=>Math.random().toString(36).slice(2,9);
+
+function showToast(msg,type='inf',dur=3400){
+  const c=document.getElementById('toasts');if(!c)return;
+  const el=document.createElement('div');el.className='toast t'+type;
+  const ic={ok:'✓',err:'✕',inf:'ℹ'};
+  el.innerHTML='<span style="font-size:14px;font-weight:700">'+(ic[type]||'i')+'</span><span>'+msg+'</span>';
+  el.onclick=()=>el.remove();c.appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(20px)';el.style.transition='all .3s';setTimeout(()=>el.remove(),300)},dur);
+}
+const T={ok:m=>showToast(m,'ok'),err:m=>showToast(m,'err',4500),inf:m=>showToast(m,'inf')};
+
+function useRoute(){
+  const [r,setR]=useState(()=>location.hash.slice(1)||'/');
+  useEffect(()=>{const h=()=>setR(location.hash.slice(1)||'/');window.addEventListener('hashchange',h);return()=>window.removeEventListener('hashchange',h)},[]);
+  return r;
+}
+const go=p=>{location.hash=p};
+
+const AuthCtx=createContext(null);
+function AuthProvider({children}){
+  const [user,setUser]=useState(()=>{try{return JSON.parse(sessionStorage.getItem('sd_u'))}catch{return null}});
+  const login=u=>{sessionStorage.setItem('sd_u',JSON.stringify(u));setUser(u)};
+  const logout=()=>{sessionStorage.removeItem('sd_u');setUser(null);go('/')};
+  return <AuthCtx.Provider value={{user,login,logout}}>{children}</AuthCtx.Provider>;
+}
+const useAuth=()=>useContext(AuthCtx);
+
+const CartCtx=createContext(null);
+function CartProvider({children}){
+  const [items,setItems]=useState(()=>{try{return JSON.parse(localStorage.getItem('sd_cart')||'[]')}catch{return[]}});
+  const save=n=>{localStorage.setItem('sd_cart',JSON.stringify(n));setItems(n)};
+  const add=(p,qty=1)=>{
+    const key=String(p.id);const found=items.find(i=>i.key===key);
+    const price=p.store_price||p.price_fcfa||calcP(p.sellPrice||0);
+    save(found?items.map(i=>i.key===key?{...i,quantity:i.quantity+qty}:i):[...items,{key,productId:p.id,name:p.name||p.productNameEn,image:p.images?.[0]||p.productImage,priceFCFA:price,quantity:qty,supplier:p.supplier}]);
+    T.ok('Ajouté au panier !');
+  };
+  const rm=key=>save(items.filter(i=>i.key!==key));
+  const setQty=(key,q)=>q<=0?rm(key):save(items.map(i=>i.key===key?{...i,quantity:q}:i));
+  const clear=()=>save([]);
+  const subtotal=useMemo(()=>items.reduce((s,i)=>s+i.priceFCFA*i.quantity,0),[items]);
+  const count=useMemo(()=>items.reduce((s,i)=>s+i.quantity,0),[items]);
+  return <CartCtx.Provider value={{items,add,rm,setQty,clear,subtotal,count}}>{children}</CartCtx.Provider>;
+}
+const useCart=()=>useContext(CartCtx);
+
+const DEMO=[
+  {id:'p1',name:'Ecouteurs Bluetooth Pro X3',images:['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80'],price_fcfa:18500,category:'Electronique',supplier:'cj',sellPrice:14},
+  {id:'p2',name:'Montre Connectee Sport Elite',images:['https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80'],price_fcfa:35000,category:'Electronique',supplier:'cj',sellPrice:28},
+  {id:'p3',name:'Sac a dos Anti-vol Urban',images:['https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&q=80'],price_fcfa:22000,category:'Mode',supplier:'dakar'},
+  {id:'p4',name:'Lampe LED Ambiance Smart',images:['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80'],price_fcfa:12800,category:'Maison',supplier:'cj',sellPrice:9},
+  {id:'p5',name:'Enceinte Portable Waterproof',images:['https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&q=80'],price_fcfa:28000,category:'Electronique',supplier:'cj',sellPrice:22},
+  {id:'p6',name:'Sneakers Running 2024',images:['https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80'],price_fcfa:42000,category:'Sport',supplier:'dakar'},
+  {id:'p7',name:'Boubou Brode Traditionnel',images:['https://images.unsplash.com/photo-1590330297626-d7aff25a0431?w=400&q=80'],price_fcfa:28000,category:'Mode',supplier:'own'},
+  {id:'p8',name:'Set Cosmetiques Bio',images:['https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&q=80'],price_fcfa:16500,category:'Beaute',supplier:'aliexpress',sellPrice:12},
+];
+const DEMO_S=[
+  {id:'s1',name:'TechDakar Shop',slug:'techdakar',desc:'Gadgets tech a Dakar',logo:'📱',color:'#6366F1',products:12,orders:34,revenue:485000,owner:'Moussa Diallo'},
+  {id:'s2',name:'Mode Senegal',slug:'modesn',desc:'Mode africaine et internationale',logo:'👗',color:'#EC4899',products:28,orders:67,revenue:1250000,owner:'Fatou Ndiaye'},
+  {id:'s3',name:'Artisanat Dakar',slug:'artisanat',desc:'Artisanat local senegalais',logo:'🎨',color:'#F59E0B',products:15,orders:42,revenue:560000,owner:'Aminata Sow'},
+];
+
+async function apiCall(path,opts={}){
+  const headers={'Content-Type':'application/json',...(opts.headers||{})};
+  headers['x-admin-token']=sessionStorage.getItem('sd_tok')||'ADMIN_TOK';
+  try{
+    const r=await fetch(path,{...opts,headers});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d?.error||'Erreur '+r.status);
+    return d;
+  }catch(e){
+    // Fallback demo uniquement si le serveur est complètement inaccessible
+    const isNetErr=e.message.includes('Failed to fetch')||e.message.includes('NetworkError');
+    if(isNetErr){
+      if(path.includes('/api/products'))return{success:true,data:DEMO,total:DEMO.length};
+      if(path.includes('/api/categories'))return{success:true,data:[{name:'Électronique',slug:'electronique',icon:'📱'},{name:'Mode',slug:'mode',icon:'👗'},{name:'Maison',slug:'maison',icon:'🏠'}]};
+      if(path.includes('/api/admin/stats'))return{success:true,data:{products:0,paid_orders:0,pending_orders:0,revenue:0,monthly:0}};
+      if(path.includes('/api/admin/orders')||path.includes('/api/orders'))return{success:true,data:[],total:0};
+      if(path.includes('/api/admin/products'))return{success:true,data:DEMO,total:DEMO.length};
+      if(path.includes('/api/cj/'))return{success:false,data:[],total:0,error:'Serveur inaccessible'};
+    }
+    throw e;
+  }
+}
+
+function QR({url,size=130}){
+  const s=Math.floor(size/7);
+  const pat=[[1,1,1,1,1,1,1,0,0,1,0,0,1,0,1,1,1,1,1,1,1],[1,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,0,0,0,0,1],[1,0,1,1,1,0,1,0,0,1,1,0,0,0,1,0,1,1,1,0,1],[1,0,1,1,1,0,1,0,1,1,0,1,1,0,1,0,1,1,1,0,1],[1,0,1,1,1,0,1,0,0,0,1,1,0,0,1,0,1,1,1,0,1],[1,0,0,0,0,0,1,0,1,0,0,1,1,0,1,0,0,0,0,0,1],[1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1],[0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0],[1,0,1,1,0,1,1,1,0,1,1,0,1,0,1,1,0,1,0,1,0],[0,1,0,0,1,0,0,0,1,0,0,1,0,1,0,0,1,0,1,0,1],[1,1,1,0,1,1,1,0,1,1,0,0,1,0,0,1,1,0,0,1,1],[0,0,1,1,0,0,0,1,0,0,1,0,0,1,1,0,0,1,0,0,0],[1,0,0,1,1,0,1,1,1,0,0,0,1,0,1,0,1,1,1,0,1],[0,0,0,0,0,0,0,0,1,0,1,1,0,1,0,1,0,0,1,1,0],[1,1,1,1,1,1,1,0,0,1,1,0,1,0,1,1,1,1,0,0,1],[1,0,0,0,0,0,1,0,1,0,0,1,1,0,1,0,0,0,1,0,0],[1,0,1,1,1,0,1,1,0,1,0,0,0,0,0,1,0,1,0,1,1],[1,0,1,1,1,0,1,0,1,0,1,1,0,1,1,0,1,0,0,0,1],[1,0,1,1,1,0,1,0,0,0,1,0,1,0,0,1,0,1,1,0,0],[1,0,0,0,0,0,1,0,1,1,0,1,0,0,1,0,1,1,0,1,1],[1,1,1,1,1,1,1,1,0,0,1,0,0,1,0,1,0,0,0,1,0]];
+  return(<svg width={size} height={size} viewBox={'0 0 '+size+' '+size} style={{background:'white',padding:4,borderRadius:8}}>{pat.map((row,y)=>row.map((cell,x)=>cell?<rect key={x+'-'+y} x={x*s} y={y*s} width={s} height={s} fill="#000"/>:null))}</svg>);
+}
+
+function Logo({size=20}){
+  const [clicks,setClicks]=useState(0);const [modal,setModal]=useState(false);
+  const [em,setEm]=useState('');const [pw,setPw]=useState('');const [err,setErr]=useState('');const [load,setLoad]=useState(false);
+  const timer=useRef(null);const {login}=useAuth();
+  const click=()=>{const n=clicks+1;setClicks(n);clearTimeout(timer.current);if(n>=3){setClicks(0);setModal(true);setEm('');setPw('');setErr('');return;}timer.current=setTimeout(()=>setClicks(0),800)};
+  const doLogin=async()=>{
+    setErr('');if(!em||!pw){setErr('Remplissez tous les champs.');return;}
+    if(em.toLowerCase()!==CFG.ADMIN_EMAIL.toLowerCase()||pw!==CFG.ADMIN_PASS){setErr('Identifiants incorrects.');return;}
+    setLoad(true);await new Promise(r=>setTimeout(r,600));
+    sessionStorage.setItem('sd_tok','ADMIN_TOK');
+    login({id:'admin',name:'Ameth Diallo',email:CFG.ADMIN_EMAIL,role:'platform_admin'});
+    setModal(false);setLoad(false);T.ok('Bienvenue Administrateur !');go('/platform-admin');
+  };
+  return(<>
+    <div style={{display:'flex',alignItems:'center',gap:8,cursor:'pointer',userSelect:'none'}} onClick={click}>
+      <div style={{width:size+10,height:size+10,borderRadius:8,background:'linear-gradient(135deg,var(--lime),#A8E6FF)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:size*.72,fontWeight:900,color:'#09090E',fontFamily:'var(--fd)',transition:'transform .12s',transform:clicks>0?'scale('+(1+clicks*.05)+')':'scale(1)'}}>S</div>
+      <span style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:size,letterSpacing:'-.03em'}}>Souk<span style={{color:'var(--lime)'}}>Drop</span></span>
+    </div>
+    {modal&&(<div className="mbg" onClick={e=>{if(e.target===e.currentTarget){setModal(false);setErr('')}}}>
+      <div className="modal" style={{maxWidth:360,padding:0}}>
+        <div style={{padding:'28px 24px 0',textAlign:'center'}}>
+          <div style={{width:48,height:48,borderRadius:12,background:'linear-gradient(135deg,var(--lime),#A8E6FF)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:22,fontWeight:900,color:'#09090E',fontFamily:'var(--fd)',margin:'0 auto 12px'}}>S</div>
+          <h2 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:17,marginBottom:3}}>Administration</h2>
+          <p style={{fontSize:12,color:'var(--t3)',marginBottom:20}}>Acces reserve</p>
+        </div>
+        <div style={{padding:'0 24px 24px'}}>
+          <div className="field"><label className="lbl">Email</label><input className="inp" type="email" placeholder="admin@exemple.com" value={em} autoFocus onChange={e=>setEm(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doLogin()}/></div>
+          <div className="field"><label className="lbl">Mot de passe</label><input className="inp" type="password" placeholder="..." value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doLogin()}/></div>
+          {err&&<div style={{background:'rgba(239,68,68,.1)',border:'1px solid rgba(239,68,68,.2)',color:'var(--err)',padding:'8px 12px',borderRadius:'var(--r8)',fontSize:12,marginBottom:12}}>{err}</div>}
+          <div style={{display:'flex',gap:9}}><button className="btn bg_ bsm" style={{flex:1}} onClick={()=>{setModal(false);setErr('')}}>Annuler</button><button className="btn bl" style={{flex:2}} onClick={doLogin} disabled={load}>{load?'...':'Acceder'}</button></div>
+        </div>
+      </div>
+    </div>)}
+  </>);
+}
+
+function Av({name,size=34}){
+  const cols=['#C8F04D','#F5A623','#8B5CF6','#22C55E','#3B82F6','#EC4899'];
+  const bg=cols[(name?.charCodeAt(0)||0)%cols.length];
+  const ini=name?.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()||'?';
+  return <div style={{width:size,height:size,borderRadius:'50%',background:bg,display:'flex',alignItems:'center',justifyContent:'center',fontSize:size*.38,fontWeight:800,color:'#000',fontFamily:'var(--fd)',flexShrink:0}}>{ini}</div>;
+}
+
+function SC({icon,label,value,trend}){return(
+  <div className="sc fu">
+    <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:13}}>
+      <div style={{width:38,height:38,borderRadius:10,background:'var(--ld)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:17}}>{icon}</div>
+      {trend!=null&&<span style={{fontSize:10,fontWeight:700,color:trend>=0?'var(--ok)':'var(--err)',background:trend>=0?'rgba(34,197,94,.1)':'rgba(239,68,68,.1)',padding:'2px 7px',borderRadius:'var(--rf)'}}>{trend>=0?'↑':'↓'} {Math.abs(trend)}%</span>}
+    </div>
+    <div style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:22,letterSpacing:'-.02em',marginBottom:3}}>{value}</div>
+    <div style={{fontSize:10,color:'var(--t3)',fontWeight:700,textTransform:'uppercase',letterSpacing:'.05em'}}>{label}</div>
+  </div>
+);}
+
+function Navbar({route}){
+  const {user,logout}=useAuth();const {count}=useCart();const [sc,setSc]=useState(false);
+  useEffect(()=>{const h=()=>setSc(window.scrollY>10);window.addEventListener('scroll',h);return()=>window.removeEventListener('scroll',h)},[]);
+  const inDB=route.startsWith('/dashboard')||route.startsWith('/platform-admin');
+  return(<nav id="nav" style={{boxShadow:sc?'0 1px 0 var(--b)':'none'}}>
+    <div className="w" style={{display:'flex',alignItems:'center',height:60,gap:14}}>
+      <div style={{flexShrink:0}} onClick={()=>go('/')}><Logo size={20}/></div>
+      {!inDB&&(<div style={{display:'flex',gap:2,flex:1,marginLeft:8}}>
+        {[['/', 'Accueil'],['/marketplace','Marketplace'],['/pricing','Tarifs']].map(([r,l])=>(
+          <button key={r} onClick={()=>go(r)} style={{padding:'5px 11px',borderRadius:'var(--r8)',fontSize:13,fontWeight:500,color:route===r?'var(--lime)':'var(--t2)',background:route===r?'var(--ld)':'transparent',border:'none',cursor:'pointer',fontFamily:'var(--fb)',transition:'all var(--tr)'}}>{l}</button>
+        ))}
+      </div>)}
+      <div style={{flex:1}}/>
+      <div style={{display:'flex',gap:8,alignItems:'center',flexShrink:0}}>
+        <button onClick={()=>go('/panier')} style={{position:'relative',width:37,height:37,borderRadius:'var(--r8)',background:'var(--surf)',border:'1px solid var(--b)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:16,cursor:'pointer',transition:'all var(--tr)'}}>
+          🛒{count>0&&<span style={{position:'absolute',top:-4,right:-4,background:'var(--lime)',color:'#09090E',borderRadius:'var(--rf)',width:16,height:16,fontSize:9,fontWeight:900,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'var(--fd)'}}>{count}</span>}
+        </button>
+        {user?(<button onClick={()=>go(user.role==='platform_admin'?'/platform-admin':'/dashboard')} style={{display:'flex',alignItems:'center',gap:8,padding:'5px 11px 5px 5px',borderRadius:'var(--rf)',background:'var(--surf)',border:'1px solid var(--b)',cursor:'pointer',fontFamily:'var(--fb)'}}>
+          <Av name={user.name} size={25}/><span style={{fontSize:12,fontWeight:600,color:'var(--t1)'}}>{user.name?.split(' ')[0]}</span>
+        </button>):(<div style={{display:'flex',gap:7}}>
+          <button className="btn bg_ bsm" onClick={()=>go('/login')}>Connexion</button>
+          <button className="btn bl bsm" onClick={()=>go('/register')}>Créer ma boutique</button>
+        </div>)}
+      </div>
+    </div>
+  </nav>);
+}
+
+function Footer(){return(
+  <footer style={{borderTop:'1px solid var(--b)',padding:'44px 0 26px',background:'var(--bg2)'}}>
+    <div className="w">
+      <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr',gap:28,marginBottom:32}}>
+        <div><Logo size={18}/><p style={{fontSize:12,color:'var(--t3)',marginTop:12,lineHeight:1.7,maxWidth:250}}>Plateforme dropshipping #1 au Senegal. Vendez sans stock, encaissez en FCFA.</p></div>
+        {[{t:'Produit',l:['Marketplace','Tarifs','Fournisseurs']},{t:'Support',l:['WhatsApp (+221 77 029 96 03)','Email','FAQ']}].map((col,i)=>(
+          <div key={i}><div style={{fontSize:10,fontWeight:700,color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:12}}>{col.t}</div>{col.l.map(l=><div key={l} style={{fontSize:12,color:'var(--t2)',marginBottom:7,cursor:'pointer'}}>{l}</div>)}</div>
+        ))}
+      </div>
+      <div style={{borderTop:'1px solid var(--b)',paddingTop:18,display:'flex',justifyContent:'space-between',flexWrap:'wrap',gap:10,fontSize:11,color:'var(--t4)'}}>
+        <span>© {new Date().getFullYear()} SoukDrop — Dakar, Senegal</span><span>Made for Africa</span>
+      </div>
+    </div>
+  </footer>
+);}
+
+function PCard({p}){
+  const {add}=useCart();const [hov,setHov]=useState(false);
+  const img=p.images?.[0]||p.productImage||'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&q=80';
+  const price=p.store_price||p.price_fcfa||0;
+  const sup=SUPPLIERS.find(s=>s.id===p.supplier);
+  return(<div className="card" style={{display:'flex',flexDirection:'column',transition:'transform .2s,box-shadow .2s,border-color .2s'}}
+    onMouseEnter={e=>{setHov(true);e.currentTarget.style.transform='translateY(-3px)';e.currentTarget.style.boxShadow='var(--sh)';e.currentTarget.style.borderColor='rgba(200,240,77,.18)'}}
+    onMouseLeave={e=>{setHov(false);e.currentTarget.style.transform='';e.currentTarget.style.boxShadow='';e.currentTarget.style.borderColor='var(--b)'}}>
+    <div style={{aspectRatio:'1',overflow:'hidden',background:'var(--pan)',position:'relative',cursor:'pointer'}} onClick={()=>go('/produit/'+p.id)}>
+      <img src={img} alt={p.name||p.productNameEn} style={{width:'100%',height:'100%',objectFit:'cover',transition:'transform .4s',transform:hov?'scale(1.07)':'scale(1)'}} onError={e=>e.target.src='https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&q=80'}/>
+      {sup&&<div style={{position:'absolute',top:7,right:7,background:'rgba(0,0,0,.62)',padding:'2px 7px',borderRadius:'var(--r8)',fontSize:9,color:'#fff',fontWeight:600}}>{sup.flag} {sup.delay}</div>}
+      {p.category&&<div style={{position:'absolute',top:7,left:7}}><span className="badge bgn">{p.category}</span></div>}
+    </div>
+    <div style={{padding:'12px 13px 14px',flex:1,display:'flex',flexDirection:'column'}}>
+      <p className="c2" style={{fontSize:12,fontWeight:500,marginBottom:7,lineHeight:1.4,minHeight:'2.4em'}}>{p.name||p.productNameEn}</p>
+      <div style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:18,color:'var(--lime)',marginBottom:10,letterSpacing:'-.02em'}}>{fcfa(price)}</div>
+      <div style={{display:'flex',gap:6,marginTop:'auto'}}>
+        <button className="btn bl bsm" style={{flex:1}} onClick={()=>add(p)}>🛒 Ajouter</button>
+        <button className="btn bg_ bsm" onClick={()=>go('/produit/'+p.id)}>→</button>
+      </div>
+    </div>
+  </div>);
+}
+
+function Landing(){
+  return(<div>
+    <section className="hbg gp" style={{paddingTop:136,paddingBottom:96,position:'relative',overflow:'hidden',minHeight:'92vh',display:'flex',alignItems:'center'}}>
+      <div style={{position:'absolute',top:'18%',right:'10%',width:360,height:360,borderRadius:'50%',background:'radial-gradient(circle,rgba(200,240,77,.07),transparent 70%)',pointerEvents:'none'}}/>
+      <div className="w" style={{position:'relative',zIndex:1}}>
+        <div style={{maxWidth:570}}>
+          <div style={{display:'inline-flex',alignItems:'center',gap:8,background:'var(--surf)',border:'1px solid rgba(200,240,77,.2)',padding:'5px 15px 5px 8px',borderRadius:'var(--rf)',fontSize:12,color:'var(--t2)',marginBottom:24}}><span className="dot"/> Plateforme #1 dropshipping au Senegal 🇸🇳</div>
+          <h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:'clamp(36px,7vw,74px)',lineHeight:.97,marginBottom:20}}>Creez votre boutique<br/><span className="gt">vendez sans stock</span></h1>
+          <p style={{fontSize:'clamp(14px,2vw,17px)',color:'var(--t2)',maxWidth:470,marginBottom:34,lineHeight:1.7}}>CJ Dropshipping, fournisseur Dakar, Aliexpress ou vos propres produits. Encaissez via Wave et Orange Money automatiquement.</p>
+          <div style={{display:'flex',gap:11,flexWrap:'wrap',marginBottom:40}}>
+            <button className="btn bl bxl" onClick={()=>go('/register')}>🚀 Créer ma boutique — Gratuit</button>
+            <button className="btn bo bxl" onClick={()=>go('/marketplace')}>Voir les boutiques →</button>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:18,flexWrap:'wrap'}}>
+            <div style={{display:'flex'}}>{['M','F','O','A','K'].map((l,i)=><div key={i} style={{width:29,height:29,borderRadius:'50%',border:'2px solid var(--bg)',marginLeft:i>0?-7:0,background:'hsl('+(i*60)+',65%,55%)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:700,color:'#fff',fontFamily:'var(--fd)'}}>{l}</div>)}</div>
+            <span style={{fontSize:12,color:'var(--t3)'}}><strong style={{color:'var(--t1)'}}>+120 vendeurs</strong> actifs</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style={{borderTop:'1px solid var(--b)',borderBottom:'1px solid var(--b)',padding:'13px 0',overflow:'hidden'}}>
+      <div style={{display:'flex',animation:'marquee 22s linear infinite',width:'max-content'}}>
+        {['Wave','Orange Money','CJ Dropshipping','Fournisseur Dakar','Aliexpress','Printful','PayTech','Made for Senegal','Wave','Orange Money','CJ Dropshipping','Fournisseur Dakar','Aliexpress','Printful','PayTech','Made for Senegal'].map((l,i)=><div key={i} style={{padding:'0 34px',color:'var(--t4)',fontFamily:'var(--fd)',fontWeight:700,fontSize:12,whiteSpace:'nowrap',textTransform:'uppercase',letterSpacing:'.05em'}}>{l}</div>)}
+      </div>
+    </div>
+
+    <section style={{padding:'68px 0'}}>
+      <div className="w">
+        <div style={{textAlign:'center',marginBottom:44}}>
+          <div className="badge bgl" style={{marginBottom:12}}>Multi-fournisseurs</div>
+          <h2 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:'clamp(24px,4vw,42px)',marginBottom:10}}>Choisissez votre source</h2>
+        </div>
+        <div className="g3" style={{gap:12}}>
+          {SUPPLIERS.filter(s=>s.id!=='own').map(s=>(<div key={s.id} className="card" style={{padding:22}}>
+            <div style={{fontSize:28,marginBottom:12}}>{s.flag}</div>
+            <div style={{fontFamily:'var(--fd)',fontWeight:800,fontSize:15,marginBottom:4}}>{s.name}</div>
+            <div style={{display:'flex',gap:6,marginBottom:9}}><span className="badge bgn" style={{fontSize:9}}>⏱ {s.delay}</span></div>
+            <p style={{fontSize:12,color:'var(--t2)',lineHeight:1.6,marginBottom:12}}>{s.desc}</p>
+            {s.shippers&&(<div style={{display:'flex',flexDirection:'column',gap:5}}>{s.shippers.map(sh=>(<div key={sh.id} style={{display:'flex',justifyContent:'space-between',padding:'6px 9px',background:'var(--bg2)',borderRadius:'var(--r8)',border:'1px solid var(--b)'}}>
+              <div style={{fontSize:11,color:'var(--t2)',fontWeight:500}}>{sh.name}</div>
+              <div style={{fontSize:11,color:'var(--lime)',fontWeight:700}}>{sh.price>0?fcfa(sh.price):'Gratuit'}</div>
+            </div>))}</div>)}
+          </div>))}
+        </div>
+      </div>
+    </section>
+
+    <section style={{padding:'0 0 68px',background:'var(--bg2)'}}>
+      <div className="w" style={{paddingTop:60}}>
+        <div style={{textAlign:'center',marginBottom:44}}>
+          <div className="badge bga" style={{marginBottom:12}}>Fonctionnalites</div>
+          <h2 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:'clamp(24px,4vw,42px)'}}>Tout pour vendre en ligne</h2>
+        </div>
+        <div className="g3" style={{gap:12}}>
+          {[{i:'⚡',t:'Boutique en 2 min',d:'Lien unique + QR code. Partagez sur WhatsApp instantanement.'},{i:'📦',t:'Vos produits + CJ',d:'Vendez vos articles personnels ET importez depuis CJ, Dakar ou Aliexpress.'},{i:'💰',t:'Reversement Wave/OM',d:'Benefices verses chaque vendredi sur votre Wave ou Orange Money.'},{i:'🔗',t:'Lien et QR Code',d:'URL unique et QR code imprimable pour vos flyers.'},{i:'📊',t:'Dashboard securise',d:'Vos clients voient uniquement votre vitrine. Dashboard invisible et protege.'},{i:'🚚',t:'Expediteur au choix',d:'Choisissez l\'expediteur au checkout. Economique ou express.'}].map((f,i)=>(<div key={i} className="card fu" style={{padding:22,animationDelay:i*.07+'s'}}>
+            <div style={{width:42,height:42,borderRadius:10,background:'var(--ld)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,marginBottom:14}}>{f.i}</div>
+            <h3 style={{fontSize:15,fontWeight:700,marginBottom:7}}>{f.t}</h3>
+            <p style={{fontSize:12,color:'var(--t2)',lineHeight:1.7}}>{f.d}</p>
+          </div>))}
+        </div>
+      </div>
+    </section>
+
+    <section style={{padding:'68px 0'}}>
+      <div className="w">
+        <div className="g2" style={{alignItems:'center',gap:36}}>
+          <div>
+            <div className="badge bgg" style={{marginBottom:14}}>Reversements auto</div>
+            <h2 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:'clamp(22px,3.5vw,38px)',marginBottom:14}}>Recevez votre argent sur Wave ou Orange Money</h2>
+            <p style={{color:'var(--t2)',fontSize:14,lineHeight:1.7,marginBottom:22}}>Chaque vendredi, SoukDrop calcule vos benefices nets et vous reverse automatiquement le reste sur votre mobile money.</p>
+            {[{i:'📱',t:'Wave',d:'Versement instantane'},{i:'🟠',t:'Orange Money',d:'Versement hebdomadaire'},{i:'📊',t:'Historique',d:'Tout trace dans votre dashboard'}].map(f=>(<div key={f.t} style={{display:'flex',alignItems:'center',gap:11,padding:'11px 14px',background:'var(--surf)',borderRadius:'var(--r12)',border:'1px solid var(--b)',marginBottom:8}}><span style={{fontSize:20}}>{f.i}</span><div><div style={{fontWeight:600,fontSize:13}}>{f.t}</div><div style={{fontSize:11,color:'var(--t3)'}}>{f.d}</div></div></div>))}
+          </div>
+          <div className="card" style={{padding:24}}>
+            <div style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:13,marginBottom:17,color:'var(--t2)'}}>Exemple de reversement</div>
+            {[{l:'Votre prix de vente',v:'25 000 FCFA',c:'var(--t1)'},{l:'Cout produit CJ',v:'- 14 700 FCFA',c:'var(--err)'},{l:'Livraison Senegal',v:'- 4 920 FCFA',c:'var(--err)'},{l:'Commission SoukDrop (5%)',v:'- 1 250 FCFA',c:'var(--err)'}].map(r=>(<div key={r.l} style={{display:'flex',justifyContent:'space-between',padding:'8px 0',borderBottom:'1px solid var(--b)',fontSize:12}}><span style={{color:'var(--t2)'}}>{r.l}</span><span style={{fontWeight:600,color:r.c}}>{r.v}</span></div>))}
+            <div style={{display:'flex',justifyContent:'space-between',padding:'12px 0 0',fontFamily:'var(--fd)',fontWeight:900,fontSize:19}}><span>Vous recevez</span><span style={{color:'var(--lime)'}}>4 130 FCFA</span></div>
+            <div style={{marginTop:14,background:'var(--ld)',borderRadius:'var(--r8)',padding:'9px 13px',fontSize:11,color:'var(--lime)'}}>📱 Verse chaque vendredi</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style={{padding:'72px 0',textAlign:'center'}}>
+      <div className="w">
+        <h2 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:'clamp(24px,4vw,48px)',marginBottom:12}}>Pret a vendre ?<br/><span className="gt">Lancez-vous.</span></h2>
+        <p style={{color:'var(--t2)',fontSize:14,marginBottom:26,maxWidth:380,margin:'0 auto 26px'}}>Rejoignez +120 vendeurs actifs.</p>
+        <button className="btn bl bxl" onClick={()=>go('/register')}>🚀 Créer ma boutique — Gratuit</button>
+      </div>
+    </section>
+    <Footer/>
+  </div>);
+}
+
+function Marketplace(){
+  const [products,setProducts]=useState([]);const [cat,setCat]=useState('');
+  const [search,setSearch]=useState('');const [view,setView]=useState('products');
+  const [loading,setLoad]=useState(true);const [cats,setCats]=useState([]);
+  useEffect(()=>{
+    apiCall('/api/categories').then(d=>setCats(d.data||[]));
+  },[]);
+  useEffect(()=>{
+    setLoad(true);
+    const params=new URLSearchParams({limit:'40'});
+    if(cat)params.set('category',cat);
+    if(search)params.set('search',search);
+    apiCall('/api/products?'+params).then(d=>{
+      setProducts((d.data||[]).length>0?d.data:DEMO);
+    }).finally(()=>setLoad(false));
+  },[cat,search]);
+  return(<div style={{paddingTop:80}}>
+    <div style={{borderBottom:'1px solid var(--b)',padding:'26px 0'}}>
+      <div className="w">
+        <h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:30,marginBottom:6}}>Marketplace</h1>
+        <p style={{color:'var(--t2)',fontSize:13,marginBottom:14}}>Produits livrés au Sénégal</p>
+        <div style={{display:'flex',gap:9,flexWrap:'wrap',alignItems:'center'}}>
+          <input className="inp" placeholder="🔍 Rechercher..." value={search} onChange={e=>setSearch(e.target.value)} style={{width:220,padding:'8px 13px',fontSize:13}}/>
+          <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
+            <span className={'pill'+(cat===''?' on':'')} onClick={()=>setCat('')}>Tout</span>
+            {cats.map(c=><span key={c.slug} className={'pill'+(cat===c.name?' on':'')} onClick={()=>setCat(cat===c.name?'':c.name)}>{c.icon} {c.name}</span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="w" style={{padding:'30px 28px 60px'}}>
+      {loading?<div className="spin_"/>:
+        products.length===0?(<div style={{textAlign:'center',padding:'60px 20px'}}><div style={{fontSize:48,marginBottom:12}}>📦</div><h3 style={{fontFamily:'var(--fd)',fontWeight:700,marginBottom:7}}>Aucun produit</h3><p style={{color:'var(--t3)',fontSize:13}}>Importez des produits CJ dans votre dashboard</p></div>):
+        <div className="pgrid">{products.map(p=><PCard key={p.id} p={p}/>)}</div>
+      }
+    </div>
+    <Footer/>
+  </div>);
+}
+
+function ProductPage({id}){
+  const {add}=useCart();const [product,setProd]=useState(null);const [loading,setLoad]=useState(true);const [qty,setQty]=useState(1);
+  useEffect(()=>{
+    if(!id){go('/marketplace');return;}
+    apiCall('/api/products/'+id).then(d=>{if(d.success)setProd(d.data);else go('/marketplace');}).catch(()=>go('/marketplace')).finally(()=>setLoad(false));
+  },[id]);
+  if(loading)return<div style={{paddingTop:120,textAlign:'center'}}><div className="spin_"/></div>;
+  if(!product)return null;
+  const img=product.images?.[0]||'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&q=80';
+  return(<div style={{paddingTop:80,minHeight:'100vh'}}>
+    <div className="w" style={{padding:'40px 28px 80px'}}>
+      <button className="btn bg_ bsm" style={{marginBottom:20}} onClick={()=>history.back()}>← Retour</button>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:40,alignItems:'start'}}>
+        <div>
+          <div style={{aspectRatio:'1',borderRadius:'var(--r20)',overflow:'hidden',background:'var(--pan)'}}>
+            <img src={img} alt={product.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+          </div>
+        </div>
+        <div>
+          <span className="badge bgn" style={{marginBottom:12}}>{product.category}</span>
+          <h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:26,marginBottom:12,lineHeight:1.2}}>{product.name}</h1>
+          <div style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:34,color:'var(--lime)',marginBottom:20}}>{fcfa(product.price_fcfa)}</div>
+          {product.description&&<p style={{color:'var(--t2)',fontSize:13,lineHeight:1.8,marginBottom:24}}>{product.description}</p>}
+          <div style={{display:'flex',gap:10,alignItems:'center',marginBottom:20}}>
+            <span style={{fontSize:13,color:'var(--t3)'}}>Quantité :</span>
+            <div style={{display:'flex',alignItems:'center',gap:10,background:'var(--surf)',border:'1px solid var(--b)',borderRadius:'var(--r8)',padding:'4px 10px'}}>
+              <button onClick={()=>setQty(q=>Math.max(1,q-1))} style={{width:24,height:24,borderRadius:4,background:'var(--pan)',border:'1px solid var(--b)',color:'var(--t1)',cursor:'pointer',fontWeight:700,fontSize:16}}>−</button>
+              <span style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:15,minWidth:24,textAlign:'center'}}>{qty}</span>
+              <button onClick={()=>setQty(q=>q+1)} style={{width:24,height:24,borderRadius:4,background:'var(--pan)',border:'1px solid var(--b)',color:'var(--t1)',cursor:'pointer',fontWeight:700,fontSize:16}}>+</button>
+            </div>
+          </div>
+          <div style={{display:'flex',gap:10}}>
+            <button className="btn bl blg" style={{flex:1}} onClick={()=>{add(product,qty);T.ok('Ajouté au panier !');}}>🛒 Ajouter au panier</button>
+            <button className="btn bg_" onClick={()=>{add(product,qty);go('/commande');}}>Acheter →</button>
+          </div>
+          <div style={{marginTop:20,padding:14,background:'var(--surf)',borderRadius:'var(--r12)',border:'1px solid var(--b)',fontSize:12,color:'var(--t3)',lineHeight:1.8}}>
+            🚚 Livraison au Sénégal · Wave &amp; Orange Money acceptés<br/>
+            📦 Expédié sous 24-48h après paiement
+          </div>
+        </div>
+      </div>
+    </div>
+    <Footer/>
+  </div>);
+}
+
+function StorePage({slug_}){
+
+  const [store,setStore]=useState(null);const [products,setProducts]=useState([]);
+  const [loading,setLoad]=useState(true);const [shareModal,setShare]=useState(false);
+  useEffect(()=>{
+    const s=DEMO_S.find(x=>x.slug===slug_)||DEMO_S[0];setStore(s);
+    apiCall('/api/products').then(d=>setProducts((d.data||DEMO).map(p=>({...p,store_price:Math.ceil(p.price_fcfa*1.15)})))).finally(()=>setLoad(false));
+  },[slug_]);
+  if(!store)return <div className="spin_" style={{paddingTop:120}}/>;
+  const storeUrl='soukdrop.sn/'+store.slug;
+  return(<div style={{paddingTop:80,minHeight:'100vh'}}>
+    <div style={{height:160,background:'linear-gradient(135deg,'+store.color+'16,'+store.color+'30,var(--bg))',borderBottom:'1px solid var(--b)',display:'flex',alignItems:'flex-end'}}>
+      <div className="w" style={{paddingBottom:18,width:'100%',display:'flex',justifyContent:'space-between',alignItems:'flex-end',flexWrap:'wrap',gap:12}}>
+        <div style={{display:'flex',alignItems:'center',gap:13}}>
+          <div style={{width:64,height:64,borderRadius:13,background:store.color+'22',border:'2px solid '+store.color+'44',display:'flex',alignItems:'center',justifyContent:'center',fontSize:34}}>{store.logo}</div>
+          <div><h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:22}}>{store.name}</h1><p style={{color:'var(--t3)',fontSize:12}}>{store.desc}</p></div>
+        </div>
+        <button className="btn bg_ bsm" onClick={()=>setShare(true)}>🔗 Partager</button>
+      </div>
+    </div>
+    <div className="w" style={{paddingTop:26,paddingBottom:56}}>
+      {loading?<div className="spin_"/>:<div className="pgrid">{products.map(p=><PCard key={p.id} p={p}/>)}</div>}
+    </div>
+    {shareModal&&(<div className="mbg" onClick={e=>{if(e.target===e.currentTarget)setShare(false)}}>
+      <div className="modal" style={{padding:26,maxWidth:380}}>
+        <h3 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:17,marginBottom:5}}>Partager cette boutique</h3>
+        <div style={{display:'flex',alignItems:'center',gap:8,background:'var(--bg2)',borderRadius:'var(--r8)',padding:'9px 13px',marginBottom:13,border:'1px solid var(--b)'}}>
+          <span style={{flex:1,fontSize:12,color:'var(--lime)',fontFamily:'monospace'}}>{storeUrl}</span>
+          <button className="btn bg_ bsm" onClick={()=>{navigator.clipboard?.writeText('https://'+storeUrl);T.ok('Lien copie !')}}>Copier</button>
+        </div>
+        <div style={{display:'flex',justifyContent:'center',marginBottom:14}}><QR url={storeUrl} size={140}/></div>
+        <div style={{display:'flex',gap:7,marginBottom:12}}>
+          <button className="btn bg_ bsm" style={{flex:1}} onClick={()=>window.open('https://wa.me/221770299603?text=Bonjour SoukDrop, jai besoin daide&text='+encodeURIComponent('Decouvrez '+store.name+' !\nhttps://'+storeUrl))}>📱 WhatsApp</button>
+          <button className="btn bg_ bsm" style={{flex:1}} onClick={()=>window.open('https://www.facebook.com/sharer/sharer.php?u=https://'+storeUrl)}>📘 Facebook</button>
+        </div>
+        <button className="btn bl bfw" onClick={()=>setShare(false)}>Fermer</button>
+      </div>
+    </div>)}
+    <Footer/>
+  </div>);
+}
+
+function LoginPage(){
+  const {login}=useAuth();const [em,setEm]=useState('');const [pw,setPw]=useState('');
+  const [load,setLoad]=useState(false);const [err,setErr]=useState('');
+  const doLogin=async()=>{
+    setErr('');if(!em||!pw){setErr('Remplissez tous les champs.');return;}
+    setLoad(true);await new Promise(r=>setTimeout(r,700));
+    const u={id:'u'+uid(),name:em.split('@')[0].replace(/\./g,' ').replace(/\b\w/g,c=>c.toUpperCase()),email:em,role:'seller',plan:'Débutant',wave:'',om:'',store:{id:'s'+uid(),name:em.split('@')[0]+' Shop',slug:slug_(em.split('@')[0])}};
+    login(u);T.ok('Connexion réussie !');go('/dashboard');setLoad(false);
+  };
+  return(<div style={{paddingTop:80,minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'100px 20px 40px'}}>
+    <div style={{width:'100%',maxWidth:380}}>
+      <div className="card" style={{padding:30}}>
+        <div style={{textAlign:'center',marginBottom:22}}><Logo size={19}/><h2 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:20,marginTop:13,marginBottom:3}}>Bon retour</h2><p style={{color:'var(--t3)',fontSize:12}}>Connectez-vous a votre compte vendeur</p></div>
+        <div className="field"><label className="lbl">Email</label><input className="inp" type="email" placeholder="vous@exemple.com" value={em} onChange={e=>setEm(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doLogin()}/></div>
+        <div className="field"><label className="lbl">Mot de passe</label><input className="inp" type="password" placeholder="..." value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doLogin()}/></div>
+        {err&&<div style={{background:'rgba(239,68,68,.1)',border:'1px solid rgba(239,68,68,.2)',color:'var(--err)',padding:'8px 12px',borderRadius:'var(--r8)',fontSize:12,marginBottom:11}}>{err}</div>}
+        <button className="btn bl bfw blg" onClick={doLogin} disabled={load}>{load?'Connexion...':'Se connecter'}</button>
+        <div className="div_"/>
+        <div style={{textAlign:'center',fontSize:12,color:'var(--t3)'}}>Pas encore de compte ? <button onClick={()=>go('/register')} style={{color:'var(--lime)',fontWeight:600,background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',fontSize:12}}>Créer ma boutique</button></div>
+      </div>
+    </div>
+  </div>);
+}
+
+function RegisterPage(){
+  const {login}=useAuth();const [step,setStep]=useState(1);
+  const [form,setForm]=useState({name:'',email:'',password:'',storeName:'',storeDesc:'',plan:'Débutant',wave:'',om:''});
+  const [load,setLoad]=useState(false);
+  const u=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const doCreate=async()=>{
+    setLoad(true);await new Promise(r=>setTimeout(r,1000));
+    const usr={id:'u'+uid(),name:form.name,email:form.email,role:'seller',plan:form.plan,wave:form.wave,om:form.om,store:{id:'s'+uid(),name:form.storeName||form.name+' Shop',slug:slug_(form.storeName||form.name)}};
+    login(usr);T.ok('Boutique creee !');go('/dashboard');setLoad(false);
+  };
+  return(<div style={{paddingTop:80,minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'100px 20px 40px'}}>
+    <div style={{width:'100%',maxWidth:460}}>
+      <div className="card" style={{padding:30}}>
+        <div style={{display:'flex',gap:5,marginBottom:22}}>{[1,2,3,4].map(i=><div key={i} style={{flex:1,height:3,borderRadius:2,background:step>=i?'var(--lime)':'var(--b)',transition:'background .3s'}}/>)}</div>
+        {step===1&&<div className="fi"><h2 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:19,marginBottom:3}}>Creez votre compte</h2><p style={{color:'var(--t3)',fontSize:12,marginBottom:18}}>Etape 1/4</p>
+          <div className="field"><label className="lbl">Nom complet *</label><input className="inp" placeholder="Prenom Nom" value={form.name} onChange={e=>u('name',e.target.value)}/></div>
+          <div className="field"><label className="lbl">Email *</label><input className="inp" type="email" placeholder="vous@exemple.com" value={form.email} onChange={e=>u('email',e.target.value)}/></div>
+          <div className="field"><label className="lbl">Mot de passe *</label><input className="inp" type="password" placeholder="Min. 8 caracteres" value={form.password} onChange={e=>u('password',e.target.value)}/></div>
+          <button className="btn bl bfw" onClick={()=>setStep(2)} disabled={!form.name||!form.email||!form.password}>Continuer →</button>
+        </div>}
+        {step===2&&<div className="fi"><h2 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:19,marginBottom:3}}>Votre boutique</h2><p style={{color:'var(--t3)',fontSize:12,marginBottom:18}}>Etape 2/4</p>
+          <div className="field"><label className="lbl">Nom de la boutique *</label><input className="inp" placeholder="Ex: TechDakar Shop" value={form.storeName} onChange={e=>u('storeName',e.target.value)}/></div>
+          {form.storeName&&<div style={{fontSize:11,color:'var(--t3)',marginTop:-8,marginBottom:12}}>soukdrop.sn/<strong style={{color:'var(--lime)'}}>{slug_(form.storeName)}</strong></div>}
+          <div className="field"><label className="lbl">Description</label><textarea className="inp" rows={3} placeholder="Decrivez votre boutique..." value={form.storeDesc} onChange={e=>u('storeDesc',e.target.value)} style={{resize:'none'}}/></div>
+          <div style={{display:'flex',gap:9}}><button className="btn bg_" onClick={()=>setStep(1)}>← Retour</button><button className="btn bl" style={{flex:1}} onClick={()=>setStep(3)} disabled={!form.storeName}>Continuer →</button></div>
+        </div>}
+        {step===3&&<div className="fi"><h2 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:19,marginBottom:3}}>Ou recevoir l'argent</h2><p style={{color:'var(--t3)',fontSize:12,marginBottom:18}}>Etape 3/4</p>
+          <div style={{background:'var(--ld)',border:'1px solid rgba(200,240,77,.18)',borderRadius:'var(--r8)',padding:'9px 13px',fontSize:12,color:'var(--lime)',marginBottom:13}}>Vos benefices seront verses chaque vendredi.</div>
+          <div className="field"><label className="lbl">Numero Wave (optionnel)</label><input className="inp" placeholder="+221 7X XXX XX XX" value={form.wave} onChange={e=>u('wave',e.target.value)}/></div>
+          <div className="field"><label className="lbl">Numero Orange Money (optionnel)</label><input className="inp" placeholder="+221 7X XXX XX XX" value={form.om} onChange={e=>u('om',e.target.value)}/></div>
+          <div style={{display:'flex',gap:9}}><button className="btn bg_" onClick={()=>setStep(2)}>← Retour</button><button className="btn bl" style={{flex:1}} onClick={()=>setStep(4)}>Continuer →</button></div>
+        </div>}
+        {step===4&&<div className="fi"><h2 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:19,marginBottom:3}}>Choisissez votre plan</h2><p style={{color:'var(--t3)',fontSize:12,marginBottom:18}}>Etape 4/4</p>
+          {[{id:'Débutant',n:'Débutant',p:'Gratuit',c:'5%',q:'50'},{id:'pro',n:'Pro',p:'9 900 FCFA/mois',c:'2%',q:'500'}].map(pl=>(
+            <div key={pl.id} onClick={()=>u('plan',pl.id)} style={{padding:13,borderRadius:'var(--r12)',border:'2px solid '+(form.plan===pl.id?'var(--lime)':'var(--b)'),background:form.plan===pl.id?'var(--ld)':'transparent',cursor:'pointer',marginBottom:9,transition:'all var(--tr)'}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}><div><div style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:13,color:form.plan===pl.id?'var(--lime)':'var(--t1)'}}>{pl.n}</div><div style={{fontSize:11,color:'var(--t3)',marginTop:2}}>{pl.q} produits · Commission {pl.c}</div></div><div style={{fontSize:11,color:'var(--t2)',fontFamily:'var(--fd)',fontWeight:600}}>{pl.p}</div></div>
+            </div>
+          ))}
+          <div style={{display:'flex',gap:9,marginTop:14}}><button className="btn bg_" onClick={()=>setStep(3)}>← Retour</button><button className="btn bl" style={{flex:1}} onClick={doCreate} disabled={load}>{load?'Creation...':'🚀 Créer ma boutique'}</button></div>
+        </div>}
+        <div className="div_"/>
+        <div style={{textAlign:'center',fontSize:12,color:'var(--t3)'}}>Deja un compte ? <button onClick={()=>go('/login')} style={{color:'var(--lime)',fontWeight:600,background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',fontSize:12}}>Se connecter</button></div>
+      </div>
+    </div>
+  </div>);
+}
+
+function SellerDashboard(){
+  const {user,logout}=useAuth();const [tab,setTab]=useState('overview');
+  const [products,setProducts]=useState([]);
+  const [orders]=useState([{id:'ORD-1234',client:'Amadou Ba',total:47500,status:'paid',date:"Aujourd'hui",sup:'cj'},{id:'ORD-1233',client:'Fatou Sow',total:22000,status:'paid',date:'Hier',sup:'dakar'},{id:'ORD-1232',client:'Omar Diallo',total:86000,status:'shipped',date:'3 jan',sup:'cj'}]);
+  useEffect(()=>{apiCall('/api/products?limit=100').then(d=>setProducts((d.data||[]).length>0?d.data:DEMO.slice(0,4)))},[]);
+  const [cjR,setCjR]=useState([]);const [kw,setKw]=useState('');const [searching,setSrch]=useState(false);
+  const [impSt,setImpSt]=useState({});const [selSup,setSelSup]=useState('cj');
+  const [cjPage,setCjPage]=useState(1);const [cjTotal,setCjTotal]=useState(0);const [cjCat,setCjCat]=useState('');
+  const [editPrice,setEditPrice]=useState(null);const [ownModal,setOwnModal]=useState(false);
+  const [payoutModal,setPayoutModal]=useState(false);
+  const [wave,setWave]=useState(user?.wave||'');const [om,setOm]=useState(user?.om||'');
+  const [own,setOwn]=useState({name:'',price:'',cat:'',desc:'',stock:'',images:[]});
+  const storeUrl='soukdrop.sn/'+(user?.store?.slug||'ma-boutique');
+  const paidRev=orders.filter(o=>o.status==='paid'||o.status==='shipped').reduce((s,o)=>s+o.total,0);
+  const comm=Math.round(paidRev*(CFG.COMM[user?.plan||'Débutant']));const net=paidRev-comm;
+
+  const loadCJ=async(page=1,keyword='',cat='')=>{
+    setSrch(true);setCjR([]);
+    try{
+      const params=new URLSearchParams({pageNum:page,pageSize:20});
+      if(keyword) params.set('keyword',keyword);
+      if(cat) params.set('categoryId',cat);
+      const d=await apiCall('/api/cj/products/search?'+params,{admin:true});
+      setCjR(d.data||[]);setCjTotal(d.total||0);setCjPage(page);
+      if(!d.data?.length) T.inf('Aucun produit trouvé');
+    }catch(e){T.err('CJ: '+e.message);}
+    finally{setSrch(false);}
+  };
+  const doSearch=async()=>loadCJ(1,kw,cjCat);
+  const doImport=async(p)=>{const pid=p.pid||p.id;setImpSt(s=>({...s,[pid]:'loading'}));
+    try{
+      const res=await apiCall('/api/cj/import',{method:'POST',admin:true,body:JSON.stringify({pid})});
+      if(res.success){
+        const np={...res.data,images:res.data.images||[p.productImage],supplier:'cj'};
+        setProducts(prev=>[np,...prev.filter(x=>x.cj_pid!==pid)]);
+        setImpSt(s=>({...s,[pid]:'done'}));
+        T.ok((p.productNameEn||p.name||'').slice(0,30)+' mis en ligne !');
+      } else { throw new Error(res.error||'Erreur import'); }
+    }catch(e){setImpSt(s=>({...s,[pid]:'error'}));T.err(e.message);}
+  };
+  const handleFile=(e)=>{Array.from(e.target.files).forEach(file=>{const r=new FileReader();r.onload=ev=>setOwn(p=>({...p,images:[...p.images,ev.target.result]}));r.readAsDataURL(file)})};
+  const addOwn=()=>{if(!own.name||!own.price){T.err('Nom et prix requis');return;}const np={id:'p'+uid(),name:own.name,price_fcfa:parseInt(own.price)||0,category:own.cat||'Personnel',images:own.images.length?own.images:['https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&q=80'],status:'active',supplier:'own',stock:parseInt(own.stock)||0};setProducts(prev=>[np,...prev]);setOwnModal(false);setOwn({name:'',price:'',cat:'',desc:'',stock:'',images:[]});T.ok('Article personnel ajoute !')};
+  const TAGS=['smartphone','sneakers','headphones','led light','bag','smart watch'];
+  const SBadge=({s})=>{const m={paid:{l:'Paye',c:'bgg'},shipped:{l:'Expedie',c:'bgl'},pending_payment:{l:'En attente',c:'bgy'},cancelled:{l:'Annule',c:'bgr'}};const v=m[s]||{l:s,c:'bgn'};return <span className={'badge '+v.c}>{v.l}</span>;};
+  return(<div style={{display:'flex',minHeight:'100vh',paddingTop:60}}>
+    <aside className="sb">
+      <div style={{padding:'3px 8px',marginBottom:18}}>
+        <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:13}}><Av name={user?.name} size={32}/><div style={{minWidth:0}}><div style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:12,color:'var(--t1)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{user?.name}</div><div style={{fontSize:10,color:'var(--t3)'}}>{user?.plan==='pro'?'Plan Pro':'Plan Starter'}</div></div></div>
+        <div style={{background:'var(--ld)',border:'1px solid rgba(200,240,77,.15)',borderRadius:'var(--r8)',padding:'9px 11px'}}><div style={{fontSize:10,color:'var(--t3)',marginBottom:3}}>Solde a reverser</div><div style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:17,color:'var(--lime)'}}>{fcfa(net)}</div><button className="btn bl bsm bfw" style={{marginTop:7,fontSize:10}} onClick={()=>setPayoutModal(true)}>Encaisser</button></div>
+      </div>
+      <nav style={{display:'flex',flexDirection:'column',gap:2,flex:1}}>
+        {[['overview','📊',"Vue d'ensemble"],['products','📦','Mes produits'],['import','➕','Importer'],['own','🏠','Mes articles'],['orders','🛍️','Commandes'],['share','🔗','Partager'],['payouts','💰','Reversements'],['settings','⚙️','Parametres']].map(([id,ic,l])=>(
+          <button key={id} className={'sbtn'+(tab===id?' on':'')} onClick={()=>setTab(id)}><span style={{fontSize:15}}>{ic}</span>{l}</button>
+        ))}
+      </nav>
+      <div style={{paddingTop:9,borderTop:'1px solid var(--b)',display:'flex',flexDirection:'column',gap:3}}>
+        <button className="sbtn" onClick={()=>go('/store/'+(user?.store?.slug||'shop'))}>🔗 Voir ma boutique</button>
+        <button className="sbtn" onClick={logout} style={{color:'var(--t4)'}} onMouseEnter={e=>e.currentTarget.style.color='var(--err)'} onMouseLeave={e=>e.currentTarget.style.color='var(--t4)'}>🚪 Deconnexion</button>
+      </div>
+    </aside>
+    <main style={{flex:1,padding:'26px',overflowY:'auto',minWidth:0}}>
+      {tab==='overview'&&(<div className="fi">
+        <div style={{marginBottom:22}}><h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:23}}>Bonjour {user?.name?.split(' ')[0]} 👋</h1><p style={{color:'var(--t3)',fontSize:12,marginTop:3}}>Boutique : <strong style={{color:'var(--lime)'}}>{user?.store?.name}</strong></p></div>
+        <div className="g4" style={{marginBottom:18}}><SC icon="💰" label="Revenus bruts" value={fcfa(paidRev)} trend={14}/><SC icon="💸" label="Commission" value={fcfa(comm)}/><SC icon="✅" label="Net a recevoir" value={fcfa(net)} trend={11}/><SC icon="🛍️" label="Commandes" value={orders.length} trend={6}/></div>
+        <div className="g2">
+          <div className="card" style={{padding:20}}>
+            <h3 style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:14,marginBottom:14}}>Commandes recentes</h3>
+            {orders.slice(0,3).map((o,i)=>(<div key={o.id} style={{display:'flex',alignItems:'center',gap:11,padding:'10px 0',borderBottom:i<2?'1px solid var(--b)':'none'}}>
+              <div style={{width:32,height:32,borderRadius:'var(--r8)',background:'var(--pan)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,flexShrink:0}}>🛍️</div>
+              <div style={{flex:1,minWidth:0}}><div style={{fontSize:12,fontWeight:600,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{o.client}</div><div style={{fontSize:10,color:'var(--t3)'}}>{o.date}</div></div>
+              <div style={{textAlign:'right'}}><div style={{fontFamily:'var(--fd)',fontWeight:700,color:'var(--lime)',fontSize:12}}>{fcfa(o.total)}</div><SBadge s={o.status}/></div>
+            </div>))}
+          </div>
+          <div className="card" style={{padding:20,background:'var(--ld)',borderColor:'rgba(200,240,77,.18)'}}>
+            <div style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:13,marginBottom:5}}>🔗 Votre boutique est en ligne</div>
+            <div style={{fontSize:12,color:'var(--lime)',fontFamily:'monospace',marginBottom:13,wordBreak:'break-all'}}>{storeUrl}</div>
+            <div style={{display:'flex',gap:7,flexWrap:'wrap'}}>
+              <button className="btn bg_ bsm" onClick={()=>{navigator.clipboard?.writeText('https://'+storeUrl);T.ok('Lien copie !')}}>Copier</button>
+              <button className="btn bl bsm" onClick={()=>setTab('share')}>QR Code</button>
+            </div>
+          </div>
+        </div>
+      </div>)}
+
+      {tab==='products'&&(<div className="fi">
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:18,flexWrap:'wrap',gap:9}}>
+          <div><h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:21}}>Mes produits</h1><p style={{color:'var(--t3)',fontSize:12,marginTop:2}}>{products.length} produit{products.length!==1?'s':''}</p></div>
+          <div style={{display:'flex',gap:7}}><button className="btn bg_ bsm" onClick={()=>setTab('own')}>+ Personnel</button><button className="btn bl bsm" onClick={()=>setTab('import')}>+ Importer</button></div>
+        </div>
+        <div style={{display:'flex',flexDirection:'column',gap:9}}>
+          {products.map(p=>{const sup=SUPPLIERS.find(s=>s.id===p.supplier);return(<div key={p.id} style={{display:'flex',alignItems:'center',gap:11,padding:13,background:'var(--surf)',borderRadius:'var(--r16)',border:'1px solid var(--b)',transition:'border-color var(--tr)'}} onMouseEnter={e=>e.currentTarget.style.borderColor='var(--bm)'} onMouseLeave={e=>e.currentTarget.style.borderColor='var(--b)'}>
+            <div style={{width:52,height:52,borderRadius:'var(--r8)',overflow:'hidden',background:'var(--pan)',flexShrink:0}}><img src={p.images?.[0]} alt={p.name} style={{width:'100%',height:'100%',objectFit:'cover'}} onError={e=>e.target.src='https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=100&q=60'}/></div>
+            <div style={{flex:1,minWidth:0}}><div className="ellipsis" style={{fontWeight:600,fontSize:13}}>{p.name}</div><div style={{display:'flex',gap:7,marginTop:2,flexWrap:'wrap'}}><span style={{fontSize:10,color:'var(--t3)'}}>{p.category}</span>{sup&&<span style={{fontSize:10,color:'var(--t3)'}}>{sup.flag} {sup.name}</span>}{p.supplier==='own'&&p.stock!=null&&<span style={{fontSize:10,color:p.stock>0?'var(--ok)':'var(--err)'}}>Stock: {p.stock}</span>}</div></div>
+            {editPrice===p.id?(<div style={{display:'flex',gap:5,alignItems:'center'}}><input type="number" className="inp" defaultValue={p.price_fcfa} id={'pr-'+p.id} style={{width:110,padding:'5px 9px',fontSize:12}}/><button className="btn bl bsm" onClick={()=>{const el=document.getElementById('pr-'+p.id);setProducts(prev=>prev.map(x=>x.id===p.id?{...x,price_fcfa:parseInt(el.value)||x.price_fcfa}:x));setEditPrice(null);T.ok('Prix mis a jour')}}>✓</button><button className="btn bg_ bsm" onClick={()=>setEditPrice(null)}>✕</button></div>):(<div style={{display:'flex',alignItems:'center',gap:7}}><div style={{fontFamily:'var(--fd)',fontWeight:800,fontSize:14,color:'var(--lime)'}}>{fcfa(p.price_fcfa)}</div><button className="btn bg_ bsm" onClick={()=>setEditPrice(p.id)}>✏️</button></div>)}
+            <span className={'badge '+(p.status==='active'?'bgg':'bgn')} style={{fontSize:9}}>Actif</span>
+            <button className="btn bd bsm" onClick={()=>{setProducts(prev=>prev.filter(x=>x.id!==p.id));T.ok('Produit supprime')}}>🗑</button>
+          </div>);})}
+        </div>
+      </div>)}
+
+      {tab==='import'&&(<div className="fi">
+        <div style={{marginBottom:18}}>
+          <h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:21}}>Catalogue CJ Dropshipping</h1>
+          <p style={{color:'var(--t3)',fontSize:12,marginTop:3}}>Choisissez les produits à mettre en ligne dans votre boutique</p>
+        </div>
+        {/* Barre recherche */}
+        <div className="card" style={{padding:16,marginBottom:14}}>
+          <div style={{display:'flex',gap:9,marginBottom:10}}>
+            <input className="inp" placeholder="🔍 Rechercher dans le catalogue CJ..." value={kw} onChange={e=>setKw(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doSearch()} style={{flex:1}}/>
+            <button className="btn bl" onClick={doSearch} disabled={searching} style={{minWidth:120}}>{searching?'Recherche...':'🔍 Chercher'}</button>
+            <button className="btn bg_" onClick={()=>loadCJ(1,'','')} disabled={searching} style={{minWidth:100}}>Tout afficher</button>
+          </div>
+          <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
+            {['smartphone','wireless earbuds','sneakers','led light','kitchen gadget','beauty tool','smart watch','bag','baby toy','car accessory'].map(t=>(
+              <span key={t} className="pill" style={{fontSize:11,cursor:'pointer'}} onClick={()=>{setKw(t);loadCJ(1,t,'');}}>{t}</span>
+            ))}
+          </div>
+        </div>
+        {/* Info */}
+        {cjR.length===0&&!searching&&(
+          <div style={{textAlign:'center',padding:'50px 20px'}}>
+            <div style={{fontSize:50,marginBottom:12}}>🌐</div>
+            <h3 style={{fontFamily:'var(--fd)',fontWeight:800,fontSize:16,marginBottom:8}}>Accédez à des millions de produits</h3>
+            <p style={{color:'var(--t3)',fontSize:13,marginBottom:16}}>Cliquez sur une catégorie ou tapez un mot-clé, puis cliquez "Mettre en ligne" sur les produits de votre choix.</p>
+            <button className="btn bl" onClick={()=>loadCJ(1,'','')} style={{margin:'0 auto'}}>📦 Voir le catalogue complet</button>
+          </div>
+        )}
+        {searching&&<div className="spin_"/>}
+        {/* Résultats */}
+        {cjR.length>0&&(<div>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+            <p style={{fontSize:12,color:'var(--t3)'}}><strong style={{color:'var(--t1)'}}>{cjTotal.toLocaleString()}</strong> produits · page <strong>{cjPage}</strong></p>
+            <div style={{display:'flex',gap:7}}>
+              <button className="btn bg_ bsm" onClick={()=>loadCJ(cjPage-1,kw,cjCat)} disabled={cjPage<=1||searching}>← Précédent</button>
+              <button className="btn bg_ bsm" onClick={()=>loadCJ(cjPage+1,kw,cjCat)} disabled={searching||cjR.length<20}>Suivant →</button>
+            </div>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:11}}>
+            {cjR.map(p=>{
+              const pid=p.pid||p.id;
+              const st=impSt[pid];
+              const priceFCFA=p.priceCalc?.finalFCFA||Math.ceil((parseFloat(p.sellPrice||15)+8)*1.5*615);
+              return(<div key={pid} className="card" style={{display:'flex',flexDirection:'column',border:st==='done'?'1.5px solid rgba(34,197,94,.4)':'1px solid var(--b)'}}>
+                <div style={{aspectRatio:'1',background:'var(--pan)',overflow:'hidden',borderRadius:'var(--r12) var(--r12) 0 0',position:'relative'}}>
+                  <img src={p.productImage} alt={p.productNameEn} style={{width:'100%',height:'100%',objectFit:'cover'}} onError={e=>e.target.src='https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&q=60'}/>
+                  {st==='done'&&<div style={{position:'absolute',top:8,right:8,background:'rgba(34,197,94,.9)',color:'#fff',borderRadius:'var(--rf)',padding:'3px 8px',fontSize:10,fontWeight:700}}>✓ En ligne</div>}
+                </div>
+                <div style={{padding:'10px 11px 12px',flex:1,display:'flex',flexDirection:'column',gap:5}}>
+                  <p style={{fontSize:11,fontWeight:500,lineHeight:1.4,overflow:'hidden',display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical'}}>{p.productNameEn}</p>
+                  <div style={{fontSize:10,color:'var(--t4)'}}>📦 {p.categoryName||'Général'}</div>
+                  <div style={{background:'var(--bg2)',borderRadius:'var(--r8)',padding:'6px 9px',fontSize:11}}>
+                    <div style={{color:'var(--t4)'}}>Coût CJ: <strong style={{color:'var(--t2)'}}>${parseFloat(p.sellPrice||0).toFixed(2)}</strong></div>
+                    <div style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:14,color:'var(--lime)',marginTop:2}}>Vous vendez: {fcfa(priceFCFA)}</div>
+                    <div style={{fontSize:10,color:'var(--ok)',marginTop:1}}>Marge: ~{fcfa(priceFCFA - Math.ceil((parseFloat(p.sellPrice||0)+8)*615))}</div>
+                  </div>
+                  <button
+                    className="btn bsm bfw"
+                    style={{marginTop:'auto',...(st==='done'?{background:'rgba(34,197,94,.12)',color:'var(--ok)',border:'1px solid rgba(34,197,94,.3)'}:st==='error'?{background:'rgba(239,68,68,.12)',color:'var(--err)',border:'1px solid rgba(239,68,68,.2)'}:{background:'var(--lime)',color:'#09090E',border:'none'})}}
+                    onClick={()=>doImport(p)}
+                    disabled={st==='loading'||st==='done'}
+                  >{st==='loading'?'⏳ Mise en ligne...':st==='done'?'✓ Déjà en ligne':st==='error'?'🔄 Réessayer':'🚀 Mettre en ligne'}</button>
+                </div>
+              </div>);
+            })}
+          </div>
+          {/* Pagination bas */}
+          <div style={{display:'flex',justifyContent:'center',gap:9,marginTop:20,paddingBottom:10}}>
+            <button className="btn bg_" onClick={()=>loadCJ(cjPage-1,kw,cjCat)} disabled={cjPage<=1||searching}>← Page précédente</button>
+            <span style={{display:'flex',alignItems:'center',fontSize:12,color:'var(--t3)',padding:'0 12px'}}>Page {cjPage}</span>
+            <button className="btn bl" onClick={()=>loadCJ(cjPage+1,kw,cjCat)} disabled={searching||cjR.length<20}>Page suivante →</button>
+          </div>
+        </div>)}
+      </div>)}
+
+      {tab==='own'&&(<div className="fi">
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:18}}><div><h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:21}}>Mes articles personnels</h1><p style={{color:'var(--t3)',fontSize:12,marginTop:2}}>Vendez vos propres produits avec upload photo</p></div><button className="btn bl bsm" onClick={()=>setOwnModal(true)}>+ Ajouter</button></div>
+        <div style={{background:'var(--ad)',border:'1px solid rgba(245,166,35,.18)',borderRadius:'var(--r12)',padding:'11px 15px',fontSize:12,color:'var(--amb)',marginBottom:18}}>Ces produits sont geres par vous : vous fixez le prix, gerez le stock et expediez vous-meme.</div>
+        {products.filter(p=>p.supplier==='own').length===0?(<div style={{textAlign:'center',padding:'50px 20px'}}><div style={{fontSize:48,marginBottom:12}}>📸</div><h3 style={{fontFamily:'var(--fd)',fontWeight:700,marginBottom:7}}>Aucun article personnel</h3><button className="btn bl" onClick={()=>setOwnModal(true)}>Ajouter un article</button></div>):(
+          <div className="pgrid">{products.filter(p=>p.supplier==='own').map(p=>(<div key={p.id} className="card" style={{display:'flex',flexDirection:'column'}}>
+            <div style={{aspectRatio:'1',background:'var(--pan)',overflow:'hidden'}}><img src={p.images?.[0]} alt={p.name} style={{width:'100%',height:'100%',objectFit:'cover'}} onError={e=>e.target.src='https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&q=60'}/></div>
+            <div style={{padding:'11px 12px 13px',flex:1}}><div className="ellipsis" style={{fontWeight:600,fontSize:12,marginBottom:4}}>{p.name}</div><div style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:16,color:'var(--lime)',marginBottom:5}}>{fcfa(p.price_fcfa)}</div><div style={{fontSize:10,color:p.stock>0?'var(--ok)':'var(--err)',marginBottom:9}}>Stock : {p.stock||0}</div><button className="btn bd bsm bfw" onClick={()=>{setProducts(prev=>prev.filter(x=>x.id!==p.id));T.ok('Article supprime')}}>Supprimer</button></div>
+          </div>))}</div>
+        )}
+        {ownModal&&(<div className="mbg" onClick={e=>{if(e.target===e.currentTarget)setOwnModal(false)}}>
+          <div className="modal" style={{padding:24}}>
+            <h3 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:17,marginBottom:16}}>Ajouter un article personnel</h3>
+            <div style={{marginBottom:14}}><div className="lbl" style={{marginBottom:7}}>Photos du produit</div>
+              <label className="upz" style={{display:'block'}}>
+                <input type="file" accept="image/*" multiple style={{display:'none'}} onChange={handleFile}/>
+                {own.images.length===0?(<div><div style={{fontSize:28,marginBottom:7}}>📸</div><div style={{fontSize:12,color:'var(--t3)'}}>Cliquez ou glissez vos photos</div></div>):(<div style={{display:'flex',gap:7,flexWrap:'wrap',justifyContent:'center'}}>{own.images.map((img,i)=><div key={i} style={{width:60,height:60,borderRadius:'var(--r8)',overflow:'hidden',flexShrink:0}}><img src={img} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/></div>)}<div style={{width:60,height:60,borderRadius:'var(--r8)',border:'2px dashed var(--b)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,color:'var(--t3)'}}>+</div></div>)}
+              </label>
+            </div>
+            <div className="g2">
+              <div className="field"><label className="lbl">Nom *</label><input className="inp" placeholder="Ex: Boubou brode" value={own.name} onChange={e=>setOwn(p=>({...p,name:e.target.value}))}/></div>
+              <div className="field"><label className="lbl">Prix FCFA *</label><input className="inp" type="number" placeholder="Ex: 15000" value={own.price} onChange={e=>setOwn(p=>({...p,price:e.target.value}))}/></div>
+              <div className="field"><label className="lbl">Categorie</label><input className="inp" placeholder="Ex: Mode..." value={own.cat} onChange={e=>setOwn(p=>({...p,cat:e.target.value}))}/></div>
+              <div className="field"><label className="lbl">Stock</label><input className="inp" type="number" placeholder="Ex: 10" value={own.stock} onChange={e=>setOwn(p=>({...p,stock:e.target.value}))}/></div>
+            </div>
+            <div style={{display:'flex',gap:9,marginTop:5}}><button className="btn bg_" style={{flex:1}} onClick={()=>setOwnModal(false)}>Annuler</button><button className="btn bl" style={{flex:2}} onClick={addOwn}>Ajouter a ma boutique</button></div>
+          </div>
+        </div>)}
+      </div>)}
+
+      {tab==='orders'&&(<div className="fi">
+        <h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:21,marginBottom:18}}>Commandes</h1>
+        <div className="tbl"><table><thead><tr>{['Ref.','Client','Total','Fournisseur','Statut','Date'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+          <tbody>{orders.map(o=>{const sup=SUPPLIERS.find(s=>s.id===o.sup);return(<tr key={o.id}><td><span style={{fontFamily:'var(--fd)',fontWeight:700,color:'var(--t1)',fontSize:11}}>{o.id}</span></td><td style={{fontWeight:500,color:'var(--t1)',fontSize:12}}>{o.client}</td><td><span style={{fontFamily:'var(--fd)',fontWeight:700,color:'var(--lime)',fontSize:12}}>{fcfa(o.total)}</span></td><td style={{fontSize:11}}>{sup?sup.flag+' '+sup.name:'—'}</td><td><SBadge s={o.status}/></td><td style={{fontSize:10,color:'var(--t3)'}}>{o.date}</td></tr>);})}
+          </tbody></table></div>
+      </div>)}
+
+      {tab==='share'&&(<div className="fi">
+        <h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:21,marginBottom:5}}>Partager ma boutique</h1>
+        <p style={{color:'var(--t3)',fontSize:12,marginBottom:22}}>Diffusez votre lien et QR code</p>
+        <div className="g2">
+          <div className="card" style={{padding:22}}>
+            <h3 style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:14,marginBottom:14}}>🔗 Votre lien unique</h3>
+            <div style={{background:'var(--bg2)',borderRadius:'var(--r8)',padding:'10px 13px',border:'1px solid var(--b)',marginBottom:11,fontFamily:'monospace',fontSize:12,color:'var(--lime)',wordBreak:'break-all'}}>{storeUrl}</div>
+            <div style={{display:'flex',gap:7,marginBottom:13}}><button className="btn bg_ bsm" style={{flex:1}} onClick={()=>{navigator.clipboard?.writeText('https://'+storeUrl);T.ok('Lien copie !')}}>Copier</button><button className="btn bg_ bsm" style={{flex:1}} onClick={()=>go('/store/'+(user?.store?.slug))}>Voir</button></div>
+            <div style={{display:'flex',flexDirection:'column',gap:7}}>
+              <button className="btn bg_ bsm bfw" onClick={()=>window.open('https://wa.me/221770299603?text=Bonjour SoukDrop, jai besoin daide&text='+encodeURIComponent('Decouvrez '+(user?.store?.name)+'!\nhttps://'+storeUrl))}>📱 Partager sur WhatsApp</button>
+              <button className="btn bg_ bsm bfw" onClick={()=>window.open('https://www.facebook.com/sharer/sharer.php?u=https://'+storeUrl)}>📘 Partager sur Facebook</button>
+            </div>
+          </div>
+          <div className="card" style={{padding:22,textAlign:'center'}}>
+            <h3 style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:14,marginBottom:14}}>📲 QR Code</h3>
+            <div style={{display:'flex',justifyContent:'center',marginBottom:13}}><QR url={storeUrl} size={150}/></div>
+            <p style={{fontSize:11,color:'var(--t3)',marginBottom:13,lineHeight:1.6}}>Imprimez sur vos flyers, cartes de visite et banderoles.</p>
+            <button className="btn bl bfw" onClick={()=>T.ok('QR Code telecharge !')}>⬇ Telecharger QR Code</button>
+          </div>
+        </div>
+      </div>)}
+
+      {tab==='payouts'&&(<div className="fi">
+        <h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:21,marginBottom:5}}>Reversements</h1>
+        <p style={{color:'var(--t3)',fontSize:12,marginBottom:20}}>Recevez vos benefices sur Wave ou Orange Money</p>
+        <div style={{background:'linear-gradient(135deg,var(--ld),rgba(200,240,77,.04))',border:'1px solid rgba(200,240,77,.18)',borderRadius:'var(--r20)',padding:22,marginBottom:17}}>
+          <div style={{fontSize:12,color:'var(--t2)',marginBottom:5}}>Solde disponible a encaisser</div>
+          <div style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:34,color:'var(--lime)',marginBottom:14,letterSpacing:'-.02em'}}>{fcfa(net)}</div>
+          <button className="btn bl" onClick={()=>setPayoutModal(true)}>📱 Encaisser Wave/OM</button>
+        </div>
+        <div className="tbl"><table><thead><tr>{['Date','Commandes','Brut','Net verse','Methode'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+          <tbody>{[{d:'03 jan 2025',c:4,b:156000,n:148200,m:'Wave'},{d:'27 dec 2024',c:7,b:284000,n:269800,m:'Orange Money'},{d:'20 dec 2024',c:3,b:98000,n:93100,m:'Wave'}].map((r,i)=>(<tr key={i}><td style={{fontSize:11,color:'var(--t3)'}}>{r.d}</td><td>{r.c}</td><td style={{color:'var(--t2)',fontSize:12}}>{fcfa(r.b)}</td><td><span style={{fontFamily:'var(--fd)',fontWeight:700,color:'var(--ok)'}}>{fcfa(r.n)}</span></td><td style={{fontSize:11}}>{r.m==='Wave'?'📱':'🟠'} {r.m}</td></tr>))}</tbody></table></div>
+      </div>)}
+
+      {tab==='settings'&&(<div className="fi">
+        <h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:21,marginBottom:20}}>Parametres</h1>
+        <div className="g2">
+          <div className="card" style={{padding:20}}><h3 style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:13,marginBottom:14}}>Mon compte</h3><div className="field"><label className="lbl">Nom complet</label><input className="inp" defaultValue={user?.name}/></div><div className="field"><label className="lbl">Email</label><input className="inp" defaultValue={user?.email}/></div><div className="field"><label className="lbl">Nouveau mot de passe</label><input type="password" className="inp" placeholder="..."/></div><button className="btn bl" onClick={()=>T.ok('Sauvegardes !')}>Enregistrer</button></div>
+          <div className="card" style={{padding:20}}><h3 style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:13,marginBottom:14}}>Comptes de paiement</h3><div style={{background:'var(--ld)',border:'1px solid rgba(200,240,77,.14)',borderRadius:'var(--r8)',padding:'8px 12px',fontSize:11,color:'var(--lime)',marginBottom:12}}>Benefices verses chaque vendredi.</div><div className="field"><label className="lbl">Numero Wave</label><input className="inp" placeholder="+221 7X XXX XX XX" value={wave} onChange={e=>setWave(e.target.value)}/></div><div className="field"><label className="lbl">Numero Orange Money</label><input className="inp" placeholder="+221 7X XXX XX XX" value={om} onChange={e=>setOm(e.target.value)}/></div><button className="btn bl" onClick={()=>T.ok('Numeros enregistres !')}>Enregistrer</button></div>
+        </div>
+        <div className="div_"/><button className="btn bd" onClick={logout}>🚪 Deconnexion</button>
+      </div>)}
+    </main>
+
+    {payoutModal&&(<div className="mbg" onClick={e=>{if(e.target===e.currentTarget)setPayoutModal(false)}}>
+      <div className="modal" style={{padding:24,maxWidth:360}}>
+        <h3 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:17,marginBottom:5}}>Encaisser mes benefices</h3>
+        <p style={{fontSize:12,color:'var(--t3)',marginBottom:17}}>Montant : <strong style={{color:'var(--lime)'}}>{fcfa(net)}</strong></p>
+        {[{i:'📱',n:'Wave',v:wave},{i:'🟠',n:'Orange Money',v:om}].map(m=>(<button key={m.n} className="card" style={{padding:'13px 15px',display:'flex',alignItems:'center',gap:11,border:'1px solid var(--b)',cursor:'pointer',background:'var(--surf)',textAlign:'left',width:'100%',marginBottom:8,transition:'all var(--tr)'}} onClick={()=>{T.ok(fcfa(net)+' demande sur '+m.n+' !');setPayoutModal(false)}} onMouseEnter={e=>e.currentTarget.style.borderColor='rgba(200,240,77,.22)'} onMouseLeave={e=>e.currentTarget.style.borderColor='var(--b)'}><span style={{fontSize:26}}>{m.i}</span><div><div style={{fontWeight:600,fontSize:13}}>{m.n}</div><div style={{fontSize:11,color:'var(--t3)'}}>{m.v||'Non configure — Parametres'}</div></div></button>))}
+        <button className="btn bg_ bfw" style={{marginTop:5}} onClick={()=>setPayoutModal(false)}>Annuler</button>
+      </div>
+    </div>)}
+  </div>);
+}
+
+function PlatformAdmin(){
+  const {logout}=useAuth();const [tab,setTab]=useState('overview');
+  const [stats,setStats]=useState(null);const [orders,setOrders]=useState([]);
+  const [products,setProducts]=useState([]);const [stores,setStores]=useState(DEMO_S);const [load,setLoad]=useState(true);
+  useEffect(()=>{Promise.all([
+    apiCall('/api/admin/stats',{admin:true}),
+    apiCall('/api/admin/orders',{admin:true}),
+    apiCall('/api/admin/products',{admin:true})
+  ]).then(([s,o,p])=>{setStats(s.data);setOrders(o.data||[]);setProducts(p.data||[])}).finally(()=>setLoad(false))},[]);
+  return(<div style={{display:'flex',minHeight:'100vh',paddingTop:60}}>
+    <aside className="sb">
+      <div style={{padding:'3px 8px',marginBottom:18}}><div style={{display:'flex',alignItems:'center',gap:9}}><div style={{width:34,height:34,borderRadius:10,background:'linear-gradient(135deg,var(--lime),var(--amb))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:15}}>👑</div><div><div style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:12,color:'var(--lime)'}}>Super Admin</div><div style={{fontSize:10,color:'var(--t3)'}}>SoukDrop</div></div></div></div>
+      <nav style={{display:'flex',flexDirection:'column',gap:2,flex:1}}>{[['overview','📊','Vue globale'],['sellers','🏪','Vendeurs'],['orders','🛍️','Commandes'],['products','📦','Catalogue'],['payouts','💰','Reversements'],['suppliers','🌍','Fournisseurs']].map(([id,ic,l])=>(<button key={id} className={'sbtn'+(tab===id?' on':'')} onClick={()=>setTab(id)}><span style={{fontSize:14}}>{ic}</span>{l}</button>))}</nav>
+      <div style={{paddingTop:9,borderTop:'1px solid var(--b)'}}><button className="sbtn" onClick={logout} style={{color:'var(--t4)'}} onMouseEnter={e=>e.currentTarget.style.color='var(--err)'} onMouseLeave={e=>e.currentTarget.style.color='var(--t4)'}>🚪 Deconnexion</button></div>
+    </aside>
+    <main style={{flex:1,padding:'26px',overflowY:'auto',minWidth:0}}>
+      {load?<div className="spin_"/>:(<>
+        {tab==='overview'&&(<div className="fi"><div style={{marginBottom:20}}><h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:23}}>Tableau de bord SoukDrop</h1></div>
+          <div className="g4" style={{marginBottom:18}}><SC icon="💰" label="Revenus total" value={fcfa(stats?.revenue||0)} trend={18}/><SC icon="📦" label="Produits actifs" value={stats?.products||0}/><SC icon="✅" label="Commandes payées" value={stats?.paid_orders||0} trend={12}/><SC icon="⏳" label="En attente paiement" value={stats?.pending_orders||0}/></div>
+          <div className="card" style={{padding:20}}><h3 style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:14,marginBottom:14}}>Boutiques actives</h3>
+            {stores.map(s=>(<div key={s.id} style={{display:'flex',alignItems:'center',gap:11,padding:'10px 0',borderBottom:'1px solid var(--b)'}}>
+              <div style={{width:36,height:36,borderRadius:9,background:s.color+'22',display:'flex',alignItems:'center',justifyContent:'center',fontSize:18,flexShrink:0}}>{s.logo}</div>
+              <div style={{flex:1,minWidth:0}}><div style={{fontWeight:600,fontSize:12,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{s.name}</div><div style={{fontSize:10,color:'var(--t3)'}}>{s.owner}</div></div>
+              <div style={{textAlign:'right'}}><div style={{fontFamily:'var(--fd)',fontWeight:700,color:'var(--lime)',fontSize:12}}>{fcfa(s.revenue)}</div><div style={{fontSize:10,color:'var(--t3)'}}>{s.orders} commandes</div></div>
+              <span className="badge bgg" style={{fontSize:8}}>Actif</span>
+            </div>))}
+          </div>
+        </div>)}
+        {tab==='sellers'&&(<div className="fi"><h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:21,marginBottom:18}}>Gestion des vendeurs</h1>
+          <div className="tbl"><table><thead><tr>{['Boutique','Proprietaire','Produits','Ventes','Revenus','Actions'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+            <tbody>{stores.map(s=>(<tr key={s.id}><td><div style={{display:'flex',alignItems:'center',gap:7}}><span style={{fontSize:16}}>{s.logo}</span><span style={{fontWeight:600,color:'var(--t1)',fontSize:12}}>{s.name}</span></div></td><td style={{fontSize:11}}>{s.owner}</td><td>{s.products}</td><td>{s.orders}</td><td><span style={{fontFamily:'var(--fd)',fontWeight:700,color:'var(--lime)',fontSize:12}}>{fcfa(s.revenue)}</span></td><td><div style={{display:'flex',gap:5}}><button className="btn bg_ bsm" onClick={()=>go('/store/'+s.slug)}>👁</button><button className="btn bd bsm" onClick={()=>{setStores(p=>p.filter(x=>x.id!==s.id));T.ok('Vendeur suspendu')}}>🚫</button></div></td></tr>))}</tbody></table></div>
+        </div>)}
+        {tab==='orders'&&(<div className="fi"><h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:21,marginBottom:18}}>Toutes les commandes</h1>
+          {orders.length===0?(<div style={{textAlign:'center',padding:'50px 20px'}}><div style={{fontSize:48,marginBottom:12}}>🛍️</div><p style={{color:'var(--t3)'}}>Aucune commande pour l'instant</p></div>):(
+          <div className="tbl"><table><thead><tr>{['Ref.','Client','Total','Statut','Date','CJ Order','Action'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+            <tbody>{orders.map(o=>(<tr key={o.id}>
+              <td><span style={{fontFamily:'var(--fd)',fontWeight:700,color:'var(--t1)',fontSize:10}}>#{(o.id||'').slice(0,8).toUpperCase()}</span></td>
+              <td><div style={{fontWeight:500,fontSize:11,color:'var(--t1)'}}>{o.customer_name}</div><div style={{fontSize:10,color:'var(--t3)'}}>{o.customer_email}</div><div style={{fontSize:10,color:'var(--t4)'}}>{o.customer_phone}</div></td>
+              <td><span style={{fontFamily:'var(--fd)',fontWeight:700,color:'var(--lime)',fontSize:12}}>{fcfa(o.total_fcfa)}</span></td>
+              <td><span className={'badge '+(o.status==='paid'?'bgg':o.status==='shipped'?'bgl':o.status==='delivered'?'bgg':o.status==='cancelled'?'bgr':'bgy')} style={{fontSize:8}}>{o.status}</span></td>
+              <td style={{fontSize:10,color:'var(--t3)'}}>{new Date(o.created_at).toLocaleDateString('fr-SN')}</td>
+              <td style={{fontSize:10,color:'var(--t3)',fontFamily:'monospace'}}>{o.cj_order_id||'—'}</td>
+              <td><div style={{display:'flex',gap:4}}>
+                {o.status==='pending_payment'&&<button className="btn bl bsm" onClick={async()=>{await apiCall('/api/orders/'+o.id+'/status',{method:'PUT',admin:true,body:JSON.stringify({status:'paid'})});setOrders(p=>p.map(x=>x.id===o.id?{...x,status:'paid'}:x));T.ok('Marqué payé')}}>✓ Payé</button>}
+                {o.status==='paid'&&<button className="btn bg_ bsm" onClick={async()=>{await apiCall('/api/orders/'+o.id+'/status',{method:'PUT',admin:true,body:JSON.stringify({status:'shipped'})});setOrders(p=>p.map(x=>x.id===o.id?{...x,status:'shipped'}:x));T.ok('Marqué expédié')}}>📦 Expédié</button>}
+                {o.status==='shipped'&&<button className="btn bg_ bsm" onClick={async()=>{await apiCall('/api/orders/'+o.id+'/status',{method:'PUT',admin:true,body:JSON.stringify({status:'delivered'})});setOrders(p=>p.map(x=>x.id===o.id?{...x,status:'delivered'}:x));T.ok('Livré')}}>✅ Livré</button>}
+              </div></td>
+            </tr>))}</tbody></table></div>)}
+        </div>)}
+        {tab==='products'&&(<div className="fi">
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:18}}><h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:21}}>Catalogue global</h1><span style={{fontSize:12,color:'var(--t3)'}}>{products.length} produit{products.length!==1?'s':''}</span></div>
+          {products.length===0?(<div style={{textAlign:'center',padding:'60px 20px'}}><div style={{fontSize:48,marginBottom:12}}>📦</div><p style={{color:'var(--t3)'}}>Aucun produit importé.<br/>Allez dans le dashboard vendeur → Importer.</p></div>):(
+          <div className="pgrid">{products.map(p=><PCard key={p.id} p={p}/>)}</div>)}
+        </div>)}
+        {tab==='payouts'&&(<div className="fi"><h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:21,marginBottom:18}}>Reversements vendeurs</h1>
+          <div className="tbl"><table><thead><tr>{['Vendeur','Montant','Methode','Compte','Statut','Action'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+            <tbody>{[{n:'Moussa Diallo',a:148200,m:'Wave',c:'+221 77 123 45 67',st:'pending'},{n:'Fatou Ndiaye',a:269800,m:'Orange Money',c:'+221 77 987 65 43',st:'paid'},{n:'Aminata Sow',a:93100,m:'Wave',c:'+221 77 456 78 90',st:'pending'}].map((r,i)=>(<tr key={i}><td style={{fontWeight:500,color:'var(--t1)',fontSize:12}}>{r.n}</td><td><span style={{fontFamily:'var(--fd)',fontWeight:700,color:'var(--lime)',fontSize:12}}>{fcfa(r.a)}</span></td><td style={{fontSize:11}}>{r.m==='Wave'?'📱':'🟠'} {r.m}</td><td style={{fontSize:10,color:'var(--t3)',fontFamily:'monospace'}}>{r.c}</td><td><span className={'badge '+(r.st==='paid'?'bgg':'bgy')} style={{fontSize:8}}>{r.st==='paid'?'Verse':'En attente'}</span></td><td>{r.st==='pending'&&<button className="btn bl bsm" onClick={()=>T.ok(fcfa(r.a)+' envoye a '+r.n+' !')}>Verser</button>}</td></tr>))}</tbody></table></div>
+        </div>)}
+        {tab==='suppliers'&&(<div className="fi"><h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:21,marginBottom:18}}>Fournisseurs et Expediteurs</h1>
+          <div className="g2" style={{gap:12}}>{SUPPLIERS.map(s=>(<div key={s.id} className="card" style={{padding:20}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:11}}><div style={{display:'flex',alignItems:'center',gap:9}}><div style={{fontSize:24}}>{s.flag}</div><div><div style={{fontFamily:'var(--fd)',fontWeight:800,fontSize:14}}>{s.name}</div><div style={{fontSize:10,color:'var(--t3)'}}>{s.delay}</div></div></div><span className={'badge '+(s.api?'bgg':'bga')} style={{fontSize:8}}>{s.api?'API active':'Bientot'}</span></div>
+            <p style={{fontSize:12,color:'var(--t2)',lineHeight:1.6,marginBottom:12}}>{s.desc}</p>
+            <div style={{fontSize:10,fontWeight:700,color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.05em',marginBottom:7}}>Expediteurs</div>
+            {s.shippers.map(sh=>(<div key={sh.id} style={{display:'flex',justifyContent:'space-between',padding:'6px 9px',background:'var(--bg2)',borderRadius:'var(--r8)',border:'1px solid var(--b)',marginBottom:5}}><div><div style={{fontSize:11,fontWeight:600,color:'var(--t1)'}}>{sh.name}</div><div style={{fontSize:10,color:'var(--t3)'}}>{sh.delay}</div></div><div style={{textAlign:'right'}}><div style={{fontSize:11,fontWeight:700,color:'var(--lime)'}}>{sh.price>0?fcfa(sh.price):'Inclus'}</div><span className={'badge '+(sh.type==='express'?'bga':'bgg')} style={{fontSize:8}}>{sh.type==='express'?'Express':'Eco'}</span></div></div>))}
+          </div>))}</div>
+        </div>)}
+      </>)}
+    </main>
+  </div>);
+}
+
+function CartPage(){
+  const {items,rm,setQty,subtotal}=useCart();
+  if(!items.length)return(<div style={{paddingTop:80,textAlign:'center',padding:'110px 20px'}}><div style={{fontSize:50,marginBottom:12}}>🛒</div><h2 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:22,marginBottom:7}}>Panier vide</h2><p style={{color:'var(--t3)',marginBottom:18}}>Ajoutez des produits</p><button className="btn bl blg" onClick={()=>go('/marketplace')}>Voir le marketplace</button></div>);
+  return(<div style={{paddingTop:80,padding:'96px 0 68px'}}>
+    <div className="w">
+      <h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:22,marginBottom:22}}>Mon Panier ({items.length})</h1>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 330px',gap:18,alignItems:'start'}}>
+        <div style={{display:'flex',flexDirection:'column',gap:9}}>
+          {items.map(i=>(<div key={i.key} style={{display:'flex',gap:11,padding:13,background:'var(--surf)',borderRadius:'var(--r16)',border:'1px solid var(--b)',alignItems:'center'}}>
+            <div style={{width:56,height:56,borderRadius:'var(--r8)',overflow:'hidden',background:'var(--pan)',flexShrink:0}}><img src={i.image} alt={i.name} style={{width:'100%',height:'100%',objectFit:'cover'}} onError={e=>e.target.src='https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=100'}/></div>
+            <div style={{flex:1,minWidth:0}}><div className="ellipsis" style={{fontWeight:600,fontSize:13}}>{i.name}</div><div style={{fontFamily:'var(--fd)',fontWeight:700,color:'var(--lime)',fontSize:13,marginTop:3}}>{fcfa(i.priceFCFA*i.quantity)}</div></div>
+            <div style={{display:'flex',alignItems:'center',background:'var(--bg2)',border:'1px solid var(--b)',borderRadius:'var(--r8)',overflow:'hidden'}}><button onClick={()=>setQty(i.key,i.quantity-1)} style={{width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,color:'var(--t2)',fontFamily:'inherit'}}>−</button><span style={{width:26,textAlign:'center',fontWeight:600,fontSize:12}}>{i.quantity}</span><button onClick={()=>setQty(i.key,i.quantity+1)} style={{width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,color:'var(--t2)',fontFamily:'inherit'}}>+</button></div>
+            <button onClick={()=>rm(i.key)} style={{width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',color:'var(--t4)',fontSize:12,transition:'color var(--tr)',fontFamily:'inherit'}} onMouseEnter={e=>e.currentTarget.style.color='var(--err)'} onMouseLeave={e=>e.currentTarget.style.color='var(--t4)'}>✕</button>
+          </div>))}
+        </div>
+        <div className="card" style={{padding:20,position:'sticky',top:72}}>
+          <h3 style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:14,marginBottom:14}}>Recapitulatif</h3>
+          <div style={{display:'flex',justifyContent:'space-between',fontSize:12,marginBottom:7}}><span style={{color:'var(--t3)'}}>Sous-total</span><span style={{fontWeight:600}}>{fcfa(subtotal)}</span></div>
+          <div style={{display:'flex',justifyContent:'space-between',fontSize:12,marginBottom:12}}><span style={{color:'var(--t3)'}}>Livraison</span><span style={{color:'var(--lime)',fontWeight:600}}>Au checkout</span></div>
+          <div style={{borderTop:'1px solid var(--b)',paddingTop:11,marginBottom:13}}><div style={{display:'flex',justifyContent:'space-between',fontFamily:'var(--fd)',fontWeight:900,fontSize:17}}><span>Total</span><span style={{color:'var(--lime)'}}>{fcfa(subtotal)}</span></div></div>
+          <button className="btn bl bfw blg" onClick={()=>go('/commande')}>Commander →</button>
+          <p style={{textAlign:'center',marginTop:9,fontSize:10,color:'var(--t4)'}}>🔒 Paiement securise PayTech</p>
+        </div>
+      </div>
+    </div>
+  </div>);
+}
+
+function CheckoutPage(){
+  const {items,subtotal,clear}=useCart();
+  const [cust,setCust]=useState({name:'',email:'',phone:'',address:{street:'',city:'Dakar',zip:''}});
+  const [selShip,setSelShip]=useState(null);const [submitting,setSub]=useState(false);const [err,setErr]=useState('');
+  useEffect(()=>{if(!items.length)go('/panier')},[]);
+  const supplierIds=[...new Set(items.map(i=>i.supplier).filter(Boolean))];
+  const allShippers=supplierIds.flatMap(sid=>{const sup=SUPPLIERS.find(s=>s.id===sid);return(sup?.shippers||[]).map(sh=>({...sh,supName:sup?.name,supFlag:sup?.flag}))});
+  const ship=selShip?allShippers.find(s=>s.id===selShip):allShippers[0];
+  const shipCost=ship?.price||0;const grand=subtotal+shipCost;
+  const CITIES=['Dakar','Thies','Saint-Louis','Ziguinchor','Kaolack','Mbour','Touba','Diourbel'];
+  const submit=async()=>{
+    setErr('');if(!cust.name||!cust.email||!cust.phone||!cust.address.street){setErr('Veuillez remplir tous les champs.');return;}
+    setSub(true);
+    try{
+      const res=await apiCall('/api/orders/create',{method:'POST',body:JSON.stringify({
+        items:items.map(i=>({productId:i.productId,name:i.name,quantity:i.quantity,priceFCFA:i.priceFCFA,supplier:i.supplier||'cj'})),
+        customer:cust,shippingCostFCFA:shipCost,logisticName:ship?.name||'Standard',logisticId:ship?.id||''
+      })});
+      if(res.paymentUrl){
+        clear();
+        window.location.href=res.paymentUrl;
+      } else if(res.data?.id){
+        clear();T.ok('✅ Commande créée ! Réf: '+res.data.id.slice(0,8).toUpperCase());
+        go('/commande/succes?order='+res.data.id);
+      } else {
+        setErr('Erreur lors de la création de la commande.');
+      }
+    }catch(e){setErr(e.message||'Erreur serveur. Réessayez.');}
+    setSub(false);
+  };
+  return(<div style={{paddingTop:80,padding:'96px 0 68px',background:'var(--bg2)',minHeight:'100vh'}}>
+    <div className="w">
+      <h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:22,marginBottom:22}}>Finaliser la commande</h1>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 330px',gap:18,alignItems:'start'}}>
+        <div style={{display:'flex',flexDirection:'column',gap:13}}>
+          <div className="card" style={{padding:20}}><h3 style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:13,marginBottom:14}}>Coordonnees</h3>
+            <div className="g2"><div className="field"><label className="lbl">Nom complet *</label><input className="inp" placeholder="Prenom Nom" value={cust.name} onChange={e=>setCust(p=>({...p,name:e.target.value}))}/></div><div className="field"><label className="lbl">Email *</label><input className="inp" type="email" placeholder="email@exemple.com" value={cust.email} onChange={e=>setCust(p=>({...p,email:e.target.value}))}/></div></div>
+            <div className="field"><label className="lbl">Telephone *</label><input className="inp" placeholder="+221 7X XXX XX XX" value={cust.phone} onChange={e=>setCust(p=>({...p,phone:e.target.value}))}/></div></div>
+          <div className="card" style={{padding:20}}><h3 style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:13,marginBottom:14}}>Adresse de livraison</h3>
+            <div className="field"><label className="lbl">Adresse *</label><input className="inp" placeholder="Rue, quartier, point de repere" value={cust.address.street} onChange={e=>setCust(p=>({...p,address:{...p.address,street:e.target.value}}))}/></div>
+            <div className="g2"><div className="field"><label className="lbl">Ville</label><select className="inp" value={cust.address.city} onChange={e=>setCust(p=>({...p,address:{...p.address,city:e.target.value}}))}>{CITIES.map(c=><option key={c}>{c}</option>)}</select></div><div className="field"><label className="lbl">Code postal</label><input className="inp" placeholder="10000" value={cust.address.zip} onChange={e=>setCust(p=>({...p,address:{...p.address,zip:e.target.value}}))}/></div></div></div>
+          {allShippers.length>0&&(<div className="card" style={{padding:20}}><h3 style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:13,marginBottom:14}}>Mode de livraison</h3>
+            <div style={{display:'flex',flexDirection:'column',gap:8}}>
+              {allShippers.map(sh=>(<label key={sh.id} style={{display:'flex',alignItems:'center',gap:11,padding:12,borderRadius:'var(--r12)',border:'2px solid '+((selShip||allShippers[0]?.id)===sh.id?'var(--lime)':'var(--b)'),background:(selShip||allShippers[0]?.id)===sh.id?'var(--ld)':'transparent',cursor:'pointer',transition:'all var(--tr)'}}>
+                <input type="radio" name="ship" checked={(selShip||allShippers[0]?.id)===sh.id} onChange={()=>setSelShip(sh.id)} style={{accentColor:'var(--lime)'}}/>
+                <div style={{flex:1}}><div style={{fontWeight:600,fontSize:13}}>{sh.supFlag} {sh.name}</div><div style={{fontSize:10,color:'var(--t3)',marginTop:2}}>⏱ {sh.delay} · {sh.supName}</div></div>
+                <div style={{textAlign:'right'}}><div style={{fontFamily:'var(--fd)',fontWeight:700,color:'var(--lime)',fontSize:13}}>{sh.price>0?fcfa(sh.price):'Inclus'}</div></div>
+              </label>))}
+            </div>
+          </div>)}
+        </div>
+        <div style={{position:'sticky',top:72}}>
+          <div className="card" style={{padding:18,marginBottom:11}}>
+            <h3 style={{fontFamily:'var(--fd)',fontWeight:700,fontSize:13,marginBottom:12}}>Votre commande</h3>
+            {items.map(i=>(<div key={i.key} style={{display:'flex',justifyContent:'space-between',marginBottom:7,fontSize:12}}><span style={{flex:1,marginRight:7,color:'var(--t2)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{i.name} x{i.quantity}</span><span style={{fontWeight:600,flexShrink:0}}>{fcfa(i.priceFCFA*i.quantity)}</span></div>))}
+            <div className="div_"/>
+            <div style={{display:'flex',justifyContent:'space-between',fontSize:12,marginBottom:5}}><span style={{color:'var(--t3)'}}>Livraison</span><span style={{color:'var(--lime)',fontWeight:600}}>{shipCost>0?fcfa(shipCost):'Incluse'}</span></div>
+            <div style={{display:'flex',justifyContent:'space-between',fontFamily:'var(--fd)',fontWeight:900,fontSize:17}}><span>Total</span><span style={{color:'var(--lime)'}}>{fcfa(grand)}</span></div>
+          </div>
+          {err&&<div style={{background:'rgba(239,68,68,.1)',border:'1px solid rgba(239,68,68,.2)',color:'var(--err)',padding:'8px 12px',borderRadius:'var(--r8)',fontSize:12,marginBottom:9}}>{err}</div>}
+          <button className="btn bl bfw blg" onClick={submit} disabled={submitting}>{submitting?'Traitement...':'💳 Payer maintenant'}</button>
+          <p style={{textAlign:'center',marginTop:8,fontSize:10,color:'var(--t4)'}}>🔒 Wave · Orange Money · PayTech</p>
+        </div>
+      </div>
+    </div>
+  </div>);
+}
+
+function SuccessPage(){
+  const {clear}=useCart();useEffect(()=>clear(),[]);
+  const orderId=location.hash.match(/order=([^&]+)/)?.[1]||'ORD-XXXX';
+  return(<div style={{paddingTop:80,minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'100px 20px'}}>
+    <div style={{textAlign:'center',maxWidth:440}}>
+      <div style={{width:84,height:84,background:'rgba(34,197,94,.1)',border:'1px solid rgba(34,197,94,.2)',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:38,margin:'0 auto 20px'}}>✓</div>
+      <h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:26,color:'var(--ok)',marginBottom:7}}>Commande confirmée !</h1>
+      <p style={{color:'var(--t3)',fontSize:14,marginBottom:5}}>Merci ! Votre paiement a été reçu.</p>
+      <p style={{fontSize:12,color:'var(--t4)',marginBottom:20}}>Ref : <strong style={{color:'var(--t2)'}}>{orderId.slice(0,12).toUpperCase()}</strong></p>
+      <div style={{background:'var(--surf)',border:'1px solid var(--b)',borderRadius:'var(--r16)',padding:16,marginBottom:22,fontSize:12,color:'var(--t2)',lineHeight:1.8,textAlign:'left'}}>
+        📧 Email de confirmation envoyé avec le suivi<br/>📦 Commande transmise au fournisseur<br/>🚚 Livraison selon expediteur choisi
+      </div>
+      <button className="btn bl blg" onClick={()=>go('/marketplace')}>Continuer mes achats</button>
+    </div>
+  </div>);
+}
+
+function PricingPage(){return(<div style={{paddingTop:80,minHeight:'100vh'}}>
+  <div className="w" style={{padding:'60px 28px 76px'}}>
+    <div style={{textAlign:'center',marginBottom:44}}><div className="badge bgl" style={{marginBottom:12}}>Tarifs</div><h1 style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:'clamp(26px,5vw,50px)',marginBottom:11}}>Simple et transparent</h1></div>
+    <div className="g3" style={{maxWidth:880,margin:'0 auto',gap:12}}>
+      {[{n:'Débutant',p:'Gratuit',c:'var(--t2)',pop:false,feats:['1 boutique','50 produits','Commission 5%','URL SoukDrop','Wave & Orange Money','QR Code inclus','Produits personnels'],cta:'Démarrer gratuitement',a:'/register'},
+       {n:'Pro',p:'9 900 FCFA/mois',c:'var(--lime)',pop:true,feats:['3 boutiques','500 produits','Commission 2%','Support prioritaire','Domaine personnalisé','Analytics','Multi-fournisseurs'],cta:'Choisir Pro',a:'/register?plan=pro'},
+       {n:'Entreprise',p:'24 900 FCFA/mois',c:'var(--amb)',pop:false,feats:['Boutiques illimitées','Produits illimités','Commission 0%','Manager dédié','API complete','Marque blanche'],cta:'Nous contacter',a:'/'}].map((pl,i)=>(
+        <div key={i} className="card" style={{padding:26,position:'relative',border:pl.pop?'1px solid rgba(200,240,77,.28)':'1px solid var(--b)'}}>
+          {pl.pop&&<div style={{position:'absolute',top:-1,left:'50%',transform:'translateX(-50%)',background:'var(--lime)',color:'#09090E',fontSize:9,fontWeight:900,padding:'3px 13px',borderRadius:'0 0 8px 8px',fontFamily:'var(--fd)'}}>RECOMMANDE</div>}
+          <div style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:17,marginBottom:3}}>{pl.n}</div>
+          <div style={{fontFamily:'var(--fd)',fontWeight:900,fontSize:30,color:pl.c,marginBottom:16,letterSpacing:'-.02em',lineHeight:1.1}}>{pl.p}</div>
+          <div className="div_"/>
+          <div style={{display:'flex',flexDirection:'column',gap:9,marginBottom:20}}>{pl.feats.map((f,j)=><div key={j} style={{display:'flex',gap:8,fontSize:12,color:'var(--t2)'}}><span style={{color:'var(--ok)',flexShrink:0}}>✓</span>{f}</div>)}</div>
+          <button className={'btn bfw '+(pl.pop?'bl':'bo')} onClick={()=>pl.id==='Débutant'?pl.id==='starter'?go(pl.a):T.inf('Contactez-nous sur WhatsApp +221 77 029 96 03 pour activer le plan '+pl.n):T.inf('Contactez-nous sur WhatsApp : +221 77 029 96 03 pour activer le plan '+pl.n)}>{pl.cta}</button>
+        </div>
+      ))}
+    </div>
+  </div>
+  <Footer/>
+</div>);}
+
+function App(){
+  const route=useRoute();const {user}=useAuth();
+  const r=route.split('?')[0];
+  const page=()=>{
+    if(r==='/'||r==='')return 'land';if(r==='/marketplace')return 'market';
+    if(r.startsWith('/store/'))return 'store';if(r==='/login')return 'login';
+    if(r==='/register')return 'reg';if(r==='/dashboard')return 'dash';
+    if(r==='/platform-admin')return 'admin';if(r==='/panier')return 'cart';
+    if(r==='/commande/succes')return 'success';
+    if(r==='/commande')return 'checkout';
+    if(r.startsWith('/produit/'))return 'produit';
+    if(r==='/pricing')return 'pricing';
+    return 'land';
+  };
+  const p=page();const slug__=route.split('/store/')[1]?.split('?')[0];
+  const produitId=route.split('/produit/')[1]?.split('?')[0];
+  useEffect(()=>{if(p==='dash'&&!user)go('/login');if(p==='admin'&&user?.role!=='platform_admin')go('/login')},[p,user]);
+  const pages={land:<Landing/>,market:<Marketplace/>,store:<StorePage slug_={slug__}/>,login:<LoginPage/>,reg:<RegisterPage/>,dash:user?<SellerDashboard/>:null,admin:user?.role==='platform_admin'?<PlatformAdmin/>:null,cart:<CartPage/>,checkout:<CheckoutPage/>,success:<SuccessPage/>,pricing:<PricingPage/>,produit:<ProductPage id={produitId}/>};
+  return(<div style={{minHeight:'100vh',display:'flex',flexDirection:'column'}}><Navbar route={route}/><div style={{flex:1,animation:'fadeUp .35s ease'}} key={p}>{pages[p]||<Landing/>}</div></div>);
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<AuthProvider><CartProvider><App/></CartProvider></AuthProvider>);
+</script>
+</body>
+</html>
+
+
+
+
+
