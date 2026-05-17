@@ -403,7 +403,7 @@ app.post('/api/orders/create', async (req, res) => {
       });
     }
     
-    res.json({ success: true, data: order, paymentUrl });
+    if (!paymentUrl) { return res.status(500).json({ success: false, error: 'Paiement indisponible: ' + (paytechError || 'Erreur PayTech'), data: order }); } res.json({ success: true, data: order, paymentUrl });
   } catch (e) {
     res.status(500).json({ success: false, error: e.message });
   }
