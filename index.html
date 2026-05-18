@@ -617,8 +617,11 @@ function RegisterPage(){
 function SellerDashboard(){
   const {user,logout}=useAuth();const [tab,setTab]=useState('overview');
   const [products,setProducts]=useState([]);
-  const [orders]=useState([{id:'ORD-1234',client:'Amadou Ba',total:47500,status:'paid',date:"Aujourd'hui",sup:'cj'},{id:'ORD-1233',client:'Fatou Sow',total:22000,status:'paid',date:'Hier',sup:'dakar'},{id:'ORD-1232',client:'Omar Diallo',total:86000,status:'shipped',date:'3 jan',sup:'cj'}]);
-  useEffect(()=>{apiCall('/api/products?limit=100').then(d=>setProducts((d.data||[]).length>0?d.data:DEMO.slice(0,4)))},[]);
+  const [orders,setOrders]=useState([]);
+  useEffect(()=>{
+    apiCall('/api/products?limit=100').then(d=>setProducts(d.data||[]));
+    apiCall('/api/admin/orders').then(d=>setOrders(d.data||[])).catch(()=>{});
+  },[]);
   const [cjR,setCjR]=useState([]);const [kw,setKw]=useState('');const [searching,setSrch]=useState(false);
   const [impSt,setImpSt]=useState({});const [selSup,setSelSup]=useState('cj');
   const [cjPage,setCjPage]=useState(1);const [cjTotal,setCjTotal]=useState(0);const [cjCat,setCjCat]=useState('');
@@ -626,8 +629,8 @@ function SellerDashboard(){
   const [payoutModal,setPayoutModal]=useState(false);
   const [wave,setWave]=useState(user?.wave||'');const [om,setOm]=useState(user?.om||'');
   const [own,setOwn]=useState({name:'',price:'',cat:'',desc:'',stock:'',images:[]});
-  const storeUrl='soukdrop.sn/'+(user?.store?.slug||'ma-boutique');
-  const paidRev=orders.filter(o=>o.status==='paid'||o.status==='shipped').reduce((s,o)=>s+o.total,0);
+  const storeUrl=`${window.location.origin}/#/store/${user?.store?.slug||'ma-boutique'}`;
+  const paidRev=orders.filter(o=>o.status==='paid'||o.status==='shipped').reduce((s,o)=>s+(o.total_fcfa||0),0);
   const comm=Math.round(paidRev*(CFG.COMM[user?.plan||'starter']));const net=paidRev-comm;
 
   const loadCJ=async(page=1,keyword='',cat='')=>{
