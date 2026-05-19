@@ -1,0 +1,1228 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>SoukDrop — Livraison rapide au Sénégal</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --bg:#0A0A0F;--bg2:#111118;--surf:#16161F;--pan:#1D1D28;
+  --b:rgba(255,255,255,.06);--bm:rgba(255,255,255,.12);
+  --lime:#B9FF4B;--ld:rgba(185,255,75,.12);--ldb:rgba(185,255,75,.06);
+  --pur:#7C3AED;--purl:rgba(124,58,237,.15);
+  --t1:#FAFAFA;--t2:rgba(250,250,250,.65);--t3:rgba(250,250,250,.35);--t4:rgba(250,250,250,.15);
+  --ok:#22C55E;--err:#F43F5E;--warn:#F59E0B;--info:#3B82F6;
+  --ff:'Plus Jakarta Sans',sans-serif;
+  --r6:6px;--r10:10px;--r14:14px;--r20:20px;--r28:28px;--rf:9999px;
+  --sh:0 2px 12px rgba(0,0,0,.4);--shx:0 12px 40px rgba(0,0,0,.6);
+  --tr:.15s ease;--mw:1320px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff);background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+input,select,textarea{font-family:inherit;font-size:inherit}
+::selection{background:var(--lime);color:#000}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--bm);border-radius:2px}
+.w{max-width:var(--mw);margin:0 auto;padding:0 24px}
+@media(max-width:640px){.w{padding:0 16px}}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 20px;border-radius:var(--r10);font-family:var(--ff);font-weight:700;font-size:14px;transition:all var(--tr);white-space:nowrap;cursor:pointer;border:1.5px solid transparent}
+.btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+.bl{background:var(--lime);color:#000;border-color:var(--lime)}.bl:hover{background:#c8ff5a;transform:translateY(-1px);box-shadow:0 6px 20px rgba(185,255,75,.3)}
+.bo{background:transparent;color:var(--t1);border-color:var(--bm)}.bo:hover{border-color:var(--lime);color:var(--lime)}
+.bg_{background:var(--surf);color:var(--t2);border-color:var(--b)}.bg_:hover{border-color:var(--bm);color:var(--t1)}
+.bpurp{background:var(--pur);color:#fff;border-color:var(--pur)}.bpurp:hover{background:#6d28d9}
+.bd{background:rgba(244,63,94,.1);color:var(--err);border-color:rgba(244,63,94,.2)}
+.bsm{padding:6px 12px;font-size:12px;border-radius:var(--r6)}.blg{padding:13px 26px;font-size:16px}.bxl{padding:16px 32px;font-size:17px}.bfw{width:100%}
+
+/* Cards */
+.card{background:var(--surf);border:1px solid var(--b);border-radius:var(--r20);transition:border-color var(--tr)}
+.card:hover{border-color:var(--bm)}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:var(--rf);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.bgl{background:var(--ld);color:var(--lime)}.bgr{background:rgba(244,63,94,.1);color:var(--err)}.bgg{background:rgba(34,197,94,.1);color:var(--ok)}.bgy{background:rgba(245,158,11,.1);color:var(--warn)}.bgb{background:rgba(59,130,246,.1);color:var(--info)}.bgn{background:var(--surf);color:var(--t3);border:1px solid var(--b)}.bgp{background:var(--purl);color:#a78bfa}
+
+/* Forms */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.lbl{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em}
+.inp{width:100%;padding:10px 14px;background:var(--bg2);border:1.5px solid var(--b);border-radius:var(--r10);font-size:14px;color:var(--t1);transition:border-color var(--tr);outline:none}
+.inp:focus{border-color:var(--lime);box-shadow:0 0 0 3px var(--ldb)}.inp::placeholder{color:var(--t4)}
+
+/* Nav */
+#nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(10,10,15,.9);backdrop-filter:blur(24px);border-bottom:1px solid var(--b)}
+
+/* Sidebar */
+.sb{width:224px;background:var(--bg2);border-right:1px solid var(--b);padding:16px 8px;position:sticky;top:60px;height:calc(100vh - 60px);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sbtn{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:var(--r10);cursor:pointer;background:transparent;color:var(--t3);font-size:13px;font-weight:500;text-align:left;transition:all var(--tr);width:100%;border:none}
+.sbtn:hover{background:var(--surf);color:var(--t1)}.sbtn.on{background:var(--ld);color:var(--lime);font-weight:700}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.fu{animation:fadeUp .35s ease both}.fi{animation:fadeIn .25s ease both}
+.spin_{width:28px;height:28px;border:2px solid var(--b);border-top-color:var(--lime);border-radius:50%;animation:spin .6s linear infinite;margin:48px auto}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ok);animation:pulse 2s infinite;display:inline-block}
+#toasts{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column-reverse;gap:8px;z-index:9999;pointer-events:none}
+.toast{display:flex;align-items:center;gap:8px;padding:10px 15px;border-radius:var(--r10);font-size:13px;font-weight:600;max-width:320px;animation:fadeUp .25s ease;pointer-events:all;box-shadow:var(--shx);border:1px solid}
+.tok{background:var(--surf);border-color:rgba(34,197,94,.3);color:var(--ok)}.terr{background:var(--surf);border-color:rgba(244,63,94,.3);color:var(--err)}.tinf{background:var(--surf);border-color:var(--bm);color:var(--t1)}
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:600;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px);animation:fadeIn .2s ease}
+.modal{background:var(--bg2);border:1px solid var(--bm);border-radius:var(--r28);max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shx);animation:fadeUp .25s ease;padding:28px}
+.tabs{display:flex;gap:2px;background:var(--bg2);padding:3px;border-radius:var(--r10)}
+.tab{padding:7px 13px;font-weight:700;font-size:12px;border-radius:var(--r6);cursor:pointer;transition:all var(--tr);color:var(--t3);background:transparent;border:none;white-space:nowrap}
+.tab.on{background:var(--surf);color:var(--t1);box-shadow:var(--sh)}
+.tbl{overflow-x:auto;border-radius:var(--r14);border:1px solid var(--b)}
+table{width:100%;border-collapse:collapse}thead tr{background:var(--bg2)}
+th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);white-space:nowrap}
+td{padding:11px 14px;font-size:13px;color:var(--t2);border-top:1px solid var(--b)}
+tbody tr:hover td{background:rgba(255,255,255,.015)}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:900px){.g3{grid-template-columns:repeat(2,1fr)}.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+@media(max-width:640px){.pgrid{grid-template-columns:repeat(2,1fr);gap:8px}}
+.sc{background:var(--surf);border:1px solid var(--b);border-radius:var(--r14);padding:16px 18px}
+.pill{display:inline-block;padding:4px 11px;border-radius:var(--rf);font-size:12px;font-weight:600;background:var(--surf);border:1px solid var(--b);color:var(--t2);cursor:pointer;transition:all var(--tr)}
+.pill:hover,.pill.on{background:var(--ld);border-color:rgba(185,255,75,.25);color:var(--lime)}
+.div_{height:1px;background:var(--b);margin:14px 0}
+.gt{background:linear-gradient(135deg,var(--lime),#A8EDEA,#B9FF4B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ellipsis{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.c2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="toasts"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef,useContext,createContext}=React;
+
+// ── Config ────────────────────────────────────────────────────────
+const BASE=window.location.origin;
+const ADMIN_EMAIL='ameth29.130@gmail.com';
+const ADMIN_PASS='Ameth123';
+const PLANS={
+  starter:{id:'starter',name:'Starter',price:0,label:'Gratuit',comm:.05,max:50,icon:'🌱'},
+  pro:{id:'pro',name:'Pro',price:9900,label:'9 900 FCFA/mois',comm:.02,max:500,icon:'⚡'},
+  business:{id:'business',name:'Business',price:24900,label:'24 900 FCFA/mois',comm:0,max:999999,icon:'💎'}
+};
+
+// ── Utils ─────────────────────────────────────────────────────────
+const go=p=>{window.location.hash=p;window.scrollTo(0,0)};
+const route=()=>decodeURIComponent(window.location.hash.slice(1)||'/');
+const fcfa=n=>new Intl.NumberFormat('fr-SN',{style:'currency',currency:'XOF',maximumFractionDigits:0}).format(n||0);
+const slug_=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+
+const T={
+  show:(m,c)=>{const el=document.createElement('div');el.className='toast '+c;el.textContent=m;const ct=document.getElementById('toasts');ct.appendChild(el);setTimeout(()=>el.remove(),3600)},
+  ok:m=>T.show(m,'tok'),err:m=>T.show(m,'terr'),inf:m=>T.show(m,'tinf')
+};
+
+async function api(path,opts={}){
+  const h={'Content-Type':'application/json',...(opts.headers||{})};
+  h['x-admin-token']=sessionStorage.getItem('sd_tok')||'ADMIN_TOK';
+  try{
+    const r=await fetch(BASE+path,{...opts,headers:h});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d?.error||'Erreur '+r.status);
+    return d;
+  }catch(e){
+    if(e.message.includes('Failed to fetch'))return{success:false,data:[],total:0,error:'Hors ligne'};
+    throw e;
+  }
+}
+
+// ── Auth ──────────────────────────────────────────────────────────
+const AuthCtx=createContext(null);
+function AuthProvider({children}){
+  const [user,setUser]=useState(()=>{try{const s=sessionStorage.getItem('sd_u');return s?JSON.parse(s):null}catch{return null}});
+  const login=u=>{setUser(u);sessionStorage.setItem('sd_u',JSON.stringify(u));if(u.token)sessionStorage.setItem('sd_tok',u.token)};
+  const logout=()=>{setUser(null);sessionStorage.removeItem('sd_u');sessionStorage.removeItem('sd_tok');go('/')};
+  return <AuthCtx.Provider value={{user,login,logout}}>{children}</AuthCtx.Provider>;
+}
+const useAuth=()=>useContext(AuthCtx);
+
+// ── Cart ──────────────────────────────────────────────────────────
+const CartCtx=createContext(null);
+function CartProvider({children}){
+  const [items,setItems]=useState([]);
+  const add=(p,qty=1)=>setItems(prev=>{const k=p.id;const ex=prev.find(i=>i.key===k);if(ex)return prev.map(i=>i.key===k?{...i,qty:i.qty+qty}:i);return[...prev,{key:k,id:p.id,name:p.name,price:p.price_fcfa,img:(p.images||[])[0]||'',qty,cj_pid:p.cj_pid}]});
+  const rm=k=>setItems(p=>p.filter(i=>i.key!==k));
+  const setQ=(k,q)=>q<=0?rm(k):setItems(p=>p.map(i=>i.key===k?{...i,qty:q}:i));
+  const clear=()=>setItems([]);
+  const sub=items.reduce((s,i)=>s+i.price*i.qty,0);
+  const count=items.reduce((s,i)=>s+i.qty,0);
+  return <CartCtx.Provider value={{items,add,rm,setQ,clear,sub,count}}>{children}</CartCtx.Provider>;
+}
+const useCart=()=>useContext(CartCtx);
+
+// ── Stat Card ─────────────────────────────────────────────────────
+function SC({icon,label,val,sub,color}){
+  return <div className="sc">
+    <div style={{fontSize:20,marginBottom:8}}>{icon}</div>
+    <div style={{fontSize:11,color:'var(--t3)',fontWeight:700,textTransform:'uppercase',letterSpacing:'.05em',marginBottom:3}}>{label}</div>
+    <div style={{fontWeight:900,fontSize:22,color:color||'var(--t1)'}}>{val}</div>
+    {sub&&<div style={{fontSize:11,color:'var(--t3)',marginTop:2}}>{sub}</div>}
+  </div>;
+}
+
+// ── Product Card ──────────────────────────────────────────────────
+function PCard({p}){
+  const {add}=useCart();
+  const img=(p.images||[])[0]||'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&q=70';
+  return <div className="card" style={{display:'flex',flexDirection:'column',overflow:'hidden',cursor:'pointer'}} onClick={()=>go('/produit/'+p.id)}>
+    <div style={{aspectRatio:'1',background:'var(--pan)',overflow:'hidden',position:'relative',flexShrink:0}}>
+      <img src={img} alt={p.name} style={{width:'100%',height:'100%',objectFit:'cover',transition:'transform .4s'}} onMouseEnter={e=>e.target.style.transform='scale(1.07)'} onMouseLeave={e=>e.target.style.transform='scale(1)'} onError={e=>e.target.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&q=70'}/>
+      <div style={{position:'absolute',top:8,left:8}}><span className="badge bgl" style={{fontSize:8}}>En stock</span></div>
+    </div>
+    <div style={{padding:'12px 13px 14px',flex:1,display:'flex',flexDirection:'column',gap:5}}>
+      <div style={{fontSize:10,color:'var(--t4)',fontWeight:600,textTransform:'uppercase'}}>{p.category||'Général'}</div>
+      <p className="c2" style={{fontSize:13,fontWeight:600,lineHeight:1.4,flex:1}}>{p.name}</p>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:4}}>
+        <span style={{fontWeight:900,fontSize:15,color:'var(--lime)'}}>{fcfa(p.price_fcfa)}</span>
+        <button className="btn bl bsm" style={{fontSize:10,padding:'5px 10px'}} onClick={e=>{e.stopPropagation();add(p);T.ok('Ajouté !')}}>+ Panier</button>
+      </div>
+    </div>
+  </div>;
+}
+
+// ── Footer ────────────────────────────────────────────────────────
+function Footer(){
+  return <footer style={{borderTop:'1px solid var(--b)',padding:'48px 0 28px',marginTop:80}}>
+    <div className="w">
+      <div className="g4" style={{marginBottom:36}}>
+        <div>
+          <div style={{fontWeight:900,fontSize:20,color:'var(--lime)',marginBottom:10}}>SoukDrop</div>
+          <p style={{fontSize:12,color:'var(--t3)',lineHeight:1.9}}>La boutique en ligne de référence au Sénégal.<br/>Produits de qualité, livraison rapide.</p>
+          <div style={{marginTop:12,display:'flex',gap:8}}>
+            <button className="btn bl bsm" onClick={()=>window.open('https://wa.me/221770299603?text=Bonjour SoukDrop')}>💬 WhatsApp</button>
+          </div>
+        </div>
+        <div>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:12}}>Boutique</div>
+          {['Tous les produits','Nouveautés','Promotions','Livraison'].map(l=><div key={l} style={{fontSize:13,color:'var(--t2)',marginBottom:8,cursor:'pointer'}} onClick={()=>go('/marketplace')}>{l}</div>)}
+        </div>
+        <div>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:12}}>Vendeurs</div>
+          {['Créer ma boutique','Tarifs','Se connecter','Support'].map(l=><div key={l} style={{fontSize:13,color:'var(--t2)',marginBottom:8,cursor:'pointer'}} onClick={()=>go('/register')}>{l}</div>)}
+        </div>
+        <div>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:12}}>Contact</div>
+          <div style={{fontSize:13,color:'var(--t2)',marginBottom:8}}>📱 +221 77 029 96 03</div>
+          <div style={{fontSize:13,color:'var(--t2)',marginBottom:8}}>📧 support@soukdrop.sn</div>
+          <div style={{fontSize:13,color:'var(--t2)',marginBottom:8}}>📍 Dakar, Sénégal</div>
+          <div style={{marginTop:12,padding:'10px 12px',background:'var(--surf)',borderRadius:'var(--r10)',border:'1px solid var(--b)'}}>
+            <div style={{fontSize:10,color:'var(--t3)',marginBottom:4}}>Paiements acceptés</div>
+            <div style={{fontSize:12,fontWeight:600}}>💛 Wave · 🟠 Orange Money</div>
+          </div>
+        </div>
+      </div>
+      <div className="div_"/>
+      <div style={{display:'flex',justifyContent:'space-between',fontSize:11,color:'var(--t4)',flexWrap:'wrap',gap:8}}>
+        <span>© 2025 SoukDrop. Tous droits réservés.</span>
+        <span>🔒 Paiements 100% sécurisés · Livraison garantie</span>
+      </div>
+    </div>
+  </footer>;
+}
+
+// ── Navbar ────────────────────────────────────────────────────────
+function Navbar(){
+  const {user,logout}=useAuth();
+  const {count}=useCart();
+  const [clicks,setClicks]=useState(0);
+  const clickLogo=()=>{const n=clicks+1;setClicks(n);if(n>=3){setClicks(0);go(user?.role==='admin'?'/platform-admin':'/platform-admin');}else go('/')};
+  return <nav id="nav">
+    <div className="w" style={{display:'flex',alignItems:'center',justifyContent:'space-between',height:60,gap:12}}>
+      <div style={{display:'flex',alignItems:'center',gap:8,cursor:'pointer',flexShrink:0}} onClick={clickLogo}>
+        <div style={{width:30,height:30,background:'var(--lime)',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:900,fontSize:13,color:'#000'}}>S</div>
+        <span style={{fontWeight:900,fontSize:17}}>SoukDrop</span>
+      </div>
+      <div style={{display:'flex',gap:6,alignItems:'center',flexWrap:'wrap'}}>
+        <button className="btn bg_ bsm" onClick={()=>go('/marketplace')}>🛒 Boutique</button>
+        <button className="btn bg_ bsm" onClick={()=>go('/pricing')}>Tarifs</button>
+        <button className="btn bg_ bsm" style={{position:'relative'}} onClick={()=>go('/panier')}>
+          🛍️ Panier{count>0&&<span style={{position:'absolute',top:-5,right:-5,background:'var(--lime)',color:'#000',borderRadius:'50%',width:16,height:16,display:'flex',alignItems:'center',justifyContent:'center',fontSize:9,fontWeight:900}}>{count}</span>}
+        </button>
+        {user?<>
+          <button className="btn bpurp bsm" onClick={()=>go(user.role==='admin'?'/platform-admin':'/dashboard')}>
+            {user.role==='admin'?'⚡ Admin':'📊 Dashboard'}
+          </button>
+          <button className="btn bd bsm" onClick={logout}>Quitter</button>
+        </>:<>
+          <button className="btn bo bsm" onClick={()=>go('/login')}>Connexion</button>
+          <button className="btn bl bsm" onClick={()=>go('/register')}>Créer ma boutique</button>
+        </>}
+      </div>
+    </div>
+  </nav>;
+}
+
+// ── Landing ───────────────────────────────────────────────────────
+function Landing(){
+  const [prods,setProds]=useState([]);const [load,setLoad]=useState(true);
+  useEffect(()=>{api('/api/products?limit=8').then(d=>setProds(d.data||[])).finally(()=>setLoad(false))},[]);
+  return <div>
+    {/* Hero */}
+    <div style={{paddingTop:60,background:`linear-gradient(135deg, #0A0A0F 0%, #0D1117 40%, #0A0A0F 100%)`,position:'relative',overflow:'hidden'}}>
+      <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse 70% 60% at 80% -10%,rgba(185,255,75,.06),transparent 60%),radial-gradient(ellipse 50% 70% at -10% 80%,rgba(124,58,237,.05),transparent 50%)'}}/>
+      <div className="w" style={{position:'relative',zIndex:1,padding:'80px 24px 80px'}}>
+        <div style={{maxWidth:680}}>
+          <div style={{display:'inline-flex',alignItems:'center',gap:7,background:'var(--ld)',border:'1px solid rgba(185,255,75,.2)',borderRadius:'var(--rf)',padding:'5px 14px',fontSize:12,fontWeight:700,color:'var(--lime)',marginBottom:24}}>
+            <span className="dot"/>Livraison rapide partout au Sénégal
+          </div>
+          <h1 style={{fontSize:'clamp(34px,5.5vw,64px)',fontWeight:900,lineHeight:1.05,marginBottom:20,letterSpacing:'-0.02em'}}>
+            Vos produits<br/>préférés livrés<br/><span className="gt">chez vous</span>
+          </h1>
+          <p style={{fontSize:17,color:'var(--t2)',lineHeight:1.75,marginBottom:36,maxWidth:520}}>
+            Des milliers de produits de qualité disponibles. Paiement simple via Wave ou Orange Money. Livraison assurée.
+          </p>
+          <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
+            <button className="btn bl bxl" onClick={()=>go('/marketplace')}>🛒 Découvrir les produits</button>
+            <button className="btn bo blg" onClick={()=>go('/register')}>Vendre sur SoukDrop →</button>
+          </div>
+          <div style={{display:'flex',gap:32,marginTop:40,flexWrap:'wrap'}}>
+            {[['Wave & OM','Paiement facile'],['Livraison','Partout au Sénégal'],['Support','7j/7 sur WhatsApp'],['Retour','Satisfait ou remboursé']].map(([v,l])=>(
+              <div key={l}><div style={{fontWeight:900,fontSize:14,color:'var(--lime)',marginBottom:2}}>{v}</div><div style={{fontSize:11,color:'var(--t3)'}}>{l}</div></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Produits */}
+    <div className="w" style={{padding:'64px 24px'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
+        <div>
+          <h2 style={{fontWeight:900,fontSize:26,marginBottom:4}}>Produits populaires</h2>
+          <p style={{color:'var(--t3)',fontSize:13}}>Sélection de nos meilleures ventes</p>
+        </div>
+        <button className="btn bo" onClick={()=>go('/marketplace')}>Voir tout →</button>
+      </div>
+      {load?<div className="spin_"/>:<div className="pgrid">{prods.slice(0,8).map(p=><PCard key={p.id} p={p}/>)}</div>}
+    </div>
+
+    {/* Avantages */}
+    <div style={{background:'var(--bg2)',borderTop:'1px solid var(--b)',borderBottom:'1px solid var(--b)',padding:'60px 0'}}>
+      <div className="w">
+        <h2 style={{fontWeight:900,fontSize:24,textAlign:'center',marginBottom:40}}>Pourquoi choisir SoukDrop ?</h2>
+        <div className="g4">
+          {[['🚚','Livraison rapide','Vos commandes livrées en 15-25 jours partout au Sénégal.'],
+            ['💳','Paiement local','Wave et Orange Money acceptés. Simple et sécurisé.'],
+            ['🔒','Achat sécurisé','Vos données et paiements sont 100% protégés.'],
+            ['📞','Support 7j/7','Notre équipe est disponible sur WhatsApp pour vous aider.']].map(([ico,t,d])=>(
+            <div key={t} style={{textAlign:'center',padding:'0 8px'}}>
+              <div style={{fontSize:36,marginBottom:14}}>{ico}</div>
+              <h3 style={{fontWeight:800,fontSize:14,marginBottom:8}}>{t}</h3>
+              <p style={{fontSize:12,color:'var(--t3)',lineHeight:1.8}}>{d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    {/* CTA Vendeurs */}
+    <div style={{padding:'80px 24px',textAlign:'center'}}>
+      <div style={{maxWidth:600,margin:'0 auto'}}>
+        <span className="badge bgl" style={{marginBottom:16}}>Pour les entrepreneurs</span>
+        <h2 style={{fontWeight:900,fontSize:32,marginBottom:14,letterSpacing:'-0.02em'}}>Lancez votre boutique en ligne</h2>
+        <p style={{color:'var(--t2)',marginBottom:28,fontSize:15,lineHeight:1.75}}>Créez votre boutique gratuitement, importez des produits et commencez à vendre. Commission seulement sur les ventes.</p>
+        <div style={{display:'flex',gap:12,justifyContent:'center',flexWrap:'wrap'}}>
+          <button className="btn bl bxl" onClick={()=>go('/register')}>Créer ma boutique gratuite</button>
+          <button className="btn bo blg" onClick={()=>go('/pricing')}>Voir les tarifs</button>
+        </div>
+      </div>
+    </div>
+    <Footer/>
+  </div>;
+}
+
+// ── Marketplace ───────────────────────────────────────────────────
+function Marketplace(){
+  const [prods,setProds]=useState([]);const [load,setLoad]=useState(true);
+  const [cats,setCats]=useState([]);const [cat,setCat]=useState('');const [search,setSearch]=useState('');
+  useEffect(()=>{api('/api/categories').then(d=>setCats(d.data||[]))},[]);
+  useEffect(()=>{
+    setLoad(true);
+    const p=new URLSearchParams({limit:'40'});if(cat)p.set('category',cat);if(search)p.set('search',search);
+    api('/api/products?'+p).then(d=>setProds(d.data||[])).finally(()=>setLoad(false));
+  },[cat,search]);
+  return <div style={{paddingTop:60}}>
+    <div style={{background:'var(--bg2)',borderBottom:'1px solid var(--b)',padding:'24px 0'}}>
+      <div className="w">
+        <h1 style={{fontWeight:900,fontSize:26,marginBottom:5}}>Boutique</h1>
+        <p style={{color:'var(--t3)',fontSize:13,marginBottom:16}}>Tous nos produits · Livraison au Sénégal</p>
+        <div style={{display:'flex',gap:9,flexWrap:'wrap',alignItems:'center'}}>
+          <input className="inp" placeholder="🔍 Rechercher un produit..." value={search} onChange={e=>setSearch(e.target.value)} style={{width:240,padding:'8px 13px',fontSize:13}}/>
+          <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
+            <span className={'pill'+(cat===''?' on':'')} onClick={()=>setCat('')}>Tout</span>
+            {cats.map(c=><span key={c.slug} className={'pill'+(cat===c.name?' on':'')} onClick={()=>setCat(cat===c.name?'':c.name)}>{c.icon} {c.name}</span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="w" style={{padding:'28px 24px 60px'}}>
+      {load?<div className="spin_"/>:prods.length===0?
+        <div style={{textAlign:'center',padding:'80px 20px'}}><div style={{fontSize:48,marginBottom:12}}>📦</div><p style={{color:'var(--t3)',fontSize:14}}>Aucun produit trouvé</p></div>:
+        <div className="pgrid">{prods.map(p=><PCard key={p.id} p={p}/>)}</div>}
+    </div>
+    <Footer/>
+  </div>;
+}
+
+// ── Product Page ──────────────────────────────────────────────────
+function ProductPage({id}){
+  const {add}=useCart();const [p,setP]=useState(null);const [load,setLoad]=useState(true);const [qty,setQty]=useState(1);const [imgIdx,setImgIdx]=useState(0);
+  useEffect(()=>{if(!id){go('/marketplace');return;}api('/api/products/'+id).then(d=>{if(d.success)setP(d.data);else go('/marketplace');}).finally(()=>setLoad(false))},[id]);
+  if(load)return<div style={{paddingTop:100,textAlign:'center'}}><div className="spin_"/></div>;
+  if(!p)return null;
+  const imgs=p.images?.length?p.images:['https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600'];
+  return <div style={{paddingTop:60,minHeight:'100vh'}}>
+    <div className="w" style={{padding:'40px 24px 80px'}}>
+      <button className="btn bg_ bsm" style={{marginBottom:24}} onClick={()=>history.back()}>← Retour</button>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:48,alignItems:'start'}}>
+        <div>
+          <div style={{aspectRatio:'1',borderRadius:'var(--r20)',overflow:'hidden',background:'var(--bg2)',marginBottom:10}}>
+            <img src={imgs[imgIdx]} alt={p.name} style={{width:'100%',height:'100%',objectFit:'cover'}} onError={e=>e.target.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600'}/>
+          </div>
+          {imgs.length>1&&<div style={{display:'flex',gap:8}}>
+            {imgs.slice(0,6).map((im,i)=><div key={i} onClick={()=>setImgIdx(i)} style={{width:60,height:60,borderRadius:'var(--r6)',overflow:'hidden',border:'2px solid '+(imgIdx===i?'var(--lime)':'var(--b)'),cursor:'pointer',flexShrink:0}}>
+              <img src={im} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+            </div>)}
+          </div>}
+        </div>
+        <div>
+          <span className="badge bgn" style={{marginBottom:12}}>{p.category}</span>
+          <h1 style={{fontWeight:900,fontSize:26,marginBottom:12,lineHeight:1.2,letterSpacing:'-0.01em'}}>{p.name}</h1>
+          <div style={{fontWeight:900,fontSize:36,color:'var(--lime)',marginBottom:8}}>{fcfa(p.price_fcfa)}</div>
+          <span className="badge bgg" style={{marginBottom:20}}>✓ En stock · Livraison disponible</span>
+          {p.description&&<p style={{color:'var(--t2)',fontSize:13,lineHeight:1.85,marginBottom:24}}>{p.description}</p>}
+          <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:20}}>
+            <span style={{fontSize:13,color:'var(--t3)',fontWeight:600}}>Qté :</span>
+            <div style={{display:'flex',alignItems:'center',gap:10,background:'var(--bg2)',border:'1px solid var(--b)',borderRadius:'var(--r10)',padding:'4px 8px'}}>
+              <button onClick={()=>setQty(q=>Math.max(1,q-1))} style={{width:26,height:26,borderRadius:'var(--r6)',background:'var(--surf)',border:'1px solid var(--b)',color:'var(--t1)',fontWeight:700,fontSize:15}}>−</button>
+              <span style={{fontWeight:700,fontSize:14,minWidth:22,textAlign:'center'}}>{qty}</span>
+              <button onClick={()=>setQty(q=>q+1)} style={{width:26,height:26,borderRadius:'var(--r6)',background:'var(--surf)',border:'1px solid var(--b)',color:'var(--t1)',fontWeight:700,fontSize:15}}>+</button>
+            </div>
+          </div>
+          <div style={{display:'flex',gap:10,marginBottom:20}}>
+            <button className="btn bl blg" style={{flex:1}} onClick={()=>{add(p,qty);T.ok('Ajouté au panier !')}}>🛒 Ajouter au panier</button>
+            <button className="btn bpurp" onClick={()=>{add(p,qty);go('/commande')}}>Acheter →</button>
+          </div>
+          <div style={{padding:14,background:'var(--surf)',borderRadius:'var(--r14)',border:'1px solid var(--b)',fontSize:12,color:'var(--t3)',lineHeight:2}}>
+            🚚 Livraison au Sénégal · 15-25 jours ouvrés<br/>
+            💳 Wave & Orange Money acceptés<br/>
+            📦 Expédié sous 24-48h après confirmation paiement<br/>
+            🔄 Retour possible sous 7 jours
+          </div>
+        </div>
+      </div>
+    </div>
+    <Footer/>
+  </div>;
+}
+
+// ── Store Page ────────────────────────────────────────────────────
+function StorePage({slug_}){
+  const [store,setStore]=useState(null);const [prods,setProds]=useState([]);const [load,setLoad]=useState(true);
+  useEffect(()=>{
+    if(!slug_){go('/marketplace');return;}
+    api('/api/store/'+slug_).then(d=>{if(d.success){setStore(d.data.store);setProds(d.data.products||[]);}else go('/marketplace');}).finally(()=>setLoad(false));
+  },[slug_]);
+  if(load)return<div style={{paddingTop:100,textAlign:'center'}}><div className="spin_"/></div>;
+  if(!store)return null;
+  return <div style={{paddingTop:60}}>
+    <div style={{background:'var(--bg2)',borderBottom:'1px solid var(--b)',padding:'32px 0'}}>
+      <div className="w">
+        <div style={{display:'flex',alignItems:'center',gap:16}}>
+          <div style={{width:60,height:60,borderRadius:'var(--r14)',background:'var(--ld)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:26,border:'1px solid rgba(185,255,75,.2)',flexShrink:0}}>🏪</div>
+          <div>
+            <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap'}}>
+              <h1 style={{fontWeight:900,fontSize:22}}>{store.name}</h1>
+              {store.certified&&<span className="badge bgy">⭐ Vendeur certifié</span>}
+            </div>
+            <p style={{color:'var(--t2)',fontSize:13,marginTop:3}}>{store.description||'Boutique officielle SoukDrop'}</p>
+            <div style={{fontSize:11,color:'var(--t4)',marginTop:4}}>📦 {prods.length} produit{prods.length!==1?'s':''}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="w" style={{padding:'28px 24px 60px'}}>
+      {prods.length===0?<div style={{textAlign:'center',padding:'80px 20px'}}><div style={{fontSize:48,marginBottom:12}}>📦</div><p style={{color:'var(--t3)'}}>Cette boutique n'a pas encore de produits</p></div>:
+      <div className="pgrid">{prods.map(p=><PCard key={p.id} p={p}/>)}</div>}
+    </div>
+    <Footer/>
+  </div>;
+}
+
+// ── Cart ──────────────────────────────────────────────────────────
+function CartPage(){
+  const {items,rm,setQ,sub}=useCart();
+  if(!items.length)return<div style={{paddingTop:60,minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'100px 20px',textAlign:'center'}}>
+    <div><div style={{fontSize:56,marginBottom:16}}>🛍️</div><h2 style={{fontWeight:900,fontSize:22,marginBottom:8}}>Panier vide</h2><p style={{color:'var(--t3)',marginBottom:20}}>Ajoutez des produits pour commencer</p><button className="btn bl blg" onClick={()=>go('/marketplace')}>Voir les produits</button></div>
+  </div>;
+  const total=sub+2500;
+  return <div style={{paddingTop:60,minHeight:'100vh',padding:'80px 0 60px'}}>
+    <div className="w">
+      <h1 style={{fontWeight:900,fontSize:24,marginBottom:24}}>Mon panier <span style={{fontSize:14,color:'var(--t3)',fontWeight:500}}>({items.length} article{items.length!==1?'s':''})</span></h1>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 320px',gap:20,alignItems:'start'}}>
+        <div style={{display:'flex',flexDirection:'column',gap:8}}>
+          {items.map(i=><div key={i.key} style={{display:'flex',gap:12,padding:14,background:'var(--surf)',borderRadius:'var(--r14)',border:'1px solid var(--b)',alignItems:'center'}}>
+            <div style={{width:58,height:58,borderRadius:'var(--r10)',overflow:'hidden',background:'var(--bg2)',flexShrink:0}}>
+              <img src={i.img} alt={i.name} style={{width:'100%',height:'100%',objectFit:'cover'}} onError={e=>e.target.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=100'}/>
+            </div>
+            <div style={{flex:1,minWidth:0}}>
+              <div className="ellipsis" style={{fontWeight:600,fontSize:13}}>{i.name}</div>
+              <div style={{fontWeight:900,color:'var(--lime)',fontSize:13,marginTop:3}}>{fcfa(i.price*i.qty)}</div>
+            </div>
+            <div style={{display:'flex',alignItems:'center',background:'var(--bg2)',border:'1px solid var(--b)',borderRadius:'var(--r6)',overflow:'hidden'}}>
+              <button onClick={()=>setQ(i.key,i.qty-1)} style={{width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',color:'var(--t2)',fontWeight:700}}>−</button>
+              <span style={{width:26,textAlign:'center',fontWeight:700,fontSize:12}}>{i.qty}</span>
+              <button onClick={()=>setQ(i.key,i.qty+1)} style={{width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',color:'var(--t2)',fontWeight:700}}>+</button>
+            </div>
+            <button onClick={()=>rm(i.key)} style={{color:'var(--t4)',fontSize:14,padding:'0 4px'}}>✕</button>
+          </div>)}
+        </div>
+        <div className="card" style={{padding:20,position:'sticky',top:72}}>
+          <h3 style={{fontWeight:800,fontSize:14,marginBottom:14}}>Récapitulatif</h3>
+          <div style={{display:'flex',justifyContent:'space-between',fontSize:13,marginBottom:7}}><span style={{color:'var(--t3)'}}>Sous-total</span><span style={{fontWeight:600}}>{fcfa(sub)}</span></div>
+          <div style={{display:'flex',justifyContent:'space-between',fontSize:13,marginBottom:14}}><span style={{color:'var(--t3)'}}>Livraison</span><span style={{fontWeight:600,color:'var(--lime)'}}>{fcfa(2500)}</span></div>
+          <div style={{borderTop:'1px solid var(--b)',paddingTop:12,marginBottom:16}}>
+            <div style={{display:'flex',justifyContent:'space-between',fontWeight:900,fontSize:18}}><span>Total</span><span style={{color:'var(--lime)'}}>{fcfa(total)}</span></div>
+          </div>
+          <button className="btn bl bfw blg" onClick={()=>go('/commande')}>Commander →</button>
+          <p style={{textAlign:'center',marginTop:10,fontSize:11,color:'var(--t4)'}}>🔒 Paiement sécurisé · Wave · Orange Money</p>
+        </div>
+      </div>
+    </div>
+  </div>;
+}
+
+// ── Checkout ──────────────────────────────────────────────────────
+function CheckoutPage(){
+  const {items,sub,clear}=useCart();
+  const [c,setC]=useState({name:'',email:'',phone:'',street:'',city:'Dakar'});
+  const [busy,setBusy]=useState(false);const [err,setErr]=useState('');
+  useEffect(()=>{if(!items.length)go('/panier')},[]);
+  const cities=['Dakar','Thiès','Saint-Louis','Ziguinchor','Kaolack','Mbour','Touba','Diourbel','Rufisque','Louga'];
+  const total=sub+2500;
+  const submit=async()=>{
+    setErr('');
+    if(!c.name||!c.email||!c.phone||!c.street){setErr('Veuillez remplir tous les champs.');return;}
+    if(!c.email.includes('@')){setErr('Email invalide.');return;}
+    if(c.phone.length<8){setErr('Numéro de téléphone invalide.');return;}
+    setBusy(true);
+    try{
+      const res=await api('/api/orders/create',{method:'POST',body:JSON.stringify({
+        items:items.map(i=>({productId:i.id,name:i.name,quantity:i.qty,priceFCFA:i.price,cj_pid:i.cj_pid})),
+        customer:{name:c.name,email:c.email,phone:c.phone,address:{street:c.street,city:c.city}},
+        shippingCostFCFA:2500,logisticName:'Standard'
+      })});
+      if(res.paymentUrl){clear();window.location.href=res.paymentUrl;}
+      else setErr('Erreur paiement: '+(res.error||'Service temporairement indisponible. Réessayez.'));
+    }catch(e){setErr(e.message||'Erreur serveur.');}
+    setBusy(false);
+  };
+  return <div style={{paddingTop:60,minHeight:'100vh',padding:'80px 0 60px'}}>
+    <div className="w">
+      <h1 style={{fontWeight:900,fontSize:24,marginBottom:24}}>Finaliser ma commande</h1>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 340px',gap:20,alignItems:'start'}}>
+        <div style={{display:'flex',flexDirection:'column',gap:16}}>
+          <div className="card" style={{padding:24}}>
+            <h3 style={{fontWeight:800,fontSize:15,marginBottom:16}}>Vos informations</h3>
+            <div className="g2">
+              <div className="field"><label className="lbl">Nom complet *</label><input className="inp" placeholder="Prénom Nom" value={c.name} onChange={e=>setC(p=>({...p,name:e.target.value}))}/></div>
+              <div className="field"><label className="lbl">Email *</label><input className="inp" type="email" placeholder="vous@email.com" value={c.email} onChange={e=>setC(p=>({...p,email:e.target.value}))}/></div>
+            </div>
+            <div className="field"><label className="lbl">Téléphone Wave/OM *</label><input className="inp" placeholder="+221 7X XXX XX XX" value={c.phone} onChange={e=>setC(p=>({...p,phone:e.target.value}))}/></div>
+          </div>
+          <div className="card" style={{padding:24}}>
+            <h3 style={{fontWeight:800,fontSize:15,marginBottom:16}}>Adresse de livraison</h3>
+            <div className="field"><label className="lbl">Adresse *</label><input className="inp" placeholder="Rue, Quartier, N°" value={c.street} onChange={e=>setC(p=>({...p,street:e.target.value}))}/></div>
+            <div className="field"><label className="lbl">Ville *</label>
+              <select className="inp" value={c.city} onChange={e=>setC(p=>({...p,city:e.target.value}))}>
+                {cities.map(v=><option key={v} value={v}>{v}</option>)}
+              </select>
+            </div>
+          </div>
+          {err&&<div style={{padding:12,background:'rgba(244,63,94,.1)',border:'1px solid rgba(244,63,94,.2)',borderRadius:'var(--r10)',fontSize:13,color:'var(--err)',fontWeight:600}}>{err}</div>}
+        </div>
+        <div className="card" style={{padding:20,position:'sticky',top:72}}>
+          <h3 style={{fontWeight:800,fontSize:14,marginBottom:14}}>Votre commande</h3>
+          {items.map(i=><div key={i.key} style={{display:'flex',justifyContent:'space-between',fontSize:12,marginBottom:7,color:'var(--t2)'}}>
+            <span className="ellipsis" style={{maxWidth:160}}>{i.name} ×{i.qty}</span>
+            <span style={{fontWeight:700,flexShrink:0,marginLeft:8}}>{fcfa(i.price*i.qty)}</span>
+          </div>)}
+          <div className="div_"/>
+          <div style={{display:'flex',justifyContent:'space-between',fontSize:13,marginBottom:7}}><span style={{color:'var(--t3)'}}>Sous-total</span><span>{fcfa(sub)}</span></div>
+          <div style={{display:'flex',justifyContent:'space-between',fontSize:13,marginBottom:14}}><span style={{color:'var(--t3)'}}>Livraison</span><span style={{color:'var(--lime)',fontWeight:700}}>{fcfa(2500)}</span></div>
+          <div style={{borderTop:'1px solid var(--b)',paddingTop:12,marginBottom:16}}>
+            <div style={{display:'flex',justifyContent:'space-between',fontWeight:900,fontSize:18}}><span>Total</span><span style={{color:'var(--lime)'}}>{fcfa(total)}</span></div>
+          </div>
+          <button className="btn bl bfw blg" onClick={submit} disabled={busy}>{busy?'⏳ Traitement...':'💳 Payer via Wave/OM'}</button>
+          <p style={{textAlign:'center',marginTop:10,fontSize:11,color:'var(--t4)'}}>🔒 Paiement 100% sécurisé</p>
+        </div>
+      </div>
+    </div>
+  </div>;
+}
+
+// ── Success ───────────────────────────────────────────────────────
+function SuccessPage(){
+  const h=window.location.hash;const orderId=new URLSearchParams(h.includes('?')?h.split('?')[1]:'').get('order')||'';
+  return <div style={{paddingTop:60,minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'80px 20px'}}>
+    <div style={{textAlign:'center',maxWidth:480}}>
+      <div style={{width:80,height:80,background:'var(--ld)',border:'2px solid var(--lime)',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:36,margin:'0 auto 24px',animation:'float 3s ease-in-out infinite'}}>✓</div>
+      <h1 style={{fontWeight:900,fontSize:28,color:'var(--lime)',marginBottom:10}}>Commande confirmée !</h1>
+      <p style={{color:'var(--t2)',marginBottom:8,fontSize:15}}>Merci pour votre achat sur SoukDrop.</p>
+      {orderId&&<p style={{color:'var(--t4)',fontSize:12,marginBottom:24}}>Référence : {orderId.slice(0,12).toUpperCase()}</p>}
+      <div style={{background:'var(--surf)',border:'1px solid var(--b)',borderRadius:'var(--r20)',padding:20,marginBottom:28,textAlign:'left'}}>
+        {[['📧','Email de confirmation envoyé'],['📦','Commande en cours de préparation'],['🚚','Livraison sous 15-25 jours'],['📱','Suivi disponible sur WhatsApp']].map(([ico,t])=>(
+          <div key={t} style={{display:'flex',alignItems:'center',gap:10,padding:'7px 0',borderBottom:'1px solid var(--b)',fontSize:13,color:'var(--t2)'}}><span>{ico}</span>{t}</div>
+        ))}
+      </div>
+      <button className="btn bl blg" onClick={()=>go('/marketplace')}>Continuer mes achats</button>
+    </div>
+  </div>;
+}
+
+// ── Login ─────────────────────────────────────────────────────────
+function LoginPage(){
+  const {login}=useAuth();const [email,setEmail]=useState('');const [pw,setPw]=useState('');const [busy,setBusy]=useState(false);const [err,setErr]=useState('');
+  const doLogin=async()=>{
+    setErr('');setBusy(true);
+    if(email===ADMIN_EMAIL&&pw===ADMIN_PASS){login({id:'admin',name:'Ameth Sy',email:ADMIN_EMAIL,role:'admin',token:'ADMIN_TOK'});T.ok('Bienvenue Admin !');go('/platform-admin');setBusy(false);return;}
+    try{
+      const r=await api('/api/auth/login',{method:'POST',body:JSON.stringify({email,password:pw})});
+      if(r.success){login(r.data);T.ok('Connexion réussie !');go('/dashboard');}
+      else setErr(r.error||'Email ou mot de passe incorrect.');
+    }catch(e){setErr('Email ou mot de passe incorrect.');}
+    setBusy(false);
+  };
+  return <div style={{paddingTop:60,minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'80px 20px'}}>
+    <div style={{width:'100%',maxWidth:400}}>
+      <div style={{textAlign:'center',marginBottom:28}}>
+        <div style={{fontWeight:900,fontSize:22,color:'var(--lime)',marginBottom:4}}>SoukDrop</div>
+        <h2 style={{fontWeight:900,fontSize:24,marginBottom:4}}>Connexion</h2>
+        <p style={{color:'var(--t3)',fontSize:13}}>Accédez à votre espace vendeur</p>
+      </div>
+      <div className="card" style={{padding:28}}>
+        <div className="field"><label className="lbl">Email</label><input className="inp" type="email" placeholder="vous@email.com" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doLogin()}/></div>
+        <div className="field"><label className="lbl">Mot de passe</label><input className="inp" type="password" placeholder="••••••••" value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doLogin()}/></div>
+        {err&&<div style={{padding:10,background:'rgba(244,63,94,.1)',borderRadius:'var(--r6)',fontSize:12,color:'var(--err)',marginBottom:12,fontWeight:600}}>{err}</div>}
+        <button className="btn bl bfw" onClick={doLogin} disabled={busy||!email||!pw}>{busy?'Connexion...':'Se connecter'}</button>
+        <div className="div_"/>
+        <div style={{textAlign:'center',fontSize:13,color:'var(--t3)'}}>Pas de compte ? <button onClick={()=>go('/register')} style={{color:'var(--lime)',fontWeight:700,background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',fontSize:13}}>Créer ma boutique</button></div>
+      </div>
+    </div>
+  </div>;
+}
+
+// ── Register ──────────────────────────────────────────────────────
+function RegisterPage(){
+  const {login}=useAuth();const [step,setStep]=useState(1);
+  const [f,setF]=useState({name:'',email:'',password:'',type:'',storeName:'',storeDesc:'',plan:'starter',wave:'',om:''});
+  const [busy,setBusy]=useState(false);const [err,setErr]=useState('');
+  const u=(k,v)=>setF(p=>({...p,[k]:v}));
+  const TYPES=[{id:'electronique',icon:'📱',n:'Électronique'},{id:'mode',icon:'👗',n:'Mode'},{id:'maison',icon:'🏠',n:'Maison'},{id:'beaute',icon:'💄',n:'Beauté'},{id:'sport',icon:'⚽',n:'Sport'},{id:'general',icon:'🛒',n:'Général'}];
+  const doCreate=async()=>{
+    setErr('');setBusy(true);
+    try{
+      const r=await api('/api/auth/register',{method:'POST',body:JSON.stringify({name:f.name,email:f.email,password:f.password,storeName:f.storeName||f.name+' Shop',storeDesc:f.storeDesc,storeType:f.type,plan:f.plan,wave:f.wave,om:f.om})});
+      if(r.success){login(r.data);T.ok('Boutique créée ! 🎉');go('/dashboard');}
+      else setErr(r.error||'Erreur création compte.');
+    }catch(e){setErr(e.message||'Erreur serveur.');}
+    setBusy(false);
+  };
+  const steps=['Compte','Boutique','Type','Plan','Paiement'];
+  return <div style={{paddingTop:60,minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'80px 20px 40px'}}>
+    <div style={{width:'100%',maxWidth:500}}>
+      <div style={{textAlign:'center',marginBottom:24}}>
+        <div style={{fontWeight:900,fontSize:20,color:'var(--lime)',marginBottom:4}}>SoukDrop</div>
+        <h2 style={{fontWeight:900,fontSize:22}}>Créez votre boutique</h2>
+      </div>
+      {/* Progress */}
+      <div style={{display:'flex',gap:6,marginBottom:24,alignItems:'center'}}>
+        {steps.map((s,i)=><React.Fragment key={s}>
+          <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:3}}>
+            <div style={{width:28,height:28,borderRadius:'50%',background:step>i+1?'var(--lime)':step===i+1?'var(--pur)':'var(--surf)',border:'2px solid '+(step>i+1?'var(--lime)':step===i+1?'var(--pur)':'var(--b)'),display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:900,color:step>i+1?'#000':step===i+1?'#fff':'var(--t4)',transition:'all .3s'}}>
+              {step>i+1?'✓':i+1}
+            </div>
+            <div style={{fontSize:9,color:step===i+1?'var(--lime)':'var(--t4)',fontWeight:600,whiteSpace:'nowrap'}}>{s}</div>
+          </div>
+          {i<steps.length-1&&<div style={{flex:1,height:1.5,background:step>i+1?'var(--lime)':'var(--b)',transition:'background .3s',marginBottom:14}}/>}
+        </React.Fragment>)}
+      </div>
+      <div className="card" style={{padding:28}}>
+        {/* Step 1 */}
+        {step===1&&<div className="fi">
+          <h3 style={{fontWeight:800,fontSize:17,marginBottom:3}}>Vos informations</h3>
+          <p style={{color:'var(--t3)',fontSize:12,marginBottom:18}}>Étape 1 sur 5</p>
+          <div className="field"><label className="lbl">Nom complet *</label><input className="inp" placeholder="Prénom Nom" value={f.name} onChange={e=>u('name',e.target.value)}/></div>
+          <div className="field"><label className="lbl">Email *</label><input className="inp" type="email" placeholder="vous@email.com" value={f.email} onChange={e=>u('email',e.target.value)}/></div>
+          <div className="field"><label className="lbl">Mot de passe *</label><input className="inp" type="password" placeholder="Minimum 6 caractères" value={f.password} onChange={e=>u('password',e.target.value)}/></div>
+          <button className="btn bl bfw" onClick={()=>setStep(2)} disabled={!f.name||!f.email||f.password.length<6}>Continuer →</button>
+          <div style={{textAlign:'center',marginTop:14,fontSize:12,color:'var(--t3)'}}>Déjà inscrit ? <button onClick={()=>go('/login')} style={{color:'var(--lime)',fontWeight:700,background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',fontSize:12}}>Se connecter</button></div>
+        </div>}
+        {/* Step 2 */}
+        {step===2&&<div className="fi">
+          <h3 style={{fontWeight:800,fontSize:17,marginBottom:3}}>Votre boutique</h3>
+          <p style={{color:'var(--t3)',fontSize:12,marginBottom:18}}>Étape 2 sur 5</p>
+          <div className="field"><label className="lbl">Nom de la boutique *</label><input className="inp" placeholder="Ex: Mode Dakar Shop" value={f.storeName} onChange={e=>u('storeName',e.target.value)}/></div>
+          {f.storeName&&<div style={{fontSize:11,color:'var(--t3)',marginTop:-7,marginBottom:12,padding:'7px 10px',background:'var(--bg2)',borderRadius:'var(--r6)',border:'1px solid var(--b)'}}>
+            🔗 <strong style={{color:'var(--lime)'}}>{window.location.origin}/#/store/{slug_(f.storeName)}</strong>
+          </div>}
+          <div className="field"><label className="lbl">Description</label><textarea className="inp" rows={3} placeholder="Décrivez votre boutique en quelques mots..." value={f.storeDesc} onChange={e=>u('storeDesc',e.target.value)} style={{resize:'none'}}/></div>
+          <div style={{display:'flex',gap:9}}><button className="btn bg_" onClick={()=>setStep(1)}>←</button><button className="btn bl" style={{flex:1}} onClick={()=>setStep(3)} disabled={!f.storeName}>Continuer →</button></div>
+        </div>}
+        {/* Step 3 */}
+        {step===3&&<div className="fi">
+          <h3 style={{fontWeight:800,fontSize:17,marginBottom:3}}>Type de boutique</h3>
+          <p style={{color:'var(--t3)',fontSize:12,marginBottom:18}}>Étape 3 sur 5 — Choisissez votre niche</p>
+          <div className="g2" style={{gap:8,marginBottom:16}}>
+            {TYPES.map(t=><div key={t.id} onClick={()=>u('type',t.id)} style={{padding:12,borderRadius:'var(--r10)',border:'2px solid '+(f.type===t.id?'var(--lime)':'var(--b)'),background:f.type===t.id?'var(--ld)':'var(--bg2)',cursor:'pointer',transition:'all var(--tr)',textAlign:'center'}}>
+              <div style={{fontSize:24,marginBottom:4}}>{t.icon}</div>
+              <div style={{fontWeight:700,fontSize:12,color:f.type===t.id?'var(--lime)':'var(--t1)'}}>{t.n}</div>
+            </div>)}
+          </div>
+          <div style={{display:'flex',gap:9}}><button className="btn bg_" onClick={()=>setStep(2)}>←</button><button className="btn bl" style={{flex:1}} onClick={()=>setStep(4)} disabled={!f.type}>Continuer →</button></div>
+        </div>}
+        {/* Step 4 */}
+        {step===4&&<div className="fi">
+          <h3 style={{fontWeight:800,fontSize:17,marginBottom:3}}>Choisissez votre plan</h3>
+          <p style={{color:'var(--t3)',fontSize:12,marginBottom:18}}>Étape 4 sur 5</p>
+          {Object.values(PLANS).map(pl=><div key={pl.id} onClick={()=>u('plan',pl.id)} style={{padding:14,borderRadius:'var(--r10)',border:'2px solid '+(f.plan===pl.id?'var(--lime)':'var(--b)'),background:f.plan===pl.id?'var(--ld)':'var(--bg2)',cursor:'pointer',marginBottom:9,transition:'all var(--tr)'}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+              <div style={{display:'flex',alignItems:'center',gap:8}}>
+                <span style={{fontSize:18}}>{pl.icon}</span>
+                <div>
+                  <div style={{fontWeight:800,fontSize:13,color:f.plan===pl.id?'var(--lime)':'var(--t1)'}}>{pl.name}</div>
+                  <div style={{fontSize:10,color:'var(--t3)'}}>{pl.max===999999?'Illimité':pl.max+' produits'} · {Math.round(pl.comm*100)}% commission</div>
+                </div>
+              </div>
+              <div style={{fontWeight:900,fontSize:13,textAlign:'right'}}>
+                {pl.label}
+                {f.plan===pl.id&&<div style={{fontSize:9,color:'var(--lime)',fontWeight:700}}>✓</div>}
+              </div>
+            </div>
+          </div>)}
+          <div style={{display:'flex',gap:9}}><button className="btn bg_" onClick={()=>setStep(3)}>←</button><button className="btn bl" style={{flex:1}} onClick={()=>setStep(5)}>Continuer →</button></div>
+        </div>}
+        {/* Step 5 */}
+        {step===5&&<div className="fi">
+          <h3 style={{fontWeight:800,fontSize:17,marginBottom:3}}>Recevoir vos paiements</h3>
+          <p style={{color:'var(--t3)',fontSize:12,marginBottom:18}}>Étape 5 sur 5 — Coordonnées de reversement</p>
+          <div style={{padding:'10px 13px',background:'var(--ld)',border:'1px solid rgba(185,255,75,.18)',borderRadius:'var(--r10)',fontSize:12,color:'var(--lime)',marginBottom:16,fontWeight:600}}>
+            💰 Vos gains seront reversés chaque vendredi via PayTech
+          </div>
+          <div className="field"><label className="lbl">Numéro Wave</label><input className="inp" placeholder="+221 7X XXX XX XX" value={f.wave} onChange={e=>u('wave',e.target.value)}/></div>
+          <div className="field"><label className="lbl">Numéro Orange Money</label><input className="inp" placeholder="+221 7X XXX XX XX" value={f.om} onChange={e=>u('om',e.target.value)}/></div>
+          {err&&<div style={{padding:10,background:'rgba(244,63,94,.1)',borderRadius:'var(--r6)',fontSize:12,color:'var(--err)',marginBottom:12,fontWeight:600}}>{err}</div>}
+          <div style={{display:'flex',gap:9}}><button className="btn bg_" onClick={()=>setStep(4)}>←</button><button className="btn bl" style={{flex:1}} onClick={doCreate} disabled={busy}>{busy?'Création...':'🚀 Créer ma boutique'}</button></div>
+        </div>}
+      </div>
+    </div>
+  </div>;
+}
+
+// ── Pricing ───────────────────────────────────────────────────────
+function PricingPage(){
+  const features={starter:['50 produits max','Commission 5%','1 boutique','QR Code inclus','Wave & Orange Money','Support standard'],pro:['500 produits','Commission 2%','3 boutiques','QR Code HD','Support prioritaire','Analytics avancés'],business:['Produits illimités','Commission 0%','Boutiques illimitées','Manager dédié','API accès','Marque blanche']};
+  return <div style={{paddingTop:60,minHeight:'100vh',padding:'80px 24px 60px'}}>
+    <div style={{textAlign:'center',marginBottom:52}}>
+      <h1 style={{fontWeight:900,fontSize:36,marginBottom:10,letterSpacing:'-0.02em'}}>Tarifs transparents</h1>
+      <p style={{color:'var(--t2)',fontSize:16}}>Démarrez gratuitement · Évoluez sans limites</p>
+    </div>
+    <div className="g3" style={{maxWidth:1000,margin:'0 auto',gap:20}}>
+      {Object.values(PLANS).map(pl=><div key={pl.id} style={{background:'var(--surf)',border:'2px solid '+(pl.id==='pro'?'var(--lime)':'var(--b)'),borderRadius:'var(--r28)',padding:28,position:'relative',transition:'transform .2s'}} onMouseEnter={e=>e.currentTarget.style.transform='translateY(-4px)'} onMouseLeave={e=>e.currentTarget.style.transform=''}>
+        {pl.id==='pro'&&<div style={{position:'absolute',top:-13,left:'50%',transform:'translateX(-50%)',background:'var(--lime)',color:'#000',borderRadius:'var(--rf)',padding:'3px 16px',fontSize:11,fontWeight:800}}>⭐ POPULAIRE</div>}
+        <div style={{fontSize:30,marginBottom:10}}>{pl.icon}</div>
+        <div style={{fontWeight:900,fontSize:22,marginBottom:4}}>{pl.name}</div>
+        <div style={{fontWeight:900,fontSize:pl.price===0?30:24,color:pl.id==='pro'?'var(--lime)':pl.id==='business'?'#f59e0b':'var(--t1)',marginBottom:pl.price>0?2:16}}>{pl.price===0?'Gratuit':fcfa(pl.price)}</div>
+        {pl.price>0&&<div style={{fontSize:11,color:'var(--t3)',marginBottom:16}}>/mois · sans engagement</div>}
+        <div className="div_"/>
+        {(features[pl.id]||[]).map(feat=><div key={feat} style={{display:'flex',alignItems:'center',gap:8,marginBottom:9,fontSize:13,color:'var(--t2)'}}>
+          <span style={{color:'var(--lime)',fontWeight:900,flexShrink:0}}>✓</span>{feat}
+        </div>)}
+        <button className="btn bfw" style={{marginTop:20,background:pl.id==='pro'?'var(--lime)':pl.id==='business'?'#f59e0b':'transparent',color:pl.id==='starter'?'var(--t2)':'#000',border:pl.id==='starter'?'1.5px solid var(--bm)':'none',fontWeight:800}} onClick={()=>go('/register')}>
+          {pl.price===0?'Commencer gratuitement':'Choisir '+pl.name}
+        </button>
+      </div>)}
+    </div>
+    <div style={{textAlign:'center',marginTop:48,color:'var(--t3)',fontSize:13}}>
+      Des questions ? <button onClick={()=>window.open('https://wa.me/221770299603')} style={{color:'var(--lime)',fontWeight:700,background:'none',border:'none',cursor:'pointer',fontFamily:'inherit',fontSize:13}}>Contactez-nous sur WhatsApp →</button>
+    </div>
+    <Footer/>
+  </div>;
+}
+
+// ── QR Code ───────────────────────────────────────────────────────
+function QRCode({url,size=150}){
+  const ref=useRef(null);
+  useEffect(()=>{
+    if(!ref.current)return;
+    ref.current.innerHTML='';
+    try{new window.QRCode(ref.current,{text:url,width:size,height:size,colorDark:'#B9FF4B',colorLight:'#0A0A0F',correctLevel:window.QRCode.CorrectLevel.H});}
+    catch(e){ref.current.innerHTML='<div style="color:var(--t3);font-size:10px;padding:8px">QR indisponible</div>';}
+  },[url,size]);
+  return <div ref={ref} style={{display:'inline-flex',justifyContent:'center',padding:8,background:'#0A0A0F',borderRadius:'var(--r10)',border:'1px solid var(--b)'}}/>;
+}
+
+// ── Seller Dashboard ──────────────────────────────────────────────
+function SellerDash(){
+  const {user,logout}=useAuth();const [tab,setTab]=useState('overview');
+  const [prods,setProds]=useState([]);const [orders,setOrders]=useState([]);
+  const [cjR,setCjR]=useState([]);const [kw,setKw]=useState('');const [srch,setSrch]=useState(false);
+  const [impSt,setImpSt]=useState({});const [page,setPage]=useState(1);const [total,setTotal]=useState(0);
+  const [wdAmt,setWdAmt]=useState('');const [wdMethod,setWdMethod]=useState('wave');const [wdBusy,setWdBusy]=useState(false);
+  const plan=PLANS[user?.plan||'starter'];
+  const storeUrl=`${window.location.origin}/#/store/${user?.store?.slug||'ma-boutique'}`;
+
+  useEffect(()=>{
+    api('/api/products?limit=100').then(d=>setProds(d.data||[]));
+    api('/api/admin/orders').then(d=>setOrders(d.data||[])).catch(()=>{});
+  },[]);
+
+  const rev=orders.filter(o=>o.status==='paid'||o.status==='shipped').reduce((s,o)=>s+(o.total_fcfa||0),0);
+  const comm=Math.round(rev*plan.comm);const net=rev-comm;
+
+  const loadCJ=async(p=1,k='')=>{
+    setSrch(true);setCjR([]);
+    try{const params=new URLSearchParams({pageNum:p,pageSize:20});if(k)params.set('keyword',k);const d=await api('/api/cj/products/search?'+params);setCjR(d.data||[]);setTotal(d.total||0);setPage(p);if(!d.data?.length)T.inf('Aucun produit trouvé');}
+    catch(e){T.err(e.message);}finally{setSrch(false);}
+  };
+
+  const doImport=async(p)=>{
+    if(prods.length>=plan.max){T.err(`Limite ${plan.max} produits atteinte. Passez au plan supérieur.`);return;}
+    const pid=p.pid;setImpSt(s=>({...s,[pid]:'loading'}));
+    try{
+      const r=await api('/api/cj/import',{method:'POST',body:JSON.stringify({pid})});
+      if(r.success){setProds(prev=>[r.data,...prev.filter(x=>x.cj_pid!==pid)]);setImpSt(s=>({...s,[pid]:'done'}));T.ok('Produit mis en ligne !');}
+      else throw new Error(r.error||'Erreur');
+    }catch(e){setImpSt(s=>({...s,[pid]:'error'}));T.err(e.message);}
+  };
+
+  const doWithdraw=async()=>{
+    if(!wdAmt||parseInt(wdAmt)<1000){T.err('Montant minimum : 1 000 FCFA');return;}
+    if(parseInt(wdAmt)>net){T.err('Montant supérieur à votre solde disponible');return;}
+    const phone=wdMethod==='wave'?user?.wave:user?.om;
+    if(!phone){T.err('Ajoutez votre numéro '+(wdMethod==='wave'?'Wave':'Orange Money')+' dans vos paramètres');return;}
+    setWdBusy(true);
+    try{
+      const r=await api('/api/withdrawals/request',{method:'POST',body:JSON.stringify({amount:parseInt(wdAmt),method:wdMethod,phone,sellerName:user?.name})});
+      if(r.success){T.ok('Demande de retrait envoyée ! Vous serez contacté sous 24h.');setWdAmt('');}
+      else T.err(r.error||'Erreur');
+    }catch(e){T.err(e.message);}
+    setWdBusy(false);
+  };
+
+  const NAV=[{k:'overview',ico:'📊',l:'Vue d\'ensemble'},{k:'orders',ico:'🛍️',l:'Commandes'},{k:'products',ico:'📦',l:'Mes produits'},{k:'import',ico:'⬇️',l:'Ajouter produits'},{k:'store',ico:'🏪',l:'Ma boutique'},{k:'withdraw',ico:'💰',l:'Retrait'},{k:'settings',ico:'⚙️',l:'Paramètres'}];
+
+  return <div style={{display:'flex',minHeight:'100vh',paddingTop:60}}>
+    <div className="sb">
+      <div style={{padding:'10px 12px 14px',borderBottom:'1px solid var(--b)',marginBottom:10}}>
+        <div style={{width:38,height:38,borderRadius:'var(--r10)',background:'var(--ld)',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:900,fontSize:15,color:'var(--lime)',marginBottom:7}}>
+          {(user?.name||'?')[0].toUpperCase()}
+        </div>
+        <div style={{fontWeight:700,fontSize:13}}>{user?.name}</div>
+        <div style={{fontSize:10,color:'var(--t4)',marginTop:2}}>{user?.email}</div>
+        <div style={{display:'flex',gap:5,marginTop:7,alignItems:'center'}}>
+          <span className={`badge ${plan.id==='pro'?'bgl':plan.id==='business'?'bgy':'bgn'}`} style={{fontSize:8}}>{plan.icon} {plan.name}</span>
+        </div>
+        <div style={{marginTop:7,fontSize:11,color:'var(--t3)'}}>{prods.length}/{plan.max===999999?'∞':plan.max} produits</div>
+        <div style={{height:3,background:'var(--b)',borderRadius:2,marginTop:5,overflow:'hidden'}}>
+          <div style={{height:'100%',background:'var(--lime)',borderRadius:2,width:plan.max===999999?'15%':Math.min(100,prods.length/plan.max*100)+'%'}}/>
+        </div>
+      </div>
+      {NAV.map(n=><button key={n.k} className={'sbtn'+(tab===n.k?' on':'')} onClick={()=>setTab(n.k)}>{n.ico} {n.l}</button>)}
+      <div style={{marginTop:'auto',borderTop:'1px solid var(--b)',paddingTop:10}}>
+        <button className="sbtn" onClick={()=>go('/marketplace')}>🛒 Boutique</button>
+        <button className="sbtn" onClick={logout} style={{color:'var(--err)'}}>🚪 Déconnexion</button>
+      </div>
+    </div>
+    <main style={{flex:1,padding:'24px 28px',overflowY:'auto',minWidth:0}}>
+
+      {/* Overview */}
+      {tab==='overview'&&<div className="fi">
+        <h1 style={{fontWeight:900,fontSize:22,marginBottom:20}}>Bonjour {user?.name?.split(' ')[0]} 👋</h1>
+        <div className="g4" style={{marginBottom:20}}>
+          <SC icon="💰" label="Revenus bruts" val={fcfa(rev)} color="var(--lime)"/>
+          <SC icon="💸" label="Net à recevoir" val={fcfa(net)} sub={`Comm. ${Math.round(plan.comm*100)}%`}/>
+          <SC icon="🛍️" label="Commandes" val={orders.length}/>
+          <SC icon="📦" label="Produits" val={prods.length} sub={`/${plan.max===999999?'∞':plan.max}`}/>
+        </div>
+        <div className="g2">
+          <div className="card" style={{padding:18}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
+              <h3 style={{fontWeight:800,fontSize:14}}>Dernières commandes</h3>
+              <button className="btn bg_ bsm" onClick={()=>setTab('orders')}>Voir tout</button>
+            </div>
+            {orders.length===0?<div style={{textAlign:'center',padding:'20px 0',color:'var(--t4)',fontSize:13}}>Aucune commande encore</div>:
+            orders.slice(0,5).map(o=><div key={o.id} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'8px 0',borderBottom:'1px solid var(--b)'}}>
+              <div><div style={{fontSize:12,fontWeight:600}}>{o.customer_name}</div><div style={{fontSize:10,color:'var(--t3)'}}>{new Date(o.created_at).toLocaleDateString('fr-SN')}</div></div>
+              <div style={{textAlign:'right'}}><div style={{fontWeight:900,color:'var(--lime)',fontSize:12}}>{fcfa(o.total_fcfa)}</div><span className={`badge ${o.status==='paid'?'bgg':'bgy'}`} style={{fontSize:7}}>{o.status}</span></div>
+            </div>)}
+          </div>
+          <div className="card" style={{padding:18}}>
+            <h3 style={{fontWeight:800,fontSize:14,marginBottom:14}}>Mon solde</h3>
+            <div style={{textAlign:'center',padding:'16px 0'}}>
+              <div style={{fontSize:11,color:'var(--t3)',marginBottom:4}}>Disponible au retrait</div>
+              <div style={{fontWeight:900,fontSize:32,color:'var(--lime)'}}>{fcfa(net)}</div>
+              <button className="btn bl" style={{marginTop:14}} onClick={()=>setTab('withdraw')}>💸 Retirer mes gains</button>
+            </div>
+          </div>
+        </div>
+      </div>}
+
+      {/* Commandes */}
+      {tab==='orders'&&<div className="fi">
+        <h1 style={{fontWeight:900,fontSize:22,marginBottom:20}}>Mes commandes</h1>
+        {orders.length===0?<div style={{textAlign:'center',padding:'80px 20px'}}><div style={{fontSize:48,marginBottom:12}}>🛍️</div><p style={{color:'var(--t3)'}}>Aucune commande pour l'instant</p></div>:
+        <div className="tbl"><table><thead><tr>{['Réf.','Client','Total','Statut','Date','N° suivi'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+          <tbody>{orders.map(o=><tr key={o.id}>
+            <td><span style={{fontWeight:700,fontSize:10,fontFamily:'monospace'}}>#{(o.id||'').slice(0,8).toUpperCase()}</span></td>
+            <td><div style={{fontWeight:600,fontSize:12}}>{o.customer_name}</div><div style={{fontSize:10,color:'var(--t3)'}}>{o.customer_phone}</div></td>
+            <td><span style={{fontWeight:900,color:'var(--lime)',fontSize:13}}>{fcfa(o.total_fcfa)}</span></td>
+            <td><span className={`badge ${o.status==='paid'||o.status==='delivered'?'bgg':o.status==='shipped'?'bgl':o.status==='cancelled'?'bgr':'bgy'}`} style={{fontSize:8}}>{o.status}</span></td>
+            <td style={{fontSize:11,color:'var(--t3)'}}>{new Date(o.created_at).toLocaleDateString('fr-SN')}</td>
+            <td style={{fontSize:11,fontFamily:'monospace',color:'var(--t3)'}}>{o.tracking_number||'—'}</td>
+          </tr>)}</tbody>
+        </table></div>}
+      </div>}
+
+      {/* Produits */}
+      {tab==='products'&&<div className="fi">
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+          <h1 style={{fontWeight:900,fontSize:22}}>Mes produits</h1>
+          <button className="btn bl bsm" onClick={()=>setTab('import')}>+ Ajouter</button>
+        </div>
+        {prods.length===0?<div style={{textAlign:'center',padding:'80px 20px'}}><div style={{fontSize:48,marginBottom:12}}>📦</div><p style={{color:'var(--t3)',marginBottom:16}}>Aucun produit</p><button className="btn bl" onClick={()=>setTab('import')}>Ajouter des produits</button></div>:
+        <div className="pgrid">{prods.map(p=><PCard key={p.id} p={p}/>)}</div>}
+      </div>}
+
+      {/* Import */}
+      {tab==='import'&&<div className="fi">
+        <div style={{marginBottom:20}}>
+          <h1 style={{fontWeight:900,fontSize:22}}>Ajouter des produits</h1>
+          <p style={{color:'var(--t3)',fontSize:12,marginTop:4}}>Choisissez parmi des milliers de produits disponibles</p>
+        </div>
+        {prods.length>=plan.max&&<div style={{padding:12,background:'rgba(244,63,94,.1)',border:'1px solid rgba(244,63,94,.2)',borderRadius:'var(--r10)',fontSize:13,color:'var(--err)',marginBottom:16,fontWeight:600}}>
+          Limite atteinte ({plan.max} produits). <span style={{textDecoration:'underline',cursor:'pointer'}} onClick={()=>go('/pricing')}>Passer au plan supérieur</span>
+        </div>}
+        <div className="card" style={{padding:16,marginBottom:14}}>
+          <div style={{display:'flex',gap:9,marginBottom:10}}>
+            <input className="inp" placeholder="🔍 Rechercher un produit..." value={kw} onChange={e=>setKw(e.target.value)} onKeyDown={e=>e.key==='Enter'&&loadCJ(1,kw)} style={{flex:1}}/>
+            <button className="btn bl" onClick={()=>loadCJ(1,kw)} disabled={srch}>{srch?'...':'Chercher'}</button>
+            <button className="btn bg_" onClick={()=>loadCJ(1,'')} disabled={srch}>Catalogue</button>
+          </div>
+          <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
+            {['smartphone','earbuds','sneakers','led','kitchen','beauty','watch','bag','toy','gadget'].map(t=>(
+              <span key={t} className="pill" style={{fontSize:11}} onClick={()=>{setKw(t);loadCJ(1,t);}}>{t}</span>
+            ))}
+          </div>
+        </div>
+        {srch&&<div className="spin_"/>}
+        {!srch&&cjR.length===0&&<div style={{textAlign:'center',padding:'60px 20px'}}>
+          <div style={{fontSize:48,marginBottom:12}}>🌐</div>
+          <p style={{color:'var(--t3)',fontSize:13,marginBottom:16}}>Tapez un mot-clé ou cliquez "Catalogue"</p>
+          <button className="btn bl" onClick={()=>loadCJ(1,'')}>Voir le catalogue</button>
+        </div>}
+        {cjR.length>0&&<div>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+            <p style={{fontSize:12,color:'var(--t3)'}}><strong style={{color:'var(--t1)'}}>{total.toLocaleString()}</strong> produits · Page {page}</p>
+            <div style={{display:'flex',gap:6}}>
+              <button className="btn bg_ bsm" onClick={()=>loadCJ(page-1,kw)} disabled={page<=1||srch}>←</button>
+              <button className="btn bg_ bsm" onClick={()=>loadCJ(page+1,kw)} disabled={srch||cjR.length<20}>→</button>
+            </div>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(195px,1fr))',gap:10}}>
+            {cjR.map(p=>{
+              const pid=p.pid;const st=impSt[pid];
+              const prix=p.priceCalc?.finalFCFA||Math.ceil((parseFloat(p.sellPrice||15)+8)*1.5*615);
+              const cout=Math.ceil(parseFloat(p.sellPrice||0)*615);
+              const marge=Math.max(0,prix-cout-Math.ceil(8*615));
+              return <div key={pid} className="card" style={{display:'flex',flexDirection:'column',border:st==='done'?'1.5px solid rgba(185,255,75,.35)':'1px solid var(--b)'}}>
+                <div style={{aspectRatio:'1',background:'var(--bg2)',overflow:'hidden',borderRadius:'var(--r20) var(--r20) 0 0',position:'relative'}}>
+                  <img src={p.productImage} alt={p.productNameEn} style={{width:'100%',height:'100%',objectFit:'cover'}} onError={e=>e.target.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300'}/>
+                  {st==='done'&&<div style={{position:'absolute',top:8,right:8,background:'rgba(185,255,75,.9)',color:'#000',borderRadius:'var(--rf)',padding:'2px 8px',fontSize:9,fontWeight:800}}>✓ En ligne</div>}
+                </div>
+                <div style={{padding:'10px 11px 12px',flex:1,display:'flex',flexDirection:'column',gap:5}}>
+                  <p style={{fontSize:11,fontWeight:600,lineHeight:1.4,display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{p.productNameEn}</p>
+                  <div style={{background:'var(--bg2)',borderRadius:'var(--r6)',padding:'6px 8px',fontSize:11}}>
+                    <div style={{fontWeight:900,fontSize:14,color:'var(--lime)'}}>{fcfa(prix)}</div>
+                    <div style={{fontSize:10,color:'var(--ok)',marginTop:1}}>Marge ~{fcfa(marge)}</div>
+                  </div>
+                  <button className="btn bsm bfw" style={{marginTop:'auto',fontSize:10,...(st==='done'?{background:'rgba(185,255,75,.12)',color:'var(--lime)',border:'1px solid rgba(185,255,75,.2)'}:st==='error'?{background:'rgba(244,63,94,.1)',color:'var(--err)',border:'1px solid rgba(244,63,94,.2)'}:{background:'var(--lime)',color:'#000',border:'none'})}}
+                    onClick={()=>doImport(p)} disabled={st==='loading'||st==='done'||prods.length>=plan.max}>
+                    {st==='loading'?'⏳':st==='done'?'✓ En ligne':st==='error'?'↺ Réessayer':'+ Mettre en vente'}
+                  </button>
+                </div>
+              </div>;
+            })}
+          </div>
+          <div style={{display:'flex',justifyContent:'center',gap:8,marginTop:20}}>
+            <button className="btn bg_" onClick={()=>loadCJ(page-1,kw)} disabled={page<=1||srch}>← Précédente</button>
+            <span style={{display:'flex',alignItems:'center',fontSize:12,color:'var(--t3)',padding:'0 10px'}}>Page {page}</span>
+            <button className="btn bl" onClick={()=>loadCJ(page+1,kw)} disabled={srch||cjR.length<20}>Suivante →</button>
+          </div>
+        </div>}
+      </div>}
+
+      {/* Store */}
+      {tab==='store'&&<div className="fi">
+        <h1 style={{fontWeight:900,fontSize:22,marginBottom:20}}>Ma boutique</h1>
+        <div className="g2">
+          <div className="card" style={{padding:22}}>
+            <h3 style={{fontWeight:800,fontSize:15,marginBottom:16}}>Informations</h3>
+            <div style={{marginBottom:12}}><div style={{fontSize:11,color:'var(--t3)',marginBottom:3}}>Nom</div><div style={{fontWeight:700,fontSize:16}}>{user?.store?.name||user?.name+' Shop'}</div></div>
+            <div style={{marginBottom:16}}><div style={{fontSize:11,color:'var(--t3)',marginBottom:3}}>Lien public</div><div style={{fontSize:12,color:'var(--lime)',fontWeight:600,wordBreak:'break-all',lineHeight:1.5}}>{storeUrl}</div></div>
+            <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+              <button className="btn bl bsm" onClick={()=>window.open(storeUrl)}>🔗 Voir</button>
+              <button className="btn bg_ bsm" onClick={()=>{navigator.clipboard?.writeText(storeUrl);T.ok('Lien copié !')}}>📋 Copier</button>
+              <button className="btn bg_ bsm" onClick={()=>window.open('https://wa.me/?text='+encodeURIComponent('Visitez ma boutique : '+storeUrl))}>📱 Partager</button>
+            </div>
+          </div>
+          <div className="card" style={{padding:22,textAlign:'center'}}>
+            <h3 style={{fontWeight:800,fontSize:15,marginBottom:16,textAlign:'left'}}>QR Code</h3>
+            <QRCode url={storeUrl} size={160}/>
+            <p style={{fontSize:11,color:'var(--t3)',marginTop:10}}>Scannez pour accéder à votre boutique</p>
+          </div>
+        </div>
+      </div>}
+
+      {/* Retrait */}
+      {tab==='withdraw'&&<div className="fi">
+        <h1 style={{fontWeight:900,fontSize:22,marginBottom:20}}>Retirer mes gains</h1>
+        <div className="g2" style={{marginBottom:20}}>
+          <SC icon="💰" label="Solde disponible" val={fcfa(net)} color="var(--lime)"/>
+          <SC icon="📊" label="Commission SoukDrop" val={`${Math.round(plan.comm*100)}%`} sub={fcfa(comm)+' déduit'}/>
+        </div>
+        <div className="card" style={{padding:24,maxWidth:480}}>
+          <h3 style={{fontWeight:800,fontSize:15,marginBottom:16}}>Faire une demande de retrait</h3>
+          <div className="field"><label className="lbl">Méthode</label>
+            <div style={{display:'flex',gap:8}}>
+              {['wave','om'].map(m=><button key={m} onClick={()=>setWdMethod(m)} style={{flex:1,padding:'10px',borderRadius:'var(--r10)',border:'2px solid '+(wdMethod===m?'var(--lime)':'var(--b)'),background:wdMethod===m?'var(--ld)':'var(--bg2)',color:wdMethod===m?'var(--lime)':'var(--t2)',fontWeight:700,fontSize:13,cursor:'pointer',transition:'all var(--tr)'}}>
+                {m==='wave'?'💛 Wave':'🟠 Orange Money'}
+              </button>)}
+            </div>
+          </div>
+          <div style={{padding:'10px 12px',background:'var(--bg2)',border:'1px solid var(--b)',borderRadius:'var(--r10)',marginBottom:12,fontSize:13,color:'var(--t2)'}}>
+            📱 {wdMethod==='wave'?'Wave':'Orange Money'} : <strong>{wdMethod==='wave'?(user?.wave||'Non renseigné'):(user?.om||'Non renseigné')}</strong>
+          </div>
+          <div className="field"><label className="lbl">Montant (FCFA)</label><input className="inp" type="number" placeholder="Ex: 10000" value={wdAmt} onChange={e=>setWdAmt(e.target.value)}/></div>
+          <div style={{fontSize:11,color:'var(--t3)',marginBottom:16}}>Minimum : 1 000 FCFA · Maximum disponible : {fcfa(net)}</div>
+          <button className="btn bl bfw" onClick={doWithdraw} disabled={wdBusy||!wdAmt||net<=0}>{wdBusy?'Envoi...':'💸 Demander le retrait'}</button>
+          <div style={{marginTop:14,padding:'10px 12px',background:'var(--ld)',border:'1px solid rgba(185,255,75,.15)',borderRadius:'var(--r10)',fontSize:12,color:'var(--lime)',fontWeight:600}}>
+            ℹ️ Votre demande sera traitée sous 24h par notre équipe.
+          </div>
+        </div>
+      </div>}
+
+      {/* Paramètres */}
+      {tab==='settings'&&<div className="fi">
+        <h1 style={{fontWeight:900,fontSize:22,marginBottom:20}}>Paramètres</h1>
+        <div className="card" style={{padding:24,marginBottom:14}}>
+          <h3 style={{fontWeight:800,fontSize:14,marginBottom:14}}>Mon compte</h3>
+          {[['Nom',user?.name],['Email',user?.email],['Plan',plan.name+' '+plan.icon],['Boutique',user?.store?.name||'—'],['Wave',user?.wave||'Non renseigné'],['Orange Money',user?.om||'Non renseigné']].map(([l,v])=>(
+            <div key={l} style={{display:'flex',justifyContent:'space-between',padding:'9px 0',borderBottom:'1px solid var(--b)',fontSize:13}}>
+              <span style={{color:'var(--t3)',fontWeight:600}}>{l}</span><span style={{fontWeight:600}}>{v}</span>
+            </div>
+          ))}
+        </div>
+        <button className="btn bpurp" onClick={()=>go('/pricing')}>Changer de plan →</button>
+      </div>}
+    </main>
+  </div>;
+}
+
+// ── Platform Admin ────────────────────────────────────────────────
+function PlatformAdmin(){
+  const {user,logout}=useAuth();const [tab,setTab]=useState('overview');
+  const [stats,setStats]=useState(null);const [orders,setOrders]=useState([]);
+  const [prods,setProds]=useState([]);const [sellers,setSellers]=useState([]);
+  const [withdrawals,setWithdrawals]=useState([]);const [load,setLoad]=useState(true);
+
+  useEffect(()=>{
+    Promise.all([api('/api/admin/stats'),api('/api/admin/orders'),api('/api/admin/products'),api('/api/admin/sellers'),api('/api/admin/withdrawals')]).then(([s,o,p,sv,w])=>{
+      setStats(s.data);setOrders(o.data||[]);setProds(p.data||[]);setSellers(sv.data||[]);setWithdrawals(w.data||[]);
+    }).finally(()=>setLoad(false));
+  },[]);
+
+  const updOrder=async(id,status)=>{try{await api('/api/orders/'+id+'/status',{method:'PUT',body:JSON.stringify({status})});setOrders(p=>p.map(o=>o.id===id?{...o,status}:o));T.ok('Statut mis à jour');}catch(e){T.err(e.message);}};
+  const certify=async(id,v)=>{try{await api('/api/admin/sellers/'+id+'/certify',{method:'PUT',body:JSON.stringify({certified:v})});setSellers(p=>p.map(s=>s.id===id?{...s,certified:v}:s));T.ok(v?'⭐ Certifié !':'Certification retirée');}catch(e){T.err(e.message);}};
+  const processWd=async(wd)=>{try{await api('/api/admin/withdrawals/'+wd.id+'/process',{method:'PUT'});setWithdrawals(p=>p.map(w=>w.id===wd.id?{...w,status:'processed'}:w));T.ok('Retrait marqué comme traité');}catch(e){T.err(e.message);}};
+
+  const NAV=[{k:'overview',ico:'📊',l:'Vue globale'},{k:'orders',ico:'🛍️',l:'Commandes'},{k:'sellers',ico:'🏪',l:'Vendeurs'},{k:'withdrawals',ico:'💸',l:'Retraits'},{k:'products',ico:'📦',l:'Catalogue'}];
+
+  return <div style={{display:'flex',minHeight:'100vh',paddingTop:60}}>
+    <div className="sb">
+      <div style={{padding:'10px 12px 14px',borderBottom:'1px solid var(--b)',marginBottom:10}}>
+        <div style={{display:'flex',alignItems:'center',gap:8}}>
+          <div style={{width:32,height:32,background:'var(--lime)',borderRadius:'var(--r10)',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:900,fontSize:13,color:'#000'}}>⚡</div>
+          <div><div style={{fontWeight:800,fontSize:13}}>Super Admin</div><div style={{fontSize:9,color:'var(--t4)'}}>SoukDrop Platform</div></div>
+        </div>
+        {withdrawals.filter(w=>w.status==='pending').length>0&&<div style={{marginTop:8,background:'rgba(245,158,11,.12)',border:'1px solid rgba(245,158,11,.2)',borderRadius:'var(--r6)',padding:'5px 8px',fontSize:11,color:'var(--warn)',fontWeight:600}}>
+          ⚠️ {withdrawals.filter(w=>w.status==='pending').length} retrait(s) en attente
+        </div>}
+      </div>
+      {NAV.map(n=><button key={n.k} className={'sbtn'+(tab===n.k?' on':'')} onClick={()=>setTab(n.k)}>{n.ico} {n.l}</button>)}
+      <div style={{marginTop:'auto',borderTop:'1px solid var(--b)',paddingTop:10}}>
+        <button className="sbtn" onClick={logout} style={{color:'var(--err)'}}>🚪 Déconnexion</button>
+      </div>
+    </div>
+    <main style={{flex:1,padding:'24px 28px',overflowY:'auto',minWidth:0}}>
+      {load?<div className="spin_"/>:<>
+
+        {/* Overview */}
+        {tab==='overview'&&<div className="fi">
+          <h1 style={{fontWeight:900,fontSize:22,marginBottom:20}}>Tableau de bord</h1>
+          <div className="g4" style={{marginBottom:20}}>
+            <SC icon="💰" label="Revenus totaux" val={fcfa(stats?.revenue||0)} color="var(--lime)"/>
+            <SC icon="🛍️" label="Commandes payées" val={stats?.paid_orders||0}/>
+            <SC icon="⏳" label="En attente paiement" val={stats?.pending_orders||0}/>
+            <SC icon="📦" label="Produits actifs" val={stats?.products||0}/>
+          </div>
+          {withdrawals.filter(w=>w.status==='pending').length>0&&<div style={{padding:16,background:'rgba(245,158,11,.08)',border:'1px solid rgba(245,158,11,.2)',borderRadius:'var(--r14)',marginBottom:20}}>
+            <div style={{fontWeight:800,fontSize:14,color:'var(--warn)',marginBottom:10}}>⚠️ Retraits en attente de traitement</div>
+            {withdrawals.filter(w=>w.status==='pending').map(w=><div key={w.id} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'8px 0',borderBottom:'1px solid rgba(255,255,255,.05)',fontSize:13}}>
+              <div><strong>{w.seller_name}</strong> demande {fcfa(w.amount)} via {w.method==='wave'?'💛 Wave':'🟠 OM'} · {w.phone}</div>
+              <button className="btn bl bsm" onClick={()=>processWd(w)}>✓ Traité</button>
+            </div>)}
+          </div>}
+          <div className="g2">
+            <div className="card" style={{padding:18}}>
+              <h3 style={{fontWeight:800,fontSize:14,marginBottom:14}}>Dernières commandes</h3>
+              {orders.slice(0,6).map(o=><div key={o.id} style={{display:'flex',justifyContent:'space-between',padding:'7px 0',borderBottom:'1px solid var(--b)',alignItems:'center'}}>
+                <div><div style={{fontSize:12,fontWeight:600}}>{o.customer_name}</div><div style={{fontSize:10,color:'var(--t3)'}}>{new Date(o.created_at).toLocaleDateString('fr-SN')}</div></div>
+                <div style={{textAlign:'right'}}><div style={{fontWeight:900,color:'var(--lime)',fontSize:12}}>{fcfa(o.total_fcfa)}</div><span className={`badge ${o.status==='paid'?'bgg':'bgy'}`} style={{fontSize:7}}>{o.status}</span></div>
+              </div>)}
+            </div>
+            <div className="card" style={{padding:18}}>
+              <h3 style={{fontWeight:800,fontSize:14,marginBottom:14}}>Vendeurs actifs</h3>
+              {sellers.slice(0,6).map(s=><div key={s.id} style={{display:'flex',justifyContent:'space-between',padding:'7px 0',borderBottom:'1px solid var(--b)',alignItems:'center'}}>
+                <div><div style={{fontSize:12,fontWeight:600,display:'flex',gap:5,alignItems:'center'}}>{s.store_name||s.name}{s.certified&&<span style={{color:'#f59e0b',fontSize:10}}>⭐</span>}</div><div style={{fontSize:10,color:'var(--t3)'}}>{PLANS[s.plan||'starter']?.name}</div></div>
+                <span className="badge bgn" style={{fontSize:8}}>{s.products_count||0} produits</span>
+              </div>)}
+            </div>
+          </div>
+        </div>}
+
+        {/* Commandes */}
+        {tab==='orders'&&<div className="fi">
+          <h1 style={{fontWeight:900,fontSize:22,marginBottom:20}}>Toutes les commandes</h1>
+          {orders.length===0?<div style={{textAlign:'center',padding:'80px 20px'}}><div style={{fontSize:48,marginBottom:12}}>🛍️</div><p style={{color:'var(--t3)'}}>Aucune commande</p></div>:
+          <div className="tbl"><table><thead><tr>{['Réf.','Client','Total','Statut','Date','CJ ID','Actions'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+            <tbody>{orders.map(o=><tr key={o.id}>
+              <td><span style={{fontWeight:700,fontSize:10,fontFamily:'monospace'}}>#{(o.id||'').slice(0,8).toUpperCase()}</span></td>
+              <td><div style={{fontWeight:600,fontSize:12}}>{o.customer_name}</div><div style={{fontSize:10,color:'var(--t3)'}}>{o.customer_email}</div><div style={{fontSize:10,color:'var(--t4)'}}>{o.customer_phone}</div></td>
+              <td><span style={{fontWeight:900,color:'var(--lime)',fontSize:13}}>{fcfa(o.total_fcfa)}</span></td>
+              <td><span className={`badge ${o.status==='paid'||o.status==='delivered'?'bgg':o.status==='shipped'?'bgl':o.status==='cancelled'?'bgr':'bgy'}`} style={{fontSize:8}}>{o.status}</span></td>
+              <td style={{fontSize:11,color:'var(--t3)'}}>{new Date(o.created_at).toLocaleDateString('fr-SN')}</td>
+              <td style={{fontSize:10,fontFamily:'monospace',color:'var(--t3)'}}>{o.cj_order_id||'—'}</td>
+              <td><div style={{display:'flex',gap:4,flexWrap:'wrap'}}>
+                {o.status==='pending_payment'&&<button className="btn bsm" style={{background:'var(--ld)',color:'var(--lime)',border:'1px solid rgba(185,255,75,.2)',fontSize:9,padding:'4px 8px'}} onClick={()=>updOrder(o.id,'paid')}>✓ Payé</button>}
+                {o.status==='paid'&&<button className="btn bsm" style={{background:'rgba(59,130,246,.1)',color:'var(--info)',border:'1px solid rgba(59,130,246,.2)',fontSize:9,padding:'4px 8px'}} onClick={()=>updOrder(o.id,'shipped')}>📦 Expédié</button>}
+                {o.status==='shipped'&&<button className="btn bsm" style={{background:'rgba(34,197,94,.1)',color:'var(--ok)',border:'1px solid rgba(34,197,94,.2)',fontSize:9,padding:'4px 8px'}} onClick={()=>updOrder(o.id,'delivered')}>✅ Livré</button>}
+              </div></td>
+            </tr>)}</tbody>
+          </table></div>}
+        </div>}
+
+        {/* Vendeurs */}
+        {tab==='sellers'&&<div className="fi">
+          <h1 style={{fontWeight:900,fontSize:22,marginBottom:20}}>Vendeurs ({sellers.length})</h1>
+          {sellers.length===0?<div style={{textAlign:'center',padding:'80px 20px'}}><div style={{fontSize:48,marginBottom:12}}>🏪</div><p style={{color:'var(--t3)'}}>Aucun vendeur inscrit</p></div>:
+          <div className="tbl"><table><thead><tr>{['Vendeur','Boutique','Plan','Produits','Contact paiement','Certif.','Actions'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+            <tbody>{sellers.map(s=><tr key={s.id}>
+              <td><div style={{fontWeight:600,fontSize:12}}>{s.name}</div><div style={{fontSize:10,color:'var(--t3)'}}>{s.email}</div></td>
+              <td><div style={{fontSize:12}}>{s.store_name||'—'}</div><div style={{fontSize:10,color:'var(--t4)'}}>{s.store_type||''}</div></td>
+              <td><span className={`badge ${s.plan==='pro'?'bgl':s.plan==='business'?'bgy':'bgn'}`} style={{fontSize:8}}>{PLANS[s.plan||'starter']?.name}</span></td>
+              <td style={{fontSize:12}}>{s.products_count||0}</td>
+              <td style={{fontSize:11,color:'var(--t2)'}}>{s.wave?'💛 '+s.wave:''}{s.wave&&s.om?<br/>:''}{s.om?'🟠 '+s.om:''}{!s.wave&&!s.om&&'—'}</td>
+              <td>{s.certified?<span className="badge bgy" style={{fontSize:8}}>⭐ Certifié</span>:<span className="badge bgn" style={{fontSize:8}}>Non certifié</span>}</td>
+              <td><button className="btn bsm" style={{background:s.certified?'rgba(244,63,94,.1)':'rgba(245,158,11,.1)',color:s.certified?'var(--err)':'var(--warn)',border:'none',fontSize:9,padding:'4px 8px'}} onClick={()=>certify(s.id,!s.certified)}>
+                {s.certified?'Retirer ⭐':'⭐ Certifier'}
+              </button></td>
+            </tr>)}</tbody>
+          </table></div>}
+        </div>}
+
+        {/* Retraits */}
+        {tab==='withdrawals'&&<div className="fi">
+          <h1 style={{fontWeight:900,fontSize:22,marginBottom:20}}>Demandes de retrait</h1>
+          {withdrawals.length===0?<div style={{textAlign:'center',padding:'80px 20px'}}><div style={{fontSize:48,marginBottom:12}}>💸</div><p style={{color:'var(--t3)'}}>Aucune demande de retrait</p></div>:
+          <div className="tbl"><table><thead><tr>{['Vendeur','Montant','Méthode','Numéro','Date','Statut','Action'].map(h=><th key={h}>{h}</th>)}</tr></thead>
+            <tbody>{withdrawals.map(w=><tr key={w.id}>
+              <td style={{fontWeight:600,fontSize:12}}>{w.seller_name}</td>
+              <td><span style={{fontWeight:900,color:'var(--lime)',fontSize:14}}>{fcfa(w.amount)}</span></td>
+              <td><span style={{fontWeight:600}}>{w.method==='wave'?'💛 Wave':'🟠 Orange Money'}</span></td>
+              <td style={{fontFamily:'monospace',fontSize:12}}>{w.phone}</td>
+              <td style={{fontSize:11,color:'var(--t3)'}}>{new Date(w.created_at).toLocaleDateString('fr-SN')}</td>
+              <td><span className={`badge ${w.status==='processed'?'bgg':'bgy'}`} style={{fontSize:8}}>{w.status==='processed'?'Traité':'En attente'}</span></td>
+              <td>{w.status==='pending'?<button className="btn bl bsm" onClick={()=>processWd(w)}>✓ Marquer traité</button>:<span style={{fontSize:11,color:'var(--t4)'}}>—</span>}</td>
+            </tr>)}</tbody>
+          </table></div>}
+        </div>}
+
+        {/* Catalogue */}
+        {tab==='products'&&<div className="fi">
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+            <h1 style={{fontWeight:900,fontSize:22}}>Catalogue ({prods.length})</h1>
+          </div>
+          {prods.length===0?<div style={{textAlign:'center',padding:'80px 20px'}}><div style={{fontSize:48,marginBottom:12}}>📦</div><p style={{color:'var(--t3)'}}>Aucun produit</p></div>:
+          <div className="pgrid">{prods.map(p=><PCard key={p.id} p={p}/>)}</div>}
+        </div>}
+      </>}
+    </main>
+  </div>;
+}
+
+// ── Router ────────────────────────────────────────────────────────
+function App(){
+  const {user}=useAuth();
+  const [r,setR]=useState(route());
+  useEffect(()=>{const fn=()=>{setR(route());window.scrollTo(0,0)};window.addEventListener('hashchange',fn);return()=>window.removeEventListener('hashchange',fn)},[]);
+
+  const page=()=>{
+    if(r==='/'||r==='')return'land';if(r==='/marketplace')return'mkt';
+    if(r.startsWith('/store/'))return'store';if(r==='/login')return'login';
+    if(r==='/register')return'reg';if(r==='/dashboard')return'dash';
+    if(r==='/platform-admin')return'admin';if(r==='/panier')return'cart';
+    if(r==='/commande')return'checkout';if(r==='/commande/succes')return'ok';
+    if(r.startsWith('/produit/'))return'prod';if(r==='/pricing')return'pricing';
+    return'land';
+  };
+
+  const p=page();
+  const storeSlug=r.startsWith('/store/')?r.split('/store/')[1]?.split('?')[0]:'';
+  const prodId=r.startsWith('/produit/')?r.split('/produit/')[1]?.split('?')[0]:'';
+
+  useEffect(()=>{if((p==='dash')&&!user)go('/login');if(p==='admin'&&user?.role!=='admin')go('/login')},[p,user]);
+
+  const pages={
+    land:<Landing/>,mkt:<Marketplace/>,store:<StorePage slug_={storeSlug}/>,
+    login:<LoginPage/>,reg:<RegisterPage/>,pricing:<PricingPage/>,
+    dash:user?<SellerDash/>:null,admin:user?.role==='admin'?<PlatformAdmin/>:null,
+    cart:<CartPage/>,checkout:<CheckoutPage/>,ok:<SuccessPage/>,prod:<ProductPage id={prodId}/>
+  };
+
+  return <>{<Navbar/>}{pages[p]||<Landing/>}</>;
+}
+
+ReactDOM.render(<AuthProvider><CartProvider><App/></CartProvider></AuthProvider>,document.getElementById('root'));
+</script>
+</body>
+</html>
