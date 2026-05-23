@@ -479,6 +479,130 @@ app.put('/api/admin/sellers/:id/certify', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
+// ── Seller specific routes ────────────────────────────────────────
+app.get('/api/seller/orders', async (req, res) => {
+  try {
+    const sellerId = req.headers['x-seller-id'];
+    const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(100);
+    if (error) throw error;
+    res.json({ success: true, data: data || [] });
+  } catch(e) { res.status(500).json({ success: false, error: e.message }); }
+});
+
+app.get('/api/seller/withdrawals', async (req, res) => {
+  try {
+    const sellerId = req.headers['x-seller-id'];
+    let q = supabase.from('withdrawals').select('*').order('created_at', { ascending: false });
+    if (sellerId) q = q.eq('seller_id', sellerId);
+    const { data, error } = await q;
+    if (error) throw error;
+    res.json({ success: true, data: data || [] });
+  } catch(e) { res.status(500).json({ success: false, error: e.message }); }
+});
+
+app.get('/api/seller/stats', async (req, res) => {
+  try {
+    const sellerId = req.headers['x-seller-id'];
+    const { data: orders } = await supabase.from('orders').select('total_fcfa,status').order('created_at', { ascending: false }).limit(500);
+    const paid = (orders || []).filter(o => o.status === 'paid' || o.status === 'shipped' || o.status === 'delivered');
+    const revenue = paid.reduce((s, o) => s + (o.total_fcfa || 0), 0);
+    const { data: seller } = await supabase.from('sellers').select('plan').eq('id', sellerId || '').maybeSingle();
+    const plan = seller?.plan || 'starter';
+    const commRate = plan === 'pro' ? 0.02 : plan === 'business' ? 0 : 0.05;
+    const commission = Math.round(revenue * commRate);
+    res.json({ success: true, data: { revenue, commission, net: revenue - commission } });
+  } catch(e) { res.status(500).json({ success: false, error: e.message }); }
+});
+
+// POST /api/subscription/pay — Paiement abonnement via PayTech
+app.post('/api/subscription/pay', async (req, res) => {
+  try {
+    const { plan, sellerId, sellerEmail, sellerName } = req.body;
+    const PLANS = { pro: 9900, business: 24900 };
+    const price = PLANS[plan];
+    if (!price) return res.status(400).json({ error: 'Plan invalide' });
+
+    const baseUrl = process.env.BASE_URL || `https://${process.env.RENDER_EXTERNAL_HOSTNAME}` || 'http://localhost:3001';
+    const payload = {
+      item_name: `Abonnement SoukDrop ${plan.toUpperCase()}`,
+      item_price: price, currency: 'XOF',
+      ref_command: `SUB_${plan}_${sellerId || Date.now()}`,
+      command_name: `SoukDrop Abonnement ${plan} — ${sellerName || sellerEmail}`,
+      env: 'prod',
+      ipn_url: `${baseUrl}/api/subscription/ipn`,
+      success_url: `${baseUrl}/#/dashboard?subscribed=${plan}`,
+      cancel_url: `${baseUrl}/#/pricing`
+    };
+
+    const r = await fetch('https://paytech.sn/api/payment/request-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'API_KEY': process.env.PAYTECH_API_KEY, 'API_SECRET': process.env.PAYTECH_SECRET_KEY },
+      body: JSON.stringify(payload)
+    });
+    const d = await r.json();
+    if (d.success === 1) {
+      res.json({ success: true, paymentUrl: `https://paytech.sn/payment/checkout/${d.token}` });
+    } else {
+      res.status(500).json({ success: false, error: d.errors?.join(', ') || 'Erreur PayTech' });
+    }
+  } catch(e) { res.status(500).json({ success: false, error: e.message }); }
+});
+
+// POST /api/subscription/ipn — Webhook confirmation abonnement
+app.post('/api/subscription/ipn', async (req, res) => {
+  try {
+    const { ref_command, type_event, api_key_sha256, api_secret_sha256 } = req.body;
+    const expKey = crypto.createHash('sha256').update(process.env.PAYTECH_API_KEY || '').digest('hex');
+    const expSec = crypto.createHash('sha256').update(process.env.PAYTECH_SECRET_KEY || '').digest('hex');
+    if (api_key_sha256 !== expKey || api_secret_sha256 !== expSec) return res.status(403).send('Forbidden');
+
+    if (type_event === 'sale_complete' && ref_command?.startsWith('SUB_')) {
+      const parts = ref_command.split('_');
+      const plan = parts[1];
+      const sellerId = parts[2];
+      const now = new Date();
+      const expires = new Date(now);
+      expires.setMonth(expires.getMonth() + 1);
+
+      if (sellerId && sellerId !== String(Date.now())) {
+        await supabase.from('sellers').update({
+          plan,
+          subscription_starts: now.toISOString(),
+          subscription_expires: expires.toISOString()
+        }).eq('id', sellerId);
+        console.log(`✅ Abonnement ${plan} activé pour seller ${sellerId}`);
+      }
+    }
+    res.send('OK');
+  } catch(e) { console.error('SUB IPN:', e.message); res.status(500).send('Error'); }
+});
+
+// PUT /api/admin/sellers/:id/plan
+app.put('/api/admin/sellers/:id/plan', async (req, res) => {
+  try {
+    const { plan } = req.body;
+    const { data, error } = await supabase.from('sellers').update({ plan }).eq('id', req.params.id).select().single();
+    if (error) throw error;
+    res.json({ success: true, data });
+  } catch(e) { res.status(500).json({ success: false, error: e.message }); }
+});
+
+// DELETE /api/admin/products/:id
+app.delete('/api/admin/products/:id', async (req, res) => {
+  try {
+    const { error } = await supabase.from('products').update({ status: 'archived' }).eq('id', req.params.id);
+    if (error) throw error;
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ success: false, error: e.message }); }
+});
+
+// Ajout colonne subscription à sellers si manquante
+async function ensureSellerColumns() {
+  try {
+    await supabase.rpc('exec_sql', { sql: `ALTER TABLE sellers ADD COLUMN IF NOT EXISTS subscription_starts TIMESTAMPTZ; ALTER TABLE sellers ADD COLUMN IF NOT EXISTS subscription_expires TIMESTAMPTZ;` });
+  } catch(e) { /* colonnes déjà présentes */ }
+}
+
 // ── Categories & Settings ─────────────────────────────────────────
 app.get('/api/categories', async (req, res) => {
   try {
