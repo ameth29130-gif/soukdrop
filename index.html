@@ -651,7 +651,7 @@ function RegisterPage(){
     setErr('');setBusy(true);
     try{
       const r=await api('/api/auth/register',{method:'POST',body:JSON.stringify({name:f.name,email:f.email,password:f.password,storeName:f.storeName||f.name+' Shop',storeDesc:f.storeDesc,storeType:f.type,plan:f.plan,wave:f.wave,om:f.om})});
-      if(r.success){login(r.data);T.ok('Boutique créée ! 🎉');go('/dashboard');}
+      if(r.success){login(r.data);if(f.plan!=='starter'){try{const pr=await api('/api/subscription/pay',{method:'POST',body:JSON.stringify({plan:f.plan,sellerId:r.data.id,sellerEmail:r.data.email,sellerName:r.data.name})});if(pr.paymentUrl){window.location.href=pr.paymentUrl;return;}}catch(pe){T.err('Erreur paiement: '+pe.message);}}T.ok('Boutique cr\u00e9\u00e9e ! \uD83C\uDF89');go('/dashboard');}
       else setErr(r.error||'Erreur création compte.');
     }catch(e){setErr(e.message||'Erreur serveur.');}
     setBusy(false);
