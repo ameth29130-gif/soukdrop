@@ -199,6 +199,20 @@ app.get('/api/store/:slug', async (req, res) => {
 //  CJ DROPSHIPPING
 // ═══════════════════════════════════════════════════════════════════
 
+// ── Proxy image CJ (évite le blocage CORS) ───────────────────────
+app.get('/api/img', async (req, res) => {
+  try {
+    const url = req.query.url;
+    if (!url || !url.startsWith('http')) return res.status(400).send('URL invalide');
+    const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+    if (!r.ok) return res.status(404).send('Image non trouvée');
+    const ct = r.headers.get('content-type') || 'image/jpeg';
+    res.setHeader('Content-Type', ct);
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    r.body.pipe(res);
+  } catch(e) { res.status(500).send('Erreur image'); }
+});
+
 app.get('/api/cj/products/search', async (req, res) => {
   try {
     const { keyword = '', pageNum = 1, pageSize = 20 } = req.query;
@@ -206,9 +220,16 @@ app.get('/api/cj/products/search', async (req, res) => {
     if (keyword) params.productNameEn = keyword;
     const d = await cjReq('/v1/product/list', params);
     if (!d.result) return res.json({ success: false, error: d.message, data: [], total: 0 });
+    const BASE_URL = process.env.BASE_URL || 'http://localhost:3001';
+    const proxyImg = url => url ? `${BASE_URL}/api/img?url=${encodeURIComponent(url)}` : '';
     const products = (d.data?.list || []).map(p => ({
-      pid: p.pid, productNameEn: p.productNameEn, productImage: p.productImage,
-      categoryName: p.categoryName, sellPrice: parseFloat(p.sellPrice || 0),
+      pid: p.pid,
+      productNameEn: p.productNameEn,
+      productImage: proxyImg(p.productImage),
+      images: p.productImageSet?.map(i => proxyImg(i.imageUrl)) || [proxyImg(p.productImage)],
+      categoryName: p.categoryName,
+      sellPrice: parseFloat(p.sellPrice || 0),
+      description: p.description || '',
       priceCalc: { usd: parseFloat(p.sellPrice || 0), finalFCFA: calcPrice(p.sellPrice || 0) }
     }));
     res.json({ success: true, data: products, total: d.data?.total || products.length });
@@ -224,11 +245,15 @@ app.post('/api/cj/import', async (req, res) => {
     const d = await cjReq('/v1/product/query', { pid });
     if (!d.result) throw new Error(d.message || 'Produit introuvable');
     const p = d.data;
+    const BASE_URL = process.env.BASE_URL || 'http://localhost:3001';
+    const proxyImg = url => url ? `${BASE_URL}/api/img?url=${encodeURIComponent(url)}` : '';
+    // Toutes les images du fournisseur via proxy
+    const allImages = p.productImageSet?.map(i => proxyImg(i.imageUrl)) || (p.productImage ? [proxyImg(p.productImage)] : []);
     const { data, error } = await supabase.from('products').insert({
       cj_pid: pid,
       name: p.productNameEn || p.productName,
-      description: p.description || '',
-      images: p.productImageSet?.map(i => i.imageUrl) || [p.productImage],
+      description: p.description || p.productNameEn || '',
+      images: allImages,
       cj_price_usd: parseFloat(p.sellPrice || 0),
       price_fcfa: calcPrice(p.sellPrice || 0),
       category: p.categoryName || 'Général',
