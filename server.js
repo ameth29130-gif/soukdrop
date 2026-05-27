@@ -15,6 +15,8 @@ import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
 dotenv.config();
+import dotenv from 'dotenv';
+dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -664,3 +666,4 @@ app.listen(PORT, () => {
   console.log('╚══════════════════════════════════════════╝');
   getCJToken().then(t => console.log(t ? '✅ CJ Connecté' : '❌ CJ: échec'));
 });
+
