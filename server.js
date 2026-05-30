@@ -621,7 +621,7 @@ app.listen(PORT, () => {
   console.log(`�  http://localhost:${PORT}                    �`);
   console.log('+------------------------------------------+');
   getCJToken().then(t => console.log(t ? '? CJ Connect�' : '? CJ: �chec'));
-});
+);
 
 
 
