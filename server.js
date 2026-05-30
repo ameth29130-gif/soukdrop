@@ -13,7 +13,7 @@ function proxyImageUrls(product, baseUrl) {
 }
 
 // -------------------------------------------------------------------
-//  SoukDrop v3.0 — Backend Complet
+//  SoukDrop v3.0 ï¿½ Backend Complet
 // -------------------------------------------------------------------
 import express from 'express';
 import cors from 'cors';
@@ -98,7 +98,7 @@ async function cjReq(endpoint, params = {}, method = 'GET') {
 }
 
 // -------------------------------------------------------------------
-//  AUTH — Inscription / Connexion vendeurs
+//  AUTH ï¿½ Inscription / Connexion vendeurs
 // -------------------------------------------------------------------
 
 // POST /api/auth/register
@@ -106,11 +106,11 @@ app.post('/api/auth/register', async (req, res) => {
   try {
     const { name, email, password, storeName, storeDesc, storeType, plan, wave, om } = req.body;
     if (!name || !email || !password) return res.status(400).json({ error: 'Champs requis manquants' });
-    if (password.length < 6) return res.status(400).json({ error: 'Mot de passe trop court (min 6 caractères)' });
+    if (password.length < 6) return res.status(400).json({ error: 'Mot de passe trop court (min 6 caractï¿½res)' });
 
-    // Vérifier email unique
+    // Vï¿½rifier email unique
     const { data: existing } = await supabase.from('sellers').select('id').eq('email', email).maybeSingle();
-    if (existing) return res.status(400).json({ error: 'Cet email est déjà utilisé' });
+    if (existing) return res.status(400).json({ error: 'Cet email est dï¿½jï¿½ utilisï¿½' });
 
     const hash = await bcrypt.hash(password, 10);
     const slug = (storeName || name).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now().toString(36);
@@ -187,7 +187,7 @@ app.get('/api/products/:id', async (req, res) => {
     if (error) throw error;
     supabase.from('products').update({ view_count: (data.view_count || 0) + 1 }).eq('id', req.params.id).then(() => {});
     res.json({ success: true, data });
-  } catch(e) { res.status(404).json({ success: false, error: 'Produit non trouvé' }); }
+  } catch(e) { res.status(404).json({ success: false, error: 'Produit non trouvï¿½' }); }
 });
 
 // -------------------------------------------------------------------
@@ -195,27 +195,27 @@ app.get('/api/products/:id', async (req, res) => {
 // -------------------------------------------------------------------
 
 app.get('/api/store/:slug', async (req, res) => {
-  const { data: seller, error: sErr } = await supabase.from('sellers').select('*').eq('store_slug', req.params.slug).single();
-  if (sErr || !seller) return res.status(404).json({ error: 'Boutique introuvable' });
-  const { data: products, error: pErr } = await supabase.from('products').select('*').eq('seller_id', seller.id);
-  if (pErr) return res.status(400).json({ error: pErr.message });
-  const processedProducts = (products || []).map(p => proxyImageUrls(p, process.env.BASE_URL || ''));
-  res.json({ success: true, store: seller, data: processedProducts });
+  try {
+    const { slug } = req.params;
+    const { data: seller, error: sErr } = await supabase.from('sellers').select('*').eq('store_slug', slug).single();
+    if (sErr || !seller) return res.status(404).json({ error: 'Boutique introuvable' });
+
+    const { data: products, error: pErr } = await supabase.from('products').select('*').eq('seller_id', seller.id);
+    if (pErr) return res.status(400).json({ error: pErr.message });
+
+    const processedProducts = (products || []).map(p => proxyImageUrls(p, process.env.BASE_URL || ''));
+    res.json({ success: true, store: seller, data: processedProducts });
+  } catch(e) {
+    res.status(500).json({ success: false, error: e.message });
+  }
 });
 
-    
-
-// -------------------------------------------------------------------
-//  CJ DROPSHIPPING
-// -------------------------------------------------------------------
-
-// -- Proxy image CJ (évite le blocage CORS) -----------------------
-app.get('/api/img', async (req, res) => {
+, async (req, res) => {
   try {
     const url = req.query.url;
     if (!url || !url.startsWith('http')) return res.status(400).send('URL invalide');
     const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-    if (!r.ok) return res.status(404).send('Image non trouvée');
+    if (!r.ok) return res.status(404).send('Image non trouvï¿½e');
     const ct = r.headers.get('content-type') || 'image/jpeg';
     res.setHeader('Content-Type', ct);
     res.setHeader('Cache-Control', 'public, max-age=86400');
@@ -251,7 +251,7 @@ app.post('/api/cj/import', async (req, res) => {
     const { pid } = req.body;
     if (!pid) return res.status(400).json({ error: 'pid requis' });
     const { data: existing } = await supabase.from('products').select('id').eq('cj_pid', pid).maybeSingle();
-    if (existing) return res.json({ success: true, message: 'Déjà importé', data: existing });
+    if (existing) return res.json({ success: true, message: 'Dï¿½jï¿½ importï¿½', data: existing });
     const d = await cjReq('/v1/product/query', { pid });
     if (!d.result) throw new Error(d.message || 'Produit introuvable');
     const p = d.data;
@@ -266,7 +266,7 @@ app.post('/api/cj/import', async (req, res) => {
       images: allImages,
       cj_price_usd: parseFloat(p.sellPrice || 0),
       price_fcfa: calcPrice(p.sellPrice || 0),
-      category: p.categoryName || 'Général',
+      category: p.categoryName || 'Gï¿½nï¿½ral',
       status: 'active',
       variants: p.variants || [],
       metadata: { categoryId: p.categoryId }
@@ -283,7 +283,7 @@ app.post('/api/cj/import', async (req, res) => {
 app.post('/api/orders/create', async (req, res) => {
   try {
     const { items, customer, shippingCostFCFA = 2500, logisticName = 'Standard' } = req.body;
-    if (!items?.length || !customer?.name || !customer?.email) return res.status(400).json({ error: 'Données incomplètes' });
+    if (!items?.length || !customer?.name || !customer?.email) return res.status(400).json({ error: 'Donnï¿½es incomplï¿½tes' });
 
     const subtotal = items.reduce((s, i) => s + (i.priceFCFA * i.quantity), 0);
     const total = subtotal + parseInt(shippingCostFCFA);
@@ -307,7 +307,7 @@ app.post('/api/orders/create', async (req, res) => {
         item_name: `Commande SoukDrop #${order.id.slice(0,8).toUpperCase()}`,
         item_price: order.total_fcfa, currency: 'XOF',
         ref_command: order.id,
-        command_name: `SoukDrop — ${order.customer_name}`,
+        command_name: `SoukDrop ï¿½ ${order.customer_name}`,
         env: 'prod',
         ipn_url: `${baseUrl}/api/paytech/ipn`,
         success_url: `${baseUrl}/#/commande/succes?order=${order.id}`,
@@ -346,10 +346,10 @@ app.post('/api/paytech/ipn', async (req, res) => {
     if (type_event === 'sale_complete') {
       const { data: order } = await supabase.from('orders').update({ status: 'paid', paid_at: new Date().toISOString() }).eq('id', ref_command).select().single();
       if (order) {
-        console.log('? Paiement confirmé:', ref_command);
+        console.log('? Paiement confirmï¿½:', ref_command);
         sendEmail(order).catch(console.error);
         placeCJOrder(order).catch(console.error);
-        // Mettre à jour revenus vendeur
+        // Mettre ï¿½ jour revenus vendeur
         updateSellerRevenue(order).catch(console.error);
       }
     }
@@ -378,7 +378,7 @@ async function placeCJOrder(order) {
 app.post('/api/withdrawals/request', async (req, res) => {
   try {
     const { amount, method, phone, sellerName } = req.body;
-    if (!amount || !method || !phone) return res.status(400).json({ error: 'Données incomplètes' });
+    if (!amount || !method || !phone) return res.status(400).json({ error: 'Donnï¿½es incomplï¿½tes' });
     const { data, error } = await supabase.from('withdrawals').insert({
       seller_name: sellerName || 'Vendeur',
       amount: parseInt(amount), method, phone, status: 'pending'
@@ -492,7 +492,7 @@ app.get('/api/seller/stats', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
-// POST /api/subscription/pay — Paiement abonnement via PayTech
+// POST /api/subscription/pay ï¿½ Paiement abonnement via PayTech
 app.post('/api/subscription/pay', async (req, res) => {
   try {
     const { plan, sellerId, sellerEmail, sellerName } = req.body;
@@ -505,7 +505,7 @@ app.post('/api/subscription/pay', async (req, res) => {
       item_name: `Abonnement SoukDrop ${plan.toUpperCase()}`,
       item_price: price, currency: 'XOF',
       ref_command: `SUB_${plan}_${sellerId || Date.now()}`,
-      command_name: `SoukDrop Abonnement ${plan} — ${sellerName || sellerEmail}`,
+      command_name: `SoukDrop Abonnement ${plan} ï¿½ ${sellerName || sellerEmail}`,
       env: 'prod',
       ipn_url: `${baseUrl}/api/subscription/ipn`,
       success_url: `${baseUrl}/#/dashboard?subscribed=${plan}`,
@@ -526,7 +526,7 @@ app.post('/api/subscription/pay', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
-// POST /api/subscription/ipn — Webhook confirmation abonnement
+// POST /api/subscription/ipn ï¿½ Webhook confirmation abonnement
 app.post('/api/subscription/ipn', async (req, res) => {
   try {
     const { ref_command, type_event, api_key_sha256, api_secret_sha256 } = req.body;
@@ -548,7 +548,7 @@ app.post('/api/subscription/ipn', async (req, res) => {
           subscription_starts: now.toISOString(),
           subscription_expires: expires.toISOString()
         }).eq('id', sellerId);
-        console.log(`? Abonnement ${plan} activé pour seller ${sellerId}`);
+        console.log(`? Abonnement ${plan} activï¿½ pour seller ${sellerId}`);
       }
     }
     res.send('OK');
@@ -574,11 +574,11 @@ app.delete('/api/admin/products/:id', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
-// Ajout colonne subscription à sellers si manquante
+// Ajout colonne subscription ï¿½ sellers si manquante
 async function ensureSellerColumns() {
   try {
     await supabase.rpc('exec_sql', { sql: `ALTER TABLE sellers ADD COLUMN IF NOT EXISTS subscription_starts TIMESTAMPTZ; ALTER TABLE sellers ADD COLUMN IF NOT EXISTS subscription_expires TIMESTAMPTZ;` });
-  } catch(e) { /* colonnes déjà présentes */ }
+  } catch(e) { /* colonnes dï¿½jï¿½ prï¿½sentes */ }
 }
 
 // -- Categories & Settings -----------------------------------------
@@ -614,10 +614,10 @@ app.get('/{*path}', (req, res) => res.sendFile(path.join(__dirname, 'index.html'
 // -- Start ---------------------------------------------------------
 app.listen(PORT, () => {
   console.log('\n+------------------------------------------+');
-  console.log('¦  ?? SoukDrop v3.0 — PRÊT À VENDRE       ¦');
-  console.log(`¦  http://localhost:${PORT}                    ¦`);
+  console.log('ï¿½  ?? SoukDrop v3.0 ï¿½ PRï¿½T ï¿½ VENDRE       ï¿½');
+  console.log(`ï¿½  http://localhost:${PORT}                    ï¿½`);
   console.log('+------------------------------------------+');
-  getCJToken().then(t => console.log(t ? '? CJ Connecté' : '? CJ: échec'));
+  getCJToken().then(t => console.log(t ? '? CJ Connectï¿½' : '? CJ: ï¿½chec'));
 });
 
 
