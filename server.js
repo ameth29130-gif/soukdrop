@@ -610,22 +610,13 @@ app.get('/api/health', async (req, res) => {
 
 // -- Frontend ------------------------------------------------------
 app.use(express.static(__dirname));
-app.get('/{*path}', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/{*path}', (req, res) => res.sendFile(require('path').join(__dirname, 'index.html')));
 
 // -- Start ---------------------------------------------------------
 app.listen(PORT, () => {
   console.log('\n+------------------------------------------+');
-  console.log('�  ?? SoukDrop v3.0 � PR�T � VENDRE       �');
-  console.log(`�  http://localhost:${PORT}                    �`);
+  console.log('|    SoukDrop v3.0 | PRET A VENDRE         |');
+  console.log('|    http://localhost:' + PORT + '                 |');
   console.log('+------------------------------------------+');
-  getCJToken().then(t => console.log(t ? '? CJ Connect�' : '? CJ: �chec'));
-);
-
-
-
-
-
-
-
-
-
+  if (typeof getCJToken === 'function') getCJToken().then(t => console.log(t ? '✔ CJ Connecte' : '❌ CJ: Echec')).catch(() => {});
+});
