@@ -1,1 +1,31 @@
-﻿<!DOCTYPE html><html lang='fr'><head><meta charset='UTF-8'><title>Soukdrop</title><style>body { font-family: 'Arial', sans-serif; text-align: center; background-color: #f4f4f9; padding: 50px; } .container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: inline-block; }</style></head><body><div class='container'><h1>Bienvenue sur votre boutique</h1><p>Votre plateforme de vente est en ligne et opérationnelle.</p></div></body></html>
+﻿<!DOCTYPE html>
+<html lang='fr'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Soukdrop</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; text-align: center; background-color: #f4f4f9; padding: 50px; }
+        .container { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: inline-block; max-width: 500px; }
+        h1 { color: #333; }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <h1 id="shop-title">Bienvenue sur votre boutique</h1>
+        <p id="shop-desc">Chargement de votre boutique...</p>
+    </div>
+
+    <script>
+        // Récupère le nom de la boutique dans l'URL (ex: /ma-boutique/)
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        const shopName = pathParts[0] || "Soukdrop";
+        
+        if (pathParts.length > 0) {
+            document.getElementById('shop-title').innerText = "Bienvenue sur " + shopName;
+            document.getElementById('shop-desc').innerText = "La boutique " + shopName + " est officiellement active.";
+        } else {
+            document.getElementById('shop-desc').innerText = "Votre plateforme de vente est en ligne.";
+        }
+    </script>
+</body>
+</html>
