@@ -621,4 +621,3 @@ app.listen(PORT, () => {
   console.log('+------------------------------------------+');
   if (typeof getCJToken === 'function') getCJToken().then(t => console.log(t ? '✔ CJ Connecte' : '❌ CJ: Echec')).catch(() => {});
 });
-});
