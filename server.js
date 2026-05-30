@@ -239,7 +239,7 @@ app.get('/api/cj/products/search', async (req, res) => {
       images: p.productImageSet?.map(i => proxyImg(i.imageUrl)) || [proxyImg(p.productImage)],
       categoryName: p.categoryName,
       sellPrice: parseFloat(p.sellPrice || 0),
-      description: p.description || '',
+      description: ((p.description || '' || "").replace(/<img[^>]*>/g, "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()),
       priceCalc: { usd: parseFloat(p.sellPrice || 0), finalFCFA: calcPrice(p.sellPrice || 0) }
     }));
     res.json({ success: true, data: products, total: d.data?.total || products.length });
@@ -262,7 +262,7 @@ app.post('/api/cj/import', async (req, res) => {
     const { data, error } = await supabase.from('products').insert({
       cj_pid: pid,
       name: p.productNameEn || p.productName,
-      description: p.description || p.productNameEn || '',
+      description: ((p.description || p.productNameEn || '' || "").replace(/<img[^>]*>/g, "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()),
       images: allImages,
       cj_price_usd: parseFloat(p.sellPrice || 0),
       price_fcfa: calcPrice(p.sellPrice || 0),
