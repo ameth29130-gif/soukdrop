@@ -1,6 +1,13 @@
 function proxyImageUrls(product, baseUrl) {
+  const base = baseUrl || '';
   if (product && product.images && Array.isArray(product.images)) {
-    product.images = product.images.map(img => img.startsWith('http') && !img.includes('/api/img') ? (baseUrl ? baseUrl : '') + '/api/img?url=' + encodeURIComponent(img) : img);
+    product.images = product.images.map(img => {
+      if (!img) return 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=400';
+      if (img.startsWith('http') && !img.includes('/api/img')) {
+        return base + '/api/img?url=' + encodeURIComponent(img);
+      }
+      return img;
+    });
   }
   return product;
 }
@@ -677,6 +684,7 @@ app.listen(PORT, () => {
   console.log('+------------------------------------------+');
   getCJToken().then(t => console.log(t ? '? CJ Connecté' : '? CJ: échec'));
 });
+
 
 
 
