@@ -369,7 +369,10 @@ async function placeCJOrder(order) {
   try {
     const productIds = (order.items || []).map(i => i.productId).filter(Boolean);
     if (!productIds.length) return;
-    
+  } catch (e) {
+    console.error('Erreur placeCJOrder:', e.message);
+  }
+}
 
 // -------------------------------------------------------------------
 //  RETRAITS
