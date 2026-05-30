@@ -608,8 +608,6 @@ app.get('/api/health', async (req, res) => {
   res.json({ status: 'ok', supabase: !error ? 'connected' : 'error', cj: !!(process.env.CJ_EMAIL), paytech: !!(process.env.PAYTECH_API_KEY), resend: !!(process.env.RESEND_API_KEY), ts: new Date().toISOString() });
 });
 
-}
-
 // -- Frontend ------------------------------------------------------
 app.use(express.static(__dirname));
 app.get('/{*path}', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
