@@ -1,4 +1,4 @@
-ï»¿import 'dotenv/config';
+import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3001;
 // Configuration de base
 app.use(express.json());
 
-// Routes API de test (pour vÃ©rifier que le serveur rÃ©pond)
+// Routes API de test (pour vérifier que le serveur répond)
 app.get('/api/health', (req, res) => {
     res.json({ status: 'server is running' });
 });
@@ -19,7 +19,7 @@ app.get('/api/health', (req, res) => {
 app.use(express.static(__dirname));
 
 // Route wildcard standard (compatible Express 4+)
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
