@@ -1,3 +1,4 @@
+const dotenv = require('dotenv');
 function proxyImageUrls(product, baseUrl) {
   const base = baseUrl || '';
   if (product && product.images && Array.isArray(product.images)) {
@@ -619,4 +620,5 @@ app.listen(PORT, () => {
   console.log('|    http://localhost:' + PORT + '                 |');
   console.log('+------------------------------------------+');
   if (typeof getCJToken === 'function') getCJToken().then(t => console.log(t ? '✔ CJ Connecte' : '❌ CJ: Echec')).catch(() => {});
+});
 });
