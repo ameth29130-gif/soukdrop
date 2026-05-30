@@ -1,6 +1,13 @@
-﻿// ═══════════════════════════════════════════════════════════════════
-//  SoukDrop v3.0 — Backend Complet
-// ═══════════════════════════════════════════════════════════════════
+function proxyImageUrls(product, baseUrl) {
+  if (product && product.images && Array.isArray(product.images)) {
+    product.images = product.images.map(img => img.startsWith('http') && !img.includes('/api/img') ? (baseUrl ? baseUrl : '') + '/api/img?url=' + encodeURIComponent(img) : img);
+  }
+  return product;
+}
+
+// -------------------------------------------------------------------
+//  SoukDrop v3.0 � Backend Complet
+// -------------------------------------------------------------------
 import express from 'express';
 import cors from 'cors';
 import { createClient } from '@supabase/supabase-js';
@@ -22,13 +29,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// ── Supabase ──────────────────────────────────────────────────────
+// -- Supabase ------------------------------------------------------
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-// ── Middleware ────────────────────────────────────────────────────
+// -- Middleware ----------------------------------------------------
 app.set('trust proxy', 1);
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
@@ -39,7 +46,7 @@ app.use(express.json({ limit: '5mb' }));
 const limiter = rateLimit({ windowMs: 60_000, max: 200, standardHeaders: true, legacyHeaders: false });
 app.use('/api/', limiter);
 
-// ── Config ────────────────────────────────────────────────────────
+// -- Config --------------------------------------------------------
 const USD_FCFA = parseFloat(process.env.USD_TO_FCFA || 615);
 const MARGIN   = parseFloat(process.env.PRICE_MARGIN || 1.5);
 const SHIP_USD = parseFloat(process.env.EST_SHIPPING_USD || 8);
@@ -50,7 +57,7 @@ const PLANS = {
   business:{ comm: 0,    max: 999999 }
 };
 
-// ── CJ Token ─────────────────────────────────────────────────────
+// -- CJ Token -----------------------------------------------------
 const CJ_BASE = 'https://developers.cjdropshipping.com/api2.0';
 let cjToken = null, cjExpiry = 0;
 
@@ -83,20 +90,20 @@ async function cjReq(endpoint, params = {}, method = 'GET') {
   return r.json();
 }
 
-// ═══════════════════════════════════════════════════════════════════
-//  AUTH — Inscription / Connexion vendeurs
-// ═══════════════════════════════════════════════════════════════════
+// -------------------------------------------------------------------
+//  AUTH � Inscription / Connexion vendeurs
+// -------------------------------------------------------------------
 
 // POST /api/auth/register
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { name, email, password, storeName, storeDesc, storeType, plan, wave, om } = req.body;
     if (!name || !email || !password) return res.status(400).json({ error: 'Champs requis manquants' });
-    if (password.length < 6) return res.status(400).json({ error: 'Mot de passe trop court (min 6 caractères)' });
+    if (password.length < 6) return res.status(400).json({ error: 'Mot de passe trop court (min 6 caract�res)' });
 
-    // Vérifier email unique
+    // V�rifier email unique
     const { data: existing } = await supabase.from('sellers').select('id').eq('email', email).maybeSingle();
-    if (existing) return res.status(400).json({ error: 'Cet email est déjà utilisé' });
+    if (existing) return res.status(400).json({ error: 'Cet email est d�j� utilis�' });
 
     const hash = await bcrypt.hash(password, 10);
     const slug = (storeName || name).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now().toString(36);
@@ -149,9 +156,9 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// ═══════════════════════════════════════════════════════════════════
+// -------------------------------------------------------------------
 //  PRODUITS
-// ═══════════════════════════════════════════════════════════════════
+// -------------------------------------------------------------------
 
 app.get('/api/products', async (req, res) => {
   try {
@@ -173,17 +180,21 @@ app.get('/api/products/:id', async (req, res) => {
     if (error) throw error;
     supabase.from('products').update({ view_count: (data.view_count || 0) + 1 }).eq('id', req.params.id).then(() => {});
     res.json({ success: true, data });
-  } catch(e) { res.status(404).json({ success: false, error: 'Produit non trouvé' }); }
+  } catch(e) { res.status(404).json({ success: false, error: 'Produit non trouv�' }); }
 });
 
-// ═══════════════════════════════════════════════════════════════════
+// -------------------------------------------------------------------
 //  STORE PUBLIC
-// ═══════════════════════════════════════════════════════════════════
+// -------------------------------------------------------------------
 
 app.get('/api/store/:slug', async (req, res) => {
-  try {
-    const { data: seller, error } = await supabase.from('sellers').select('*').eq('store_slug', req.params.slug).maybeSingle();
-    if (error || !seller) return res.status(404).json({ success: false, error: 'Boutique non trouvée' });
+  const { data: seller, error: sErr } = await supabase.from('sellers').select('*').eq('store_slug', req.params.slug).single();
+  if (sErr || !seller) return res.status(404).json({ error: 'Boutique introuvable' });
+  const { data: products, error: pErr } = await supabase.from('products').select('*').eq('seller_id', seller.id);
+  if (pErr) return res.status(400).json({ error: pErr.message });
+  const processedProducts = (products || []).map(p => proxyImageUrls(p, process.env.BASE_URL || ''));
+  res.json({ success: true, store: seller, data: processedProducts });
+});
 
     const { data: products } = await supabase.from('products').select('*').eq('status', 'active').order('created_at', { ascending: false }).limit(40);
 
@@ -197,17 +208,17 @@ app.get('/api/store/:slug', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
-// ═══════════════════════════════════════════════════════════════════
+// -------------------------------------------------------------------
 //  CJ DROPSHIPPING
-// ═══════════════════════════════════════════════════════════════════
+// -------------------------------------------------------------------
 
-// ── Proxy image CJ (évite le blocage CORS) ───────────────────────
+// -- Proxy image CJ (�vite le blocage CORS) -----------------------
 app.get('/api/img', async (req, res) => {
   try {
     const url = req.query.url;
     if (!url || !url.startsWith('http')) return res.status(400).send('URL invalide');
     const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-    if (!r.ok) return res.status(404).send('Image non trouvée');
+    if (!r.ok) return res.status(404).send('Image non trouv�e');
     const ct = r.headers.get('content-type') || 'image/jpeg';
     res.setHeader('Content-Type', ct);
     res.setHeader('Cache-Control', 'public, max-age=86400');
@@ -243,7 +254,7 @@ app.post('/api/cj/import', async (req, res) => {
     const { pid } = req.body;
     if (!pid) return res.status(400).json({ error: 'pid requis' });
     const { data: existing } = await supabase.from('products').select('id').eq('cj_pid', pid).maybeSingle();
-    if (existing) return res.json({ success: true, message: 'Déjà importé', data: existing });
+    if (existing) return res.json({ success: true, message: 'D�j� import�', data: existing });
     const d = await cjReq('/v1/product/query', { pid });
     if (!d.result) throw new Error(d.message || 'Produit introuvable');
     const p = d.data;
@@ -258,7 +269,7 @@ app.post('/api/cj/import', async (req, res) => {
       images: allImages,
       cj_price_usd: parseFloat(p.sellPrice || 0),
       price_fcfa: calcPrice(p.sellPrice || 0),
-      category: p.categoryName || 'Général',
+      category: p.categoryName || 'G�n�ral',
       status: 'active',
       variants: p.variants || [],
       metadata: { categoryId: p.categoryId }
@@ -268,14 +279,14 @@ app.post('/api/cj/import', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
-// ═══════════════════════════════════════════════════════════════════
+// -------------------------------------------------------------------
 //  COMMANDES
-// ═══════════════════════════════════════════════════════════════════
+// -------------------------------------------------------------------
 
 app.post('/api/orders/create', async (req, res) => {
   try {
     const { items, customer, shippingCostFCFA = 2500, logisticName = 'Standard' } = req.body;
-    if (!items?.length || !customer?.name || !customer?.email) return res.status(400).json({ error: 'Données incomplètes' });
+    if (!items?.length || !customer?.name || !customer?.email) return res.status(400).json({ error: 'Donn�es incompl�tes' });
 
     const subtotal = items.reduce((s, i) => s + (i.priceFCFA * i.quantity), 0);
     const total = subtotal + parseInt(shippingCostFCFA);
@@ -299,7 +310,7 @@ app.post('/api/orders/create', async (req, res) => {
         item_name: `Commande SoukDrop #${order.id.slice(0,8).toUpperCase()}`,
         item_price: order.total_fcfa, currency: 'XOF',
         ref_command: order.id,
-        command_name: `SoukDrop — ${order.customer_name}`,
+        command_name: `SoukDrop � ${order.customer_name}`,
         env: 'prod',
         ipn_url: `${baseUrl}/api/paytech/ipn`,
         success_url: `${baseUrl}/#/commande/succes?order=${order.id}`,
@@ -314,13 +325,13 @@ app.post('/api/orders/create', async (req, res) => {
       if (d.success === 1) {
         await supabase.from('orders').update({ paytech_ref: d.token }).eq('id', order.id);
         paymentUrl = `https://paytech.sn/payment/checkout/${d.token}`;
-        console.log('✅ PayTech URL:', paymentUrl);
+        console.log('? PayTech URL:', paymentUrl);
       } else {
-        console.error('❌ PayTech erreur:', JSON.stringify(d));
+        console.error('? PayTech erreur:', JSON.stringify(d));
         return res.status(500).json({ success: false, error: 'PayTech: ' + (d.errors?.join(', ') || 'Erreur paiement') });
       }
     } catch(pe) {
-      console.error('❌ PayTech exception:', pe.message);
+      console.error('? PayTech exception:', pe.message);
       return res.status(500).json({ success: false, error: 'Service paiement indisponible' });
     }
 
@@ -338,10 +349,10 @@ app.post('/api/paytech/ipn', async (req, res) => {
     if (type_event === 'sale_complete') {
       const { data: order } = await supabase.from('orders').update({ status: 'paid', paid_at: new Date().toISOString() }).eq('id', ref_command).select().single();
       if (order) {
-        console.log('✅ Paiement confirmé:', ref_command);
+        console.log('? Paiement confirm�:', ref_command);
         sendEmail(order).catch(console.error);
         placeCJOrder(order).catch(console.error);
-        // Mettre à jour revenus vendeur
+        // Mettre � jour revenus vendeur
         updateSellerRevenue(order).catch(console.error);
       }
     }
@@ -379,7 +390,7 @@ async function placeCJOrder(order) {
     }, 'POST');
     if (result.result) {
       await supabase.from('orders').update({ cj_order_id: result.data?.orderId, status: 'processing' }).eq('id', order.id);
-      console.log('📦 CJ Order:', result.data?.orderId);
+      console.log('?? CJ Order:', result.data?.orderId);
     }
   } catch(e) { console.error('placeCJOrder:', e.message); }
 }
@@ -387,12 +398,12 @@ async function placeCJOrder(order) {
 async function sendEmail(order) {
   if (!process.env.RESEND_API_KEY) return;
   const fcfa = n => new Intl.NumberFormat('fr-SN', { style: 'currency', currency: 'XOF', maximumFractionDigits: 0 }).format(n || 0);
-  const rows = (order.items || []).map(i => `<tr><td style="padding:8px;border-bottom:1px solid #eee">${i.name||''}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center">×${i.quantity}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:right;font-weight:700">${fcfa((i.priceFCFA||0)*i.quantity)}</td></tr>`).join('');
-  const html = `<div style="max-width:540px;margin:0 auto;font-family:Arial,sans-serif"><div style="background:#0A0A0F;padding:24px;text-align:center;border-radius:12px 12px 0 0"><h1 style="color:#B9FF4B;margin:0;font-size:24px">SoukDrop</h1><p style="color:rgba(255,255,255,.6);margin:4px 0 0;font-size:13px">Commande confirmée ✓</p></div><div style="background:#f9f9f9;padding:24px;border-radius:0 0 12px 12px"><h2 style="margin:0 0 4px">Merci ${order.customer_name} !</h2><p style="color:#666;font-size:13px;margin:0 0 16px">Réf : <strong>${(order.id||'').slice(0,12).toUpperCase()}</strong></p><table width="100%" cellspacing="0" style="border-collapse:collapse;background:#fff;border-radius:8px;border:1px solid #eee"><thead><tr style="background:#f5f5f5"><th style="padding:8px;text-align:left;font-size:11px;color:#888">Article</th><th style="padding:8px;text-align:center;font-size:11px;color:#888">Qté</th><th style="padding:8px;text-align:right;font-size:11px;color:#888">Prix</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td colspan="2" style="padding:10px;text-align:right;font-weight:700">Total :</td><td style="padding:10px;font-weight:900;font-size:16px;text-align:right;color:#0A0A0F">${fcfa(order.total_fcfa)}</td></tr></tfoot></table><div style="margin-top:16px;padding:12px;background:#f0fdf4;border-radius:8px;font-size:12px;color:#16a34a;line-height:1.8">📦 En cours de préparation<br>🚚 Livraison 15-25 jours<br>📧 Gardez cet email</div></div></div>`;
+  const rows = (order.items || []).map(i => `<tr><td style="padding:8px;border-bottom:1px solid #eee">${i.name||''}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center">�${i.quantity}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:right;font-weight:700">${fcfa((i.priceFCFA||0)*i.quantity)}</td></tr>`).join('');
+  const html = `<div style="max-width:540px;margin:0 auto;font-family:Arial,sans-serif"><div style="background:#0A0A0F;padding:24px;text-align:center;border-radius:12px 12px 0 0"><h1 style="color:#B9FF4B;margin:0;font-size:24px">SoukDrop</h1><p style="color:rgba(255,255,255,.6);margin:4px 0 0;font-size:13px">Commande confirm�e ?</p></div><div style="background:#f9f9f9;padding:24px;border-radius:0 0 12px 12px"><h2 style="margin:0 0 4px">Merci ${order.customer_name} !</h2><p style="color:#666;font-size:13px;margin:0 0 16px">R�f : <strong>${(order.id||'').slice(0,12).toUpperCase()}</strong></p><table width="100%" cellspacing="0" style="border-collapse:collapse;background:#fff;border-radius:8px;border:1px solid #eee"><thead><tr style="background:#f5f5f5"><th style="padding:8px;text-align:left;font-size:11px;color:#888">Article</th><th style="padding:8px;text-align:center;font-size:11px;color:#888">Qt�</th><th style="padding:8px;text-align:right;font-size:11px;color:#888">Prix</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td colspan="2" style="padding:10px;text-align:right;font-weight:700">Total :</td><td style="padding:10px;font-weight:900;font-size:16px;text-align:right;color:#0A0A0F">${fcfa(order.total_fcfa)}</td></tr></tfoot></table><div style="margin-top:16px;padding:12px;background:#f0fdf4;border-radius:8px;font-size:12px;color:#16a34a;line-height:1.8">?? En cours de pr�paration<br>?? Livraison 15-25 jours<br>?? Gardez cet email</div></div></div>`;
   await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.RESEND_API_KEY}` },
-    body: JSON.stringify({ from: 'SoukDrop <onboarding@resend.dev>', to: order.customer_email, subject: `✅ Commande confirmée #${(order.id||'').slice(0,8).toUpperCase()}`, html })
+    body: JSON.stringify({ from: 'SoukDrop <onboarding@resend.dev>', to: order.customer_email, subject: `? Commande confirm�e #${(order.id||'').slice(0,8).toUpperCase()}`, html })
   });
 }
 
@@ -402,7 +413,7 @@ app.get('/api/orders/:id', async (req, res) => {
     const { data, error } = await supabase.from('orders').select('*').eq('id', req.params.id).single();
     if (error) throw error;
     res.json({ success: true, data });
-  } catch(e) { res.status(404).json({ success: false, error: 'Commande non trouvée' }); }
+  } catch(e) { res.status(404).json({ success: false, error: 'Commande non trouv�e' }); }
 });
 
 // PUT /api/orders/:id/status
@@ -420,14 +431,14 @@ app.put('/api/orders/:id/status', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
-// ═══════════════════════════════════════════════════════════════════
+// -------------------------------------------------------------------
 //  RETRAITS
-// ═══════════════════════════════════════════════════════════════════
+// -------------------------------------------------------------------
 
 app.post('/api/withdrawals/request', async (req, res) => {
   try {
     const { amount, method, phone, sellerName } = req.body;
-    if (!amount || !method || !phone) return res.status(400).json({ error: 'Données incomplètes' });
+    if (!amount || !method || !phone) return res.status(400).json({ error: 'Donn�es incompl�tes' });
     const { data, error } = await supabase.from('withdrawals').insert({
       seller_name: sellerName || 'Vendeur',
       amount: parseInt(amount), method, phone, status: 'pending'
@@ -437,9 +448,9 @@ app.post('/api/withdrawals/request', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
-// ═══════════════════════════════════════════════════════════════════
+// -------------------------------------------------------------------
 //  ADMIN
-// ═══════════════════════════════════════════════════════════════════
+// -------------------------------------------------------------------
 
 app.get('/api/admin/stats', async (req, res) => {
   try {
@@ -506,7 +517,7 @@ app.put('/api/admin/sellers/:id/certify', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
-// ── Seller specific routes ────────────────────────────────────────
+// -- Seller specific routes ----------------------------------------
 app.get('/api/seller/orders', async (req, res) => {
   try {
     const sellerId = req.headers['x-seller-id'];
@@ -541,7 +552,7 @@ app.get('/api/seller/stats', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
-// POST /api/subscription/pay — Paiement abonnement via PayTech
+// POST /api/subscription/pay � Paiement abonnement via PayTech
 app.post('/api/subscription/pay', async (req, res) => {
   try {
     const { plan, sellerId, sellerEmail, sellerName } = req.body;
@@ -554,7 +565,7 @@ app.post('/api/subscription/pay', async (req, res) => {
       item_name: `Abonnement SoukDrop ${plan.toUpperCase()}`,
       item_price: price, currency: 'XOF',
       ref_command: `SUB_${plan}_${sellerId || Date.now()}`,
-      command_name: `SoukDrop Abonnement ${plan} — ${sellerName || sellerEmail}`,
+      command_name: `SoukDrop Abonnement ${plan} � ${sellerName || sellerEmail}`,
       env: 'prod',
       ipn_url: `${baseUrl}/api/subscription/ipn`,
       success_url: `${baseUrl}/#/dashboard?subscribed=${plan}`,
@@ -575,7 +586,7 @@ app.post('/api/subscription/pay', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
-// POST /api/subscription/ipn — Webhook confirmation abonnement
+// POST /api/subscription/ipn � Webhook confirmation abonnement
 app.post('/api/subscription/ipn', async (req, res) => {
   try {
     const { ref_command, type_event, api_key_sha256, api_secret_sha256 } = req.body;
@@ -597,7 +608,7 @@ app.post('/api/subscription/ipn', async (req, res) => {
           subscription_starts: now.toISOString(),
           subscription_expires: expires.toISOString()
         }).eq('id', sellerId);
-        console.log(`✅ Abonnement ${plan} activé pour seller ${sellerId}`);
+        console.log(`? Abonnement ${plan} activ� pour seller ${sellerId}`);
       }
     }
     res.send('OK');
@@ -623,14 +634,14 @@ app.delete('/api/admin/products/:id', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
-// Ajout colonne subscription à sellers si manquante
+// Ajout colonne subscription � sellers si manquante
 async function ensureSellerColumns() {
   try {
     await supabase.rpc('exec_sql', { sql: `ALTER TABLE sellers ADD COLUMN IF NOT EXISTS subscription_starts TIMESTAMPTZ; ALTER TABLE sellers ADD COLUMN IF NOT EXISTS subscription_expires TIMESTAMPTZ;` });
-  } catch(e) { /* colonnes déjà présentes */ }
+  } catch(e) { /* colonnes d�j� pr�sentes */ }
 }
 
-// ── Categories & Settings ─────────────────────────────────────────
+// -- Categories & Settings -----------------------------------------
 app.get('/api/categories', async (req, res) => {
   try {
     const { data, error } = await supabase.from('categories').select('*').eq('active', true).order('sort_order');
@@ -648,22 +659,26 @@ app.get('/api/settings', async (req, res) => {
   } catch(e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
-// ── Health ────────────────────────────────────────────────────────
+// -- Health --------------------------------------------------------
 app.get('/api/health', async (req, res) => {
   const { error } = await supabase.from('settings').select('key').limit(1);
   res.json({ status: 'ok', supabase: !error ? 'connected' : 'error', cj: !!(process.env.CJ_EMAIL), paytech: !!(process.env.PAYTECH_API_KEY), resend: !!(process.env.RESEND_API_KEY), ts: new Date().toISOString() });
 });
 
-// ── Frontend ──────────────────────────────────────────────────────
+// -- Frontend ------------------------------------------------------
 app.use(express.static(__dirname));
 app.get('/{*path}', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-// ── Start ─────────────────────────────────────────────────────────
+// -- Start ---------------------------------------------------------
 app.listen(PORT, () => {
-  console.log('\n╔══════════════════════════════════════════╗');
-  console.log('║  🚀 SoukDrop v3.0 — PRÊT À VENDRE       ║');
-  console.log(`║  http://localhost:${PORT}                    ║`);
-  console.log('╚══════════════════════════════════════════╝');
-  getCJToken().then(t => console.log(t ? '✅ CJ Connecté' : '❌ CJ: échec'));
+  console.log('\n+------------------------------------------+');
+  console.log('�  ?? SoukDrop v3.0 � PR�T � VENDRE       �');
+  console.log(`�  http://localhost:${PORT}                    �`);
+  console.log('+------------------------------------------+');
+  getCJToken().then(t => console.log(t ? '? CJ Connect�' : '? CJ: �chec'));
 });
+
+
+
+
 
