@@ -45,7 +45,7 @@ app.use('/api/', limiter);
 // -- Frontend ------------------------------------------------------
 app.use(express.static(__dirname));
 
-// CORRECTION : Utilisation de path (importé en haut) au lieu de require('path')
+// Utilise '*' tout simplement pour capturer toutes les routes SPA
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
