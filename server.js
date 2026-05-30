@@ -203,17 +203,7 @@ app.get('/api/store/:slug', async (req, res) => {
   res.json({ success: true, store: seller, data: processedProducts });
 });
 
-    const { data: products } = await supabase.from('products').select('*').eq('status', 'active').order('created_at', { ascending: false }).limit(40);
-
-    res.json({
-      success: true,
-      data: {
-        store: { id: seller.id, name: seller.store_name, slug: seller.store_slug, description: seller.store_desc, type: seller.store_type, certified: seller.certified },
-        products: products || []
-      }
-    });
-  } catch(e) { res.status(500).json({ success: false, error: e.message }); }
-});
+    
 
 // -------------------------------------------------------------------
 //  CJ DROPSHIPPING
@@ -379,64 +369,7 @@ async function placeCJOrder(order) {
   try {
     const productIds = (order.items || []).map(i => i.productId).filter(Boolean);
     if (!productIds.length) return;
-    const { data: products } = await supabase.from('products').select('id,cj_pid,variants').in('id', productIds);
-    const cjProducts = (order.items || []).map(item => {
-      const prod = (products || []).find(p => p.id === item.productId);
-      if (!prod?.cj_pid) return null;
-      return { vid: prod.variants?.[0]?.vid || '', quantity: parseInt(item.quantity || 1) };
-    }).filter(Boolean);
-    if (!cjProducts.length) return;
-    const result = await cjReq('/v1/shopping/order/createOrderV2', {
-      orderNumber: order.id, shippingCountry: 'SN', shippingCountryCode: 'SN',
-      shippingProvince: order.shipping_address?.city || 'Dakar',
-      shippingCity: order.shipping_address?.city || 'Dakar',
-      shippingAddress: order.shipping_address?.street || '',
-      shippingCustomerName: order.customer_name, shippingPhone: order.customer_phone || '',
-      remark: `SoukDrop #${order.id.slice(0,8)}`, logisticName: 'CJ Packet Standard',
-      products: cjProducts
-    }, 'POST');
-    if (result.result) {
-      await supabase.from('orders').update({ cj_order_id: result.data?.orderId, status: 'processing' }).eq('id', order.id);
-      console.log('?? CJ Order:', result.data?.orderId);
-    }
-  } catch(e) { console.error('placeCJOrder:', e.message); }
-}
-
-async function sendEmail(order) {
-  if (!process.env.RESEND_API_KEY) return;
-  const fcfa = n => new Intl.NumberFormat('fr-SN', { style: 'currency', currency: 'XOF', maximumFractionDigits: 0 }).format(n || 0);
-  const rows = (order.items || []).map(i => `<tr><td style="padding:8px;border-bottom:1px solid #eee">${i.name||''}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center">×${i.quantity}</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:right;font-weight:700">${fcfa((i.priceFCFA||0)*i.quantity)}</td></tr>`).join('');
-  const html = `<div style="max-width:540px;margin:0 auto;font-family:Arial,sans-serif"><div style="background:#0A0A0F;padding:24px;text-align:center;border-radius:12px 12px 0 0"><h1 style="color:#B9FF4B;margin:0;font-size:24px">SoukDrop</h1><p style="color:rgba(255,255,255,.6);margin:4px 0 0;font-size:13px">Commande confirmée ?</p></div><div style="background:#f9f9f9;padding:24px;border-radius:0 0 12px 12px"><h2 style="margin:0 0 4px">Merci ${order.customer_name} !</h2><p style="color:#666;font-size:13px;margin:0 0 16px">Réf : <strong>${(order.id||'').slice(0,12).toUpperCase()}</strong></p><table width="100%" cellspacing="0" style="border-collapse:collapse;background:#fff;border-radius:8px;border:1px solid #eee"><thead><tr style="background:#f5f5f5"><th style="padding:8px;text-align:left;font-size:11px;color:#888">Article</th><th style="padding:8px;text-align:center;font-size:11px;color:#888">Qté</th><th style="padding:8px;text-align:right;font-size:11px;color:#888">Prix</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td colspan="2" style="padding:10px;text-align:right;font-weight:700">Total :</td><td style="padding:10px;font-weight:900;font-size:16px;text-align:right;color:#0A0A0F">${fcfa(order.total_fcfa)}</td></tr></tfoot></table><div style="margin-top:16px;padding:12px;background:#f0fdf4;border-radius:8px;font-size:12px;color:#16a34a;line-height:1.8">?? En cours de préparation<br>?? Livraison 15-25 jours<br>?? Gardez cet email</div></div></div>`;
-  await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.RESEND_API_KEY}` },
-    body: JSON.stringify({ from: 'SoukDrop <onboarding@resend.dev>', to: order.customer_email, subject: `? Commande confirmée #${(order.id||'').slice(0,8).toUpperCase()}`, html })
-  });
-}
-
-// GET /api/orders/:id
-app.get('/api/orders/:id', async (req, res) => {
-  try {
-    const { data, error } = await supabase.from('orders').select('*').eq('id', req.params.id).single();
-    if (error) throw error;
-    res.json({ success: true, data });
-  } catch(e) { res.status(404).json({ success: false, error: 'Commande non trouvée' }); }
-});
-
-// PUT /api/orders/:id/status
-app.put('/api/orders/:id/status', async (req, res) => {
-  try {
-    const { status, tracking_number, cj_order_id } = req.body;
-    const update = { status };
-    if (tracking_number) update.tracking_number = tracking_number;
-    if (cj_order_id) update.cj_order_id = cj_order_id;
-    if (status === 'paid') update.paid_at = new Date().toISOString();
-    const { data, error } = await supabase.from('orders').update(update).eq('id', req.params.id).select().single();
-    if (error) throw error;
-    if (status === 'paid') sendEmail(data).catch(console.error);
-    res.json({ success: true, data });
-  } catch(e) { res.status(500).json({ success: false, error: e.message }); }
-});
+    
 
 // -------------------------------------------------------------------
 //  RETRAITS
@@ -684,6 +617,7 @@ app.listen(PORT, () => {
   console.log('+------------------------------------------+');
   getCJToken().then(t => console.log(t ? '? CJ Connecté' : '? CJ: échec'));
 });
+
 
 
 
