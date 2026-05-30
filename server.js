@@ -210,7 +210,7 @@ app.get('/api/store/:slug', async (req, res) => {
   }
 });
 
-, async (req, res) => {
+app.get('/api/img', async (req, res) => {
   try {
     const url = req.query.url;
     if (!url || !url.startsWith('http')) return res.status(400).send('URL invalide');
